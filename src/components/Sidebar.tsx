@@ -13,7 +13,12 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './Sidebar.css';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+    isOpen?: boolean;
+    onClose?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -21,44 +26,50 @@ export const Sidebar: React.FC = () => {
         navigate('/login');
     };
 
+    const handleLinkClick = () => {
+        if (onClose && window.innerWidth <= 768) {
+            onClose();
+        }
+    };
+
     return (
-        <aside className="sidebar">
+        <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-logo">
                 <img src="/logo.png" alt="HIDRAUP Logo" style={{ maxWidth: '100%', height: 'auto' }} />
             </div>
 
             <nav className="sidebar-nav">
-                <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                <NavLink to="/dashboard" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <LayoutDashboard size={20} />
                     <span>Painel</span>
                 </NavLink>
 
-                <NavLink to="/peritagens" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                <NavLink to="/peritagens" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <FileText size={20} />
                     <span>Todas as Peritagens</span>
                 </NavLink>
 
-                <NavLink to="/monitoramento" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                <NavLink to="/monitoramento" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <Clock size={20} />
                     <span>Status</span>
                 </NavLink>
 
-                <NavLink to="/nova-peritagem" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                <NavLink to="/nova-peritagem" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <PlusCircle size={20} />
                     <span>Nova Peritagem</span>
                 </NavLink>
 
-                <NavLink to="/clientes" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                <NavLink to="/clientes" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <DollarSign size={20} />
                     <span>Aguardando Clientes</span>
                 </NavLink>
 
-                <NavLink to="/manutencao" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                <NavLink to="/manutencao" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <Wrench size={20} />
                     <span>Cilindros em Manutenção</span>
                 </NavLink>
 
-                <NavLink to="/relatorios" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                <NavLink to="/relatorios" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <FileSearch size={20} />
                     <span>Relatórios em PDF</span>
                 </NavLink>

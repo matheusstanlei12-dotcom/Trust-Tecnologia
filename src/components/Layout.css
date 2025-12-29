@@ -9,3 +9,61 @@
     padding: 20px;
     background-color: var(--bg-main);
 }
+
+.mobile-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: white;
+    border-bottom: 1px solid #edf2f7;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    height: 60px;
+}
+
+.mobile-menu-btn {
+    background: none;
+    border: none;
+    color: #4a5568;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.mobile-logo {
+    height: 32px;
+    width: auto;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 45;
+    backdrop-filter: blur(2px);
+}
+
+@media (max-width: 768px) {
+    .mobile-header {
+        display: flex;
+    }
+
+    .layout-root {
+        flex-direction: column;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 16px;
+        margin-top: 60px;
+        /* Space for mobile header */
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
