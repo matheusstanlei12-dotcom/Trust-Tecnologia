@@ -93,3 +93,37 @@
 .btn-action:hover {
     text-decoration: underline;
 }
+
+.summary-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.summary-badge.warning {
+    background-color: #fffaf0;
+    color: #ed8936;
+    border: 1px solid #ed8936;
+}
+
+.summary-badge.maintenance {
+    background-color: #f0fff4;
+    color: #38a169;
+    border: 1px solid #38a169;
+}
+
+.status-badge.aguardando-clientes {
+    background-color: #fffaf0;
+    color: #ed8936;
+    border: 1px solid #fae3c4;
+}
+
+.status-badge.cilindros-em-manutenção {
+    background-color: #f0fff4;
+    color: #38a169;
+    border: 1px solid #c6f6d5;
+}

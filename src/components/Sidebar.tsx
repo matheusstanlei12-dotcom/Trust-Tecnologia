@@ -4,15 +4,23 @@ import {
     FileText,
     Clock,
     PlusCircle,
-    ShoppingCart,
     DollarSign,
     FileSearch,
-    LogOut
+    LogOut,
+    Wrench
 } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import './Sidebar.css';
 
 export const Sidebar: React.FC = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        navigate('/login');
+    };
+
     return (
         <aside className="sidebar">
             <div className="sidebar-logo">
@@ -22,7 +30,7 @@ export const Sidebar: React.FC = () => {
             <nav className="sidebar-nav">
                 <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <LayoutDashboard size={20} />
-                    <span>Dashboard</span>
+                    <span>Painel</span>
                 </NavLink>
 
                 <NavLink to="/peritagens" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
@@ -32,7 +40,7 @@ export const Sidebar: React.FC = () => {
 
                 <NavLink to="/monitoramento" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <Clock size={20} />
-                    <span>Linha do Tempo / Status</span>
+                    <span>Status</span>
                 </NavLink>
 
                 <NavLink to="/nova-peritagem" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
@@ -40,19 +48,19 @@ export const Sidebar: React.FC = () => {
                     <span>Nova Peritagem</span>
                 </NavLink>
 
-                <NavLink to="/compras" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                    <ShoppingCart size={20} />
-                    <span>Aguardando Compras</span>
+                <NavLink to="/clientes" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                    <DollarSign size={20} />
+                    <span>Aguardando Clientes</span>
                 </NavLink>
 
-                <NavLink to="/orcamentos" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                    <DollarSign size={20} />
-                    <span>Aguardando Orçamento</span>
+                <NavLink to="/manutencao" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                    <Wrench size={20} />
+                    <span>Cilindros em Manutenção</span>
                 </NavLink>
 
                 <NavLink to="/relatorios" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <FileSearch size={20} />
-                    <span>Relatórios PDF</span>
+                    <span>Relatórios em PDF</span>
                 </NavLink>
             </nav>
 
@@ -64,7 +72,7 @@ export const Sidebar: React.FC = () => {
                         <span className="user-role">GESTOR</span>
                     </div>
                 </div>
-                <button className="btn-logout">
+                <button className="btn-logout" onClick={handleLogout}>
                     <LogOut size={16} />
                     <span>Sair</span>
                 </button>

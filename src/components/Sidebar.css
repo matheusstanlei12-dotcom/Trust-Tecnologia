@@ -8,11 +8,28 @@
     position: fixed;
     left: 0;
     top: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Edge */
 }
 
 .sidebar-logo {
-    padding: 32px 24px;
+    padding: 20px 24px;
     border-bottom: 1px solid #f7fafc;
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar-logo img {
+    max-width: 140px !important;
+    height: auto;
 }
 
 .sidebar-nav {

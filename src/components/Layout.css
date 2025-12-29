@@ -6,6 +6,6 @@
 .main-content {
     flex: 1;
     margin-left: var(--sidebar-width);
-    padding: 40px;
+    padding: 20px;
     background-color: var(--bg-main);
 }

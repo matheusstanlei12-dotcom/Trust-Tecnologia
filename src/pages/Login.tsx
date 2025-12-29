@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './Login.css';
 
@@ -78,7 +78,7 @@ export const LoginPage: React.FC = () => {
                 <footer className="login-footer">
                     <a href="#forgot" className="forgot-link">Esqueci a senha</a>
                     <p className="no-account">
-                        Não tem uma conta? <a href="#create" className="create-account">Criar conta</a>
+                        Não tem uma conta? <Link to="/register" className="create-account">Criar conta</Link>
                     </p>
                 </footer>
             </div>

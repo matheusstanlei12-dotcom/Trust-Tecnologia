@@ -1,10 +1,10 @@
 import React from 'react';
+import { supabase } from '../lib/supabase';
 import {
-    Hourglass,
-    ShoppingCart,
-    BadgeDollarSign,
-    CheckCircle2,
-    Building2
+    FileText,
+    DollarSign,
+    Wrench,
+    CheckCircle2
 } from 'lucide-react';
 import {
     Chart as ChartJS,
@@ -30,12 +30,46 @@ ChartJS.register(
 );
 
 export const Dashboard: React.FC = () => {
+    const [counts, setCounts] = React.useState({
+        total: 0,
+        aguardando: 0,
+        manutencao: 0,
+        finalizados: 0
+    });
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        fetchCounts();
+    }, []);
+
+    const fetchCounts = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('peritagens')
+                .select('status');
+
+            if (error) throw error;
+
+            if (data) {
+                const total = data.length;
+                const aguardando = data.filter(p => p.status === 'Aguardando Clientes').length;
+                const manutencao = data.filter(p => p.status === 'Cilindros em Manutenção').length;
+                const finalizados = data.filter(p => p.status === 'Finalizados' || p.status === 'ORÇAMENTO FINALIZADO').length;
+
+                setCounts({ total, aguardando, manutencao, finalizados });
+            }
+        } catch (err) {
+            console.error('Erro ao buscar estatísticas:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const stats = [
-        { label: 'Em Andamento', value: 1, icon: <Hourglass size={32} color="#f6ad55" />, color: '#fffaf0' },
-        { label: 'Aguardando Compras', value: 1, icon: <ShoppingCart size={32} color="#4299e1" />, color: '#ebf8ff' },
-        { label: 'Aguardando Orçamento', value: 0, icon: <BadgeDollarSign size={32} color="#ed8936" />, color: '#fffaf0' },
-        { label: 'Finalizados', value: 0, icon: <CheckCircle2 size={32} color="#48bb78" />, color: '#f0fff4' },
-        { label: 'Clientes Ativos', value: 1, icon: <Building2 size={32} color="#a0aec0" />, color: '#edf2f7' },
+        { label: 'Total de Peritagens', value: counts.total, icon: <FileText size={32} color="#3182ce" />, color: '#ebf8ff' },
+        { label: 'Aguardando Clientes', value: counts.aguardando, icon: <DollarSign size={32} color="#ed8936" />, color: '#fffaf0' },
+        { label: 'Cilindros em Manutenção', value: counts.manutencao, icon: <Wrench size={32} color="#38a169" />, color: '#f0fff4' },
+        { label: 'Finalizados', value: counts.finalizados, icon: <CheckCircle2 size={32} color="#48bb78" />, color: '#f0fff4' },
     ];
 
     const barData = {
@@ -51,11 +85,11 @@ export const Dashboard: React.FC = () => {
     };
 
     const doughnutData = {
-        labels: ['Finalizados', 'Em Andamento', 'Pendentes'],
+        labels: ['Finalizados', 'Total de Peritagens', 'Pendentes'],
         datasets: [
             {
                 data: [0, 1, 0],
-                backgroundColor: ['#48bb78', '#ecc94b', '#e53e3e'],
+                backgroundColor: ['#48bb78', '#3182ce', '#e53e3e'],
                 borderWidth: 0,
             },
         ],
@@ -65,19 +99,23 @@ export const Dashboard: React.FC = () => {
         <div className="dashboard-container">
             <h1 className="page-title">Visão Geral do Sistema</h1>
 
-            <div className="stats-grid">
-                {stats.map((stat, index) => (
-                    <div key={index} className="stat-card" style={{ backgroundColor: '#ffffff' }}>
-                        <div className="stat-icon-wrapper" style={{ backgroundColor: stat.color }}>
-                            {stat.icon}
+            {loading ? (
+                <div style={{ padding: '2rem', textAlign: 'center' }}>Carregando dados...</div>
+            ) : (
+                <div className="stats-grid">
+                    {stats.map((stat, index) => (
+                        <div key={index} className="stat-card" style={{ backgroundColor: '#ffffff' }}>
+                            <div className="stat-icon-wrapper" style={{ backgroundColor: stat.color }}>
+                                {stat.icon}
+                            </div>
+                            <div className="stat-info">
+                                <span className="stat-label">{stat.label}</span>
+                                <span className="stat-value">{stat.value}</span>
+                            </div>
                         </div>
-                        <div className="stat-info">
-                            <span className="stat-label">{stat.label}</span>
-                            <span className="stat-value">{stat.value}</span>
-                        </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
 
             <div className="charts-grid">
                 <div className="chart-card">

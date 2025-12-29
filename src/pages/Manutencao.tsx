@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, ExternalLink, Loader2 } from 'lucide-react';
+import { Search, ExternalLink, Loader2, Wrench } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import './Peritagens.css';
+import './Peritagens.css'; // Reutilizando estilos
 
 interface Peritagem {
     id: string;
@@ -13,7 +13,7 @@ interface Peritagem {
     prioridade: string;
 }
 
-export const Peritagens: React.FC = () => {
+export const Manutencao: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [peritagens, setPeritagens] = useState<Peritagem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -28,6 +28,7 @@ export const Peritagens: React.FC = () => {
             const { data, error } = await supabase
                 .from('peritagens')
                 .select('*')
+                .eq('status', 'Cilindros em Manutenção')
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -47,11 +48,11 @@ export const Peritagens: React.FC = () => {
     return (
         <div className="peritagens-container">
             <div className="header-actions">
-                <h1 className="page-title">Todas as Peritagens</h1>
-                <button className="btn-primary" style={{ width: 'auto' }} onClick={() => navigate('/nova-peritagem')}>
-                    <Plus size={20} />
-                    <span>Nova Peritagem</span>
-                </button>
+                <h1 className="page-title">Cilindros em Manutenção</h1>
+                <div className="summary-badge maintenance">
+                    <Wrench size={20} />
+                    <span>Total: {peritagens.length}</span>
+                </div>
             </div>
 
             <div className="search-bar">
@@ -70,17 +71,16 @@ export const Peritagens: React.FC = () => {
                 {loading ? (
                     <div className="loading-state">
                         <Loader2 className="animate-spin" size={40} color="#3182ce" />
-                        <p>Carregando peritagens...</p>
+                        <p>Carregando...</p>
                     </div>
                 ) : (
                     <table className="peritagens-table">
                         <thead>
                             <tr>
-                                <th>Número da Peritagem</th>
+                                <th>Número</th>
                                 <th>Cliente</th>
-                                <th>Data da Execução</th>
+                                <th>Data</th>
                                 <th>Status</th>
-                                <th>Prioridade</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -91,11 +91,10 @@ export const Peritagens: React.FC = () => {
                                     <td>{p.cliente}</td>
                                     <td>{new Date(p.data_execucao).toLocaleDateString('pt-BR')}</td>
                                     <td>
-                                        <span className={`status-badge ${p.status.toLowerCase().replace(/ /g, '-')}`}>
+                                        <span className={`status-badge cilindros-em-manutenção`}>
                                             {p.status}
                                         </span>
                                     </td>
-                                    <td>{p.prioridade}</td>
                                     <td>
                                         <button className="btn-action" onClick={() => navigate(`/monitoramento?id=${p.id}`)}>
                                             <span>VER STATUS</span>
@@ -106,8 +105,8 @@ export const Peritagens: React.FC = () => {
                             ))}
                             {filteredPeritagens.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} style={{ textAlign: 'center', padding: '2rem' }}>
-                                        Nenhuma peritagem encontrada.
+                                    <td colSpan={5} style={{ textAlign: 'center', padding: '2rem' }}>
+                                        Nenhum cilindro em manutenção no momento.
                                     </td>
                                 </tr>
                             )}

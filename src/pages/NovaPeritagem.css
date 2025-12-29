@@ -1,0 +1,234 @@
+.nova-peritagem-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.btn-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #4a5568;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-back:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
+}
+
+.form-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #edf2f7;
+}
+
+.grid-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.form-group input {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2b6cb0;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.dimensions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed #e2e8f0;
+}
+
+/* Tabelas Checklist */
+.checklist-table-wrapper,
+.vedacoes-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #edf2f7;
+    border-radius: 8px;
+}
+
+.checklist-table,
+.vedacoes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.checklist-table th,
+.vedacoes-table th {
+    background: #f8fafc;
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 2px solid #edf2f7;
+    color: #4a5568;
+}
+
+.checklist-table td,
+.vedacoes-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.selected-row {
+    background: #f0f7ff;
+}
+
+.center-cell {
+    text-align: center;
+}
+
+.small-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #fcfcfc;
+}
+
+.full-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #fcfcfc;
+}
+
+/* Vedações Seção */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.btn-add {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.8rem;
+    background: #ebf8ff;
+    border: none;
+    border-radius: 6px;
+    color: #2b6cb0;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    background: #bee3f8;
+}
+
+.btn-delete {
+    padding: 0.4rem;
+    color: #e53e3e;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn-delete:hover {
+    background: #fff5f5;
+}
+
+.empty-msg {
+    text-align: center;
+    color: #a0aec0;
+    padding: 2rem !important;
+}
+
+.form-actions-footer {
+    margin-top: 3rem;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid #edf2f7;
+    background: #f8fafc;
+    border-radius: 0 0 12px 12px;
+}
+
+.btn-primary-large {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 3rem;
+    background: #38a169;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(56, 161, 105, 0.3);
+    transition: all 0.2s;
+}
+
+.btn-primary-large:hover {
+    background: #2f855a;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 20px -5px rgba(56, 161, 105, 0.4);
+}
+
+.btn-primary-large:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .dimensions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
