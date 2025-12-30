@@ -110,7 +110,7 @@ export const NovaPeritagem: React.FC = () => {
                     haste_comp: formData.hasteComp,
                     curso: formData.curso,
                     criado_por: user?.id,
-                    status: 'PERITAGEM CRIADA',
+                    status: 'AGUARDANDO APROVAÇÃO DO PCP',
                     prioridade: 'Normal'
                 }])
                 .select()

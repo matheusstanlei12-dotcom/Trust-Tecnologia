@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronRight, ArrowLeft, FileText, CheckCircle2, ShoppingCart, DollarSign, ClipboardCheck, User, Loader2 } from 'lucide-react';
+import { Search, ChevronRight, ArrowLeft, FileText, CheckCircle2, ShoppingCart, DollarSign, ClipboardCheck, User, Loader2, Wrench, XCircle, Check } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './Monitoramento.css';
@@ -14,12 +14,10 @@ interface Processo {
 }
 
 const ETAPAS = [
-    { id: 1, titulo: 'PERITAGEM CRIADA', responsavel: 'PERITO', icone: <FileText size={24} /> },
-    { id: 2, titulo: 'PERITAGEM FINALIZADA', responsavel: 'PERITO', icone: <CheckCircle2 size={24} /> },
-    { id: 3, titulo: 'AGUARDANDO COMPRAS', responsavel: 'COMPRADOR', icone: <ShoppingCart size={24} /> },
-    { id: 4, titulo: 'COTAÇÃO INSUMOS', responsavel: 'COMPRADOR', icone: <DollarSign size={24} /> },
-    { id: 5, titulo: 'ORÇAMENTO EM ELABORAÇÃO', responsavel: 'ORÇAMENTISTA', icone: <ClipboardCheck size={24} /> },
-    { id: 6, titulo: 'ORÇAMENTO FINALIZADO', responsavel: 'ORÇAMENTISTA', icone: <CheckCircle2 size={24} /> }
+    { id: 1, titulo: 'AGUARDANDO APROVAÇÃO DO PCP', responsavel: 'PCP', icone: <ClipboardCheck size={24} /> },
+    { id: 2, titulo: 'AGUARDANDO APROVAÇÃO DO CLIENTE', responsavel: 'COMERCIAL', icone: <User size={24} /> },
+    { id: 3, titulo: 'EM MANUTENÇÃO', responsavel: 'OFICINA', icone: <Wrench size={24} /> },
+    { id: 4, titulo: 'PROCESSO FINALIZADO', responsavel: 'EXPEDIÇÃO', icone: <CheckCircle2 size={24} /> }
 ];
 
 const getEtapaIndex = (status: string) => {
@@ -72,6 +70,28 @@ export const Monitoramento: React.FC = () => {
         }
     };
 
+    const handleUpdateStatus = async (newStatus: string) => {
+        if (!selectedProcess) return;
+
+        try {
+            const { error } = await supabase
+                .from('peritagens')
+                .update({ status: newStatus })
+                .eq('id', selectedProcess.id);
+
+            if (error) throw error;
+
+            // Atualiza localmente
+            const updated = { ...selectedProcess, statusTexto: newStatus, etapaAtual: getEtapaIndex(newStatus) };
+            setSelectedProcess(updated);
+            setProcessos(prev => prev.map(p => p.id === updated.id ? updated : p));
+            alert(`Status atualizado para: ${newStatus}`);
+        } catch (err: any) {
+            console.error('Erro ao atualizar status:', err);
+            alert('Erro ao atualizar status.');
+        }
+    };
+
     const filteredProcessos = processos.filter(p =>
         p.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.os.toLowerCase().includes(searchTerm.toLowerCase())
@@ -101,6 +121,37 @@ export const Monitoramento: React.FC = () => {
                             <span className="info-value">{ETAPAS[selectedProcess.etapaAtual - 1]?.responsavel}</span>
                         </div>
                     </div>
+                </div>
+
+                {/* AREA DE AÇÃO DO PCP */}
+                {selectedProcess.statusTexto === 'AGUARDANDO APROVAÇÃO DO PCP' && (
+                    <div className="pcp-actions-card">
+                        <h3>Aprovação do PCP</h3>
+                        <p>Verifique se o formulário e os itens da peritagem estão corretos antes de prosseguir.</p>
+                        <div className="pcp-buttons">
+                            <button
+                                className="btn-approve"
+                                onClick={() => handleUpdateStatus('AGUARDANDO APROVAÇÃO DO CLIENTE')}
+                            >
+                                <Check size={18} />
+                                <span>Aprovar Peritagem</span>
+                            </button>
+                            <button
+                                className="btn-reject"
+                                onClick={() => handleUpdateStatus('REVISÃO NECESSÁRIA')}
+                            >
+                                <XCircle size={18} />
+                                <span>Solicitar Revisão</span>
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* BOTÕES PARA AVANÇAR ETAPAS (DEV/TESTE) */}
+                <div className="dev-actions" style={{ marginTop: '20px', padding: '10px', background: '#f7fafc', borderRadius: '8px' }}>
+                    <small style={{ display: 'block', marginBottom: '5px', color: '#718096' }}>Controle Manual de Status:</small>
+                    <button style={{ marginRight: '10px' }} onClick={() => handleUpdateStatus('EM MANUTENÇÃO')}>Mover para Manutenção</button>
+                    <button onClick={() => handleUpdateStatus('PROCESSO FINALIZADO')}>Finalizar Processo</button>
                 </div>
 
                 <div className="timeline-horizontal">
