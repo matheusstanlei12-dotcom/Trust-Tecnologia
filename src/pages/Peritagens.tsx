@@ -94,7 +94,7 @@ export const Peritagens: React.FC = () => {
                     <Search size={20} color="#718096" />
                     <input
                         type="text"
-                        placeholder="Buscar por cliente ou ID..."
+                        placeholder="Buscar por cliente ou OS..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -111,7 +111,7 @@ export const Peritagens: React.FC = () => {
                     <table className="peritagens-table">
                         <thead>
                             <tr>
-                                <th>Número da Peritagem</th>
+                                <th>Número da Ordem de Serviço</th>
                                 <th>Cliente</th>
                                 <th>Data da Execução</th>
                                 <th>Status</th>

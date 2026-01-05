@@ -362,14 +362,12 @@
 }
 
 .row-main {
-    padding: 1rem;
-    display: flex !important;
-    flex-direction: column !important;
-    /* Impede que fiquem lado a lado no mobile */
-    align-items: flex-start !important;
-    gap: 1rem;
-    width: 100% !important;
-    overflow: hidden;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    width: 100%;
 }
 
 .item-info {
@@ -652,8 +650,10 @@
     .row-main {
         flex-direction: row;
         align-items: center;
-        padding: 0.75rem 1.5rem;
-        height: 4.5rem;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+        min-height: 4.5rem;
+        height: auto;
     }
 
     .item-text {

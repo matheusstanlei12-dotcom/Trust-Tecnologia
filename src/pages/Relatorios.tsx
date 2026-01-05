@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Search, FileText, Download, Loader2 } from 'lucide-react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { pdf } from '@react-pdf/renderer';
 import { ReportTemplate } from '../components/ReportTemplate';
 import { supabase } from '../lib/supabase';
+import { generateTechnicalOpinion } from '../lib/reportUtils';
 import './Relatorios.css';
 
 interface Peritagem {
@@ -16,7 +17,15 @@ interface Peritagem {
     ordem_servico?: string;
     nota_fiscal?: string;
     equipamento?: string;
+    tag?: string;
+    tipo_cilindro?: string;
+    camisa_int?: string;
+    haste_diam?: string;
+    curso?: string;
+    camisa_comp?: string;
     setor?: string;
+    local_equipamento?: string;
+    responsavel_tecnico?: string;
     itens?: any[];
 }
 
@@ -27,6 +36,8 @@ export const Relatorios: React.FC = () => {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [fullReportData, setFullReportData] = useState<any>(null);
     const [generatingPdf, setGeneratingPdf] = useState(false);
+    const [showParecerModal, setShowParecerModal] = useState(false);
+    const [currentParecer, setCurrentParecer] = useState('');
 
     useEffect(() => {
         fetchPeritagens();
@@ -53,44 +64,76 @@ export const Relatorios: React.FC = () => {
 
         setGeneratingPdf(true);
         setSelectedId(peritagem.id);
+        setFullReportData(null);
 
         try {
-            // Buscar Itens
-            const { data: itens } = await supabase
-                .from('peritagem_itens')
+            // Buscar Análise Técnica (Checklist para o PDF)
+            const { data: analise } = await supabase
+                .from('peritagem_analise_tecnica')
                 .select('*')
-                .eq('peritagem_id', peritagem.id)
-                .eq('selecionado', true);
+                .eq('peritagem_id', peritagem.id);
 
-            // Buscar Vedações (opcional se for incluir no relatório)
-            // const { data: vedacoes } = await supabase...
+            const parecer = generateTechnicalOpinion(peritagem as any, analise || []);
 
             const reportData = {
-                laudoNum: peritagem.numero_peritagem,
-                data: new Date(peritagem.data_execucao).toLocaleDateString('pt-BR'),
-                hora: new Date(peritagem.data_execucao).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-                area: 'OFICINA', // Fixo ou vir do banco se tiver campo
-                linha: 'GERAL',
-                equipamento: peritagem.equipamento || 'CILINDRO HIDRÁULICO',
-                tag: 'N/A',
+                laudoNum: String(peritagem.numero_peritagem || ''),
+                data: peritagem.data_execucao ? new Date(peritagem.data_execucao).toLocaleDateString('pt-BR') : '',
+                hora: peritagem.data_execucao ? new Date(peritagem.data_execucao).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '',
+                area: String(peritagem.setor || 'GERAL'),
+                linha: String(peritagem.local_equipamento || 'OFICINA'),
+                equipamento: String(peritagem.equipamento || 'CILINDRO HIDRÁULICO'),
+                tag: String(peritagem.tag || 'N/A'),
                 material: 'AÇO INDUSTRIAL',
                 desenho: 'N/A',
-                cliente: peritagem.cliente,
-                os: peritagem.os,
-                notaFiscal: peritagem.nota_fiscal,
-                itens: itens?.map((i: any) => ({
-                    id: i.item_id,
-                    desc: i.descricao,
-                    especificacao: i.dimensoes || '-',
-                    quantidade: i.qtd || '1',
-                    avaria: 'DESGASTE NATURAL', // Pode virar campo no futuro
-                    recuperacao: 'SUBSTITUIÇÃO/RECUPERAÇÃO'
-                })) || []
+                cliente: String(peritagem.cliente || ''),
+                os: String(peritagem.os || ''),
+                notaFiscal: String(peritagem.nota_fiscal || ''),
+                itens: (analise || []).map((i: any, idx: number) => ({
+                    id: idx + 1,
+                    desc: String(i.componente || ''),
+                    especificacao: '-',
+                    quantidade: '1',
+                    avaria: String(i.anomalias || 'SEM ANOMALIAS'),
+                    recuperacao: String(i.solucao || 'N/A'),
+                    foto: i.fotos && i.fotos.length > 0 ? i.fotos[0] : undefined
+                })),
+                parecerTecnico: String(parecer || '')
             };
 
             setFullReportData(reportData);
+            return reportData;
         } catch (err) {
             console.error('Erro ao preparar dados do relatório:', err);
+            alert('Erro ao buscar dados da peritagem. Verifique sua conexão ou contate o suporte.');
+            return null;
+        } finally {
+            setGeneratingPdf(false);
+        }
+    };
+
+    const handleDownloadPdf = async (peritagem: Peritagem, type: 'peritagem' | 'laudo') => {
+        setGeneratingPdf(true);
+        setSelectedId(peritagem.id);
+
+        try {
+            const data = await handleGenerateData(peritagem);
+            if (!data) return;
+
+            const blob = await pdf(<ReportTemplate data={data} />).toBlob();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = type === 'peritagem'
+                ? `PERITAGEM_${data.laudoNum}.pdf`
+                : `LAUDO_${data.laudoNum}.pdf`;
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error('Erro ao baixar PDF:', err);
+            alert('Erro ao gerar o arquivo PDF. Tente novamente.');
         } finally {
             setGeneratingPdf(false);
         }
@@ -110,7 +153,7 @@ export const Relatorios: React.FC = () => {
                     <Search size={20} color="#718096" />
                     <input
                         type="text"
-                        placeholder="Buscar peritagem por cliente ou ID..."
+                        placeholder="Buscar OS por cliente ou número..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -128,58 +171,47 @@ export const Relatorios: React.FC = () => {
                         <div key={p.id} className="report-card">
                             <div className="report-info">
                                 <h3 className="report-title">
-                                    {p.cliente} <span className="report-id">#{p.numero_peritagem}</span>
+                                    {p.cliente} <span className="report-id">O.S: {p.numero_peritagem}</span>
                                 </h3>
                                 <span className="report-details">Data: {new Date(p.data_execucao).toLocaleDateString('pt-BR')}</span>
                                 <span className={`status-badge small ${p.status.toLowerCase().replace(/ /g, '-')}`}>{p.status}</span>
                             </div>
 
                             <div className="report-actions">
-                                <div onClick={() => handleGenerateData(p)}>
-                                    {(selectedId === p.id && fullReportData) ? (
-                                        <PDFDownloadLink
-                                            document={<ReportTemplate data={fullReportData} />}
-                                            fileName={`PERITAGEM_${fullReportData.laudoNum}.pdf`}
-                                            className="pdf-download-link"
-                                        >
-                                            {/* @ts-ignore */}
-                                            {({ loading: pdfLoading }) => (
-                                                <button className="btn-outline" disabled={pdfLoading}>
-                                                    <FileText size={18} />
-                                                    <span>{pdfLoading ? '...' : 'PDF Peritagem'}</span>
-                                                </button>
-                                            )}
-                                        </PDFDownloadLink>
-                                    ) : (
-                                        <button className="btn-outline" disabled={generatingPdf && selectedId === p.id}>
-                                            <FileText size={18} />
-                                            <span>PDF Peritagem</span>
-                                        </button>
-                                    )}
-                                </div>
+                                <button
+                                    className="btn-outline"
+                                    onClick={() => handleDownloadPdf(p, 'peritagem')}
+                                    disabled={generatingPdf && selectedId === p.id}
+                                >
+                                    {generatingPdf && selectedId === p.id ? <Loader2 size={18} className="animate-spin" /> : <FileText size={18} />}
+                                    <span>PDF Peritagem</span>
+                                </button>
 
-                                <div onClick={() => handleGenerateData(p)}>
-                                    {(selectedId === p.id && fullReportData) ? (
-                                        <PDFDownloadLink
-                                            document={<ReportTemplate data={fullReportData} />}
-                                            fileName={`LAUDO_${fullReportData.laudoNum}.pdf`}
-                                            className="pdf-download-link"
-                                        >
-                                            {/* @ts-ignore */}
-                                            {({ loading: pdfLoading }) => (
-                                                <button className="btn-primary" style={{ width: 'auto' }} disabled={pdfLoading}>
-                                                    <Download size={18} />
-                                                    <span>{pdfLoading ? 'Gerando...' : 'PDF para o Cliente'}</span>
-                                                </button>
-                                            )}
-                                        </PDFDownloadLink>
-                                    ) : (
-                                        <button className="btn-primary" style={{ width: 'auto' }} disabled={generatingPdf && selectedId === p.id}>
-                                            {generatingPdf && selectedId === p.id ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
-                                            <span>PDF para o Cliente</span>
-                                        </button>
-                                    )}
-                                </div>
+                                <button
+                                    className="btn-primary"
+                                    style={{ width: 'auto' }}
+                                    onClick={() => handleDownloadPdf(p, 'laudo')}
+                                    disabled={generatingPdf && selectedId === p.id}
+                                >
+                                    {generatingPdf && selectedId === p.id ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
+                                    <span>{generatingPdf && selectedId === p.id ? 'Gerando...' : 'PDF para o Cliente'}</span>
+                                </button>
+
+                                <button
+                                    className="btn-outline"
+                                    style={{ width: 'auto' }}
+                                    onClick={async () => {
+                                        const { data: analise } = await supabase
+                                            .from('peritagem_analise_tecnica')
+                                            .select('*')
+                                            .eq('peritagem_id', p.id);
+                                        const text = generateTechnicalOpinion(p as any, analise || []);
+                                        setCurrentParecer(text);
+                                        setShowParecerModal(true);
+                                    }}
+                                >
+                                    <span>Ver Parecer</span>
+                                </button>
                             </div>
                         </div>
                     ))
@@ -188,6 +220,27 @@ export const Relatorios: React.FC = () => {
                     <p style={{ textAlign: 'center', color: '#718096' }}>Nenhuma peritagem encontrada.</p>
                 )}
             </div>
+
+            {showParecerModal && (
+                <div className="modal-overlay" onClick={() => setShowParecerModal(false)}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2>Parecer Técnico Automático</h2>
+                            <button className="close-btn" onClick={() => setShowParecerModal(false)}>&times;</button>
+                        </div>
+                        <div className="modal-body">
+                            <pre className="parecer-text">{currentParecer}</pre>
+                        </div>
+                        <div className="modal-footer">
+                            <button className="btn-primary" onClick={() => {
+                                navigator.clipboard.writeText(currentParecer);
+                                alert('Texto copiado para a área de transferência!');
+                            }}>Copiar Texto</button>
+                            <button className="btn-outline" onClick={() => setShowParecerModal(false)}>Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

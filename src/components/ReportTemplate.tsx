@@ -1,110 +1,233 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-
-// Registrar fontes se necessário (usando as padrão por enquanto)
-// Font.register({ family: 'Inter', src: '...' });
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
     page: {
-        padding: 30,
+        padding: 40,
         fontSize: 9,
         fontFamily: 'Helvetica',
-        color: '#000',
+        color: '#1a202c',
+        backgroundColor: '#FFFFFF',
     },
+    // Capa
+    coverPage: {
+        padding: 60,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        backgroundColor: '#FFFFFF', // Fundo branco puro para elegância
+    },
+    coverLogo: {
+        width: 180,
+        marginBottom: 40,
+    },
+    coverTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 8,
+        textAlign: 'center',
+        textTransform: 'uppercase',
+    },
+    coverSubtitle: {
+        fontSize: 12,
+        color: '#64748b',
+        marginBottom: 30,
+        textAlign: 'center',
+    },
+    coverDetails: {
+        width: '80%',
+        borderTopWidth: 1,
+        borderTopColor: '#2c3e50',
+        borderTopStyle: 'solid',
+        paddingTop: 40,
+        marginTop: 40,
+    },
+    coverDetailRow: {
+        flexDirection: 'column',
+        marginBottom: 15,
+        alignItems: 'center',
+    },
+    coverDetailLabel: {
+        fontSize: 10,
+        fontWeight: 'bold',
+        color: '#64748b',
+        textAlign: 'center',
+        marginBottom: 4,
+        textTransform: 'uppercase',
+    },
+    coverDetailValue: {
+        fontSize: 14,
+        color: '#1e293b',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+
+    // Header Técnico
     header: {
-        marginBottom: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        marginBottom: 25,
         borderBottomWidth: 1,
-        borderBottomColor: '#000',
-        paddingBottom: 5,
+        borderBottomColor: '#2c3e50',
+        borderBottomStyle: 'solid',
+        paddingBottom: 10,
+    },
+    logoHeader: {
+        width: 120,
+    },
+    headerTextGroup: {
+        textAlign: 'right',
     },
     headerTitle: {
         fontSize: 14,
         fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 5,
+        color: '#2c3e50',
+        textTransform: 'uppercase',
     },
-    headerSubInfo: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+    headerOS: {
         fontSize: 10,
+        color: '#64748b',
+        marginTop: 2,
+    },
+
+    // Blocos Informativos
+    sectionTitle: {
+        fontSize: 11,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        backgroundColor: '#f1f5f9',
+        padding: 6,
+        marginTop: 15,
+        marginBottom: 10,
+        borderLeft: 3,
+        borderLeftColor: '#2c3e50',
+        textTransform: 'uppercase',
+    },
+    infoGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 15,
+    },
+    infoItem: {
+        width: '50%',
+        padding: 6,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f1f5f9',
+        borderBottomStyle: 'solid',
+    },
+    infoLabel: {
+        fontSize: 8,
+        color: '#64748b',
+        fontWeight: 'bold',
         marginBottom: 2,
     },
-    table: {
-        display: 'flex',
-        width: 'auto',
+    infoValue: {
+        fontSize: 10,
+        color: '#1e293b',
+        fontWeight: 'bold',
+    },
+
+    // Itens de Inspeção
+    itemBox: {
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
         borderStyle: 'solid',
-        borderWidth: 1,
-        borderColor: '#000',
-        marginBottom: 10,
+        borderRadius: 2,
     },
-    tableRow: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#000',
-    },
-    tableCell: {
-        padding: 5,
-        borderRightWidth: 1,
-        borderRightColor: '#000',
-    },
-    tableCellNoBorder: {
-        padding: 5,
-    },
-    label: {
-        fontWeight: 'bold',
-        marginBottom: 2,
-    },
-    itemSection: {
-        flexDirection: 'row',
-        borderWidth: 1,
-        borderColor: '#000',
-        marginBottom: 10,
-        minHeight: 150,
-    },
-    photoBox: {
-        width: '40%',
-        padding: 5,
-        borderRightWidth: 1,
-        borderRightColor: '#000',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    detailsBox: {
-        width: '60%',
-    },
-    itemRow: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#000',
-        padding: 4,
-    },
-    itemLabel: {
-        width: '40%',
-        fontWeight: 'bold',
-    },
-    itemValue: {
-        width: '60%',
-    },
-    instructionTitle: {
+    itemHeader: {
+        backgroundColor: '#2c3e50',
+        color: '#ffffff',
+        padding: 6,
         fontSize: 10,
         fontWeight: 'bold',
-        marginTop: 10,
-        marginBottom: 5,
-        textDecoration: 'underline',
     },
-    instructionText: {
-        marginBottom: 5,
-        lineHeight: 1.4,
+    itemContent: {
+        flexDirection: 'row',
+        padding: 10,
+    },
+    itemImageColumn: {
+        width: '45%',
+        paddingRight: 10,
+    },
+    itemDataColumn: {
+        width: '55%',
+    },
+    itemImage: {
+        width: '100%',
+        height: 160,
+        objectFit: 'contain',
+        backgroundColor: '#f8fafc',
+    },
+    dataField: {
+        marginBottom: 8,
+    },
+    dataLabel: {
+        fontSize: 7,
+        fontWeight: 'bold',
+        color: '#64748b',
+        textTransform: 'uppercase',
+    },
+    dataValue: {
+        fontSize: 9,
+        color: '#0f172a',
+        marginTop: 1,
+    },
+    dataAlert: {
+        fontSize: 9,
+        color: '#be123c',
+        fontWeight: 'bold',
+        marginTop: 1,
+    },
+
+    // Parecer Técnico
+    parecerBox: {
+        padding: 20,
+        backgroundColor: '#ffffff',
+        lineHeight: 1.6,
         textAlign: 'justify',
     },
-    footer: {
-        marginTop: 20,
+
+    // Signatures
+    signatureContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 60,
+    },
+    signatureLine: {
+        width: '45%',
         borderTopWidth: 1,
-        borderTopColor: '#ccc',
-        paddingTop: 10,
-        fontSize: 8,
+        borderTopColor: '#000000',
+        borderTopStyle: 'solid',
+        paddingTop: 5,
         textAlign: 'center',
-        color: '#666',
+    },
+    signatureName: {
+        fontSize: 10,
+        fontWeight: 'bold',
+    },
+    signatureBottom: {
+        fontSize: 8,
+        color: '#64748b',
+        marginTop: 2,
+    },
+
+    // Footer
+    footer: {
+        position: 'absolute',
+        bottom: 30,
+        left: 50,
+        right: 50,
+        textAlign: 'center',
+        fontSize: 8,
+        color: '#94a3b8',
+        borderTopWidth: 1,
+        borderTopColor: '#f1f5f9',
+        borderTopStyle: 'solid',
+        paddingTop: 10,
     }
 });
 
@@ -128,172 +251,123 @@ interface ReportData {
         recuperacao: string;
         foto?: string;
     }>;
+    parecerTecnico?: string;
 }
 
+const Footer = () => (
+    <Text style={styles.footer} fixed>
+        Documento gerado automaticamente pela TrustEng. LTDA
+    </Text>
+);
+
 export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
-    <Document>
+    <Document title={`LAUDO_TECNICO_${data.laudoNum}`} author="HIDRAUP INDUSTRIAL">
+
+        <Page size="A4" style={styles.coverPage}>
+            <Image src="/logo.png" style={styles.coverLogo} />
+            <Text style={styles.coverTitle}>Relatório Técnico de Peritagem</Text>
+            <Text style={styles.coverSubtitle}>Diagnóstico e Avaliação de Performance Hidráulica</Text>
+
+            <View style={styles.coverDetails}>
+                <View style={styles.coverDetailRow}>
+                    <Text style={styles.coverDetailLabel}>CLIENTE</Text>
+                    <Text style={styles.coverDetailValue}>{data.cliente}</Text>
+                </View>
+                <View style={styles.coverDetailRow}>
+                    <Text style={styles.coverDetailLabel}>ORDEM DE SERVIÇO</Text>
+                    <Text style={styles.coverDetailValue}>{data.laudoNum}</Text>
+                </View>
+                <View style={styles.coverDetailRow}>
+                    <Text style={styles.coverDetailLabel}>EQUIPAMENTO</Text>
+                    <Text style={styles.coverDetailValue}>{data.equipamento}</Text>
+                </View>
+                <View style={styles.coverDetailRow}>
+                    <Text style={styles.coverDetailLabel}>DATA DE EMISSÃO</Text>
+                    <Text style={styles.coverDetailValue}>{data.data}</Text>
+                </View>
+            </View>
+        </Page>
+
+        {/* PÁGINA 1: IDENTIFICAÇÃO E RESUMO TÉCNICO */}
         <Page size="A4" style={styles.page}>
-            {/* CABEÇALHO DA PÁGINA 1 */}
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>GERÊNCIA DE OFICINAS DE MANUTENÇÃO</Text>
-                <View style={styles.headerSubInfo}>
-                    <Text>LAUDO REPARO: {data.laudoNum}</Text>
-                    <Text>{data.data} {data.hora}</Text>
+                <Image src="/logo.png" style={styles.logoHeader} />
+                <View style={styles.headerTextGroup}>
+                    <Text style={styles.headerTitle}>Laudo Técnico de Engenharia</Text>
+                    <Text style={styles.headerOS}>OS nº {data.laudoNum} | Emissão: {data.data}</Text>
                 </View>
             </View>
 
-            {/* TABELA DE IDENTIFICAÇÃO */}
-            <View style={styles.table}>
-                <View style={styles.tableRow}>
-                    <View style={[styles.tableCell, { width: '33%' }]}>
-                        <Text style={styles.label}>NOTA/LAUDO:</Text>
-                        <Text>{data.laudoNum}</Text>
-                    </View>
-                    <View style={[styles.tableCell, { width: '33%' }]}>
-                        <Text style={styles.label}>PROCESSO/OFICINAS:</Text>
-                    </View>
-                    <View style={[styles.tableCell, { width: '33%', borderRightWidth: 0 }]}>
-                        <Text style={styles.label}>DATA:</Text>
-                        <Text>{data.data} {data.hora}</Text>
-                    </View>
-                </View>
-                <View style={styles.tableRow}>
-                    <View style={[styles.tableCell, { width: '33%' }]}>
-                        <Text style={styles.label}>ÁREA:</Text>
-                        <Text>{data.area}</Text>
-                    </View>
-                    <View style={[styles.tableCell, { width: '33%' }]}>
-                        <Text style={styles.label}>LINHA:</Text>
-                        <Text>{data.linha}</Text>
-                    </View>
-                    <View style={[styles.tableCell, { width: '33%', borderRightWidth: 0 }]}>
-                        <Text style={styles.label}>EQUIPAMENTO:</Text>
-                        <Text>{data.equipamento}</Text>
-                    </View>
-                </View>
-                <View style={styles.tableRow}>
-                    <View style={[styles.tableCell, { width: '33%' }]}>
-                        <Text style={styles.label}>TIPO DE EQUIPAMENTO:</Text>
-                        <Text>CILINDRO HIDRÁULICO</Text>
-                    </View>
-                    <View style={[styles.tableCell, { width: '33%' }]}>
-                        <Text style={styles.label}>TAG DO EQUIPAMENTO:</Text>
-                        <Text>{data.tag}</Text>
-                    </View>
-                    <View style={[styles.tableCell, { width: '33%', borderRightWidth: 0 }]}>
-                        <Text style={styles.label}>MATERIAL/S/N:</Text>
-                    </View>
-                </View>
+            <Text style={styles.sectionTitle}>1. Identificação do Equipamento e Ativo</Text>
+            <View style={styles.infoGrid}>
+                <View style={styles.infoItem}><Text style={styles.infoLabel}>CLIENTE</Text><Text style={styles.infoValue}>{data.cliente}</Text></View>
+                <View style={styles.infoItem}><Text style={styles.infoLabel}>EQUIPAMENTO</Text><Text style={styles.infoValue}>{data.equipamento}</Text></View>
+                <View style={styles.infoItem}><Text style={styles.infoLabel}>TAG / IDENTIFICAÇÃO</Text><Text style={styles.infoValue}>{data.tag}</Text></View>
+                <View style={styles.infoItem}><Text style={styles.infoLabel}>SETOR / ÁREA</Text><Text style={styles.infoValue}>{data.area}</Text></View>
+                <View style={styles.infoItem}><Text style={styles.infoLabel}>LINHA / LOCAL</Text><Text style={styles.infoValue}>{data.linha}</Text></View>
+                <View style={styles.infoItem}><Text style={styles.infoLabel}>TIPO DE CILINDRO</Text><Text style={styles.infoValue}>HIDRÁULICO INDUSTRIAL</Text></View>
             </View>
 
-            <View style={[styles.table, { marginBottom: 20 }]}>
-                <View style={[styles.tableRow, { borderBottomWidth: 0 }]}>
-                    <View style={[styles.tableCell, { width: '100%', borderRightWidth: 0 }]}>
-                        <Text style={styles.label}>DESENHO:</Text>
+            <Text style={styles.sectionTitle}>2. Diagnóstico Detalhado por Componente</Text>
+            {data.itens && data.itens.map((item, idx) => (
+                <View key={idx} style={styles.itemBox} break={idx > 0 && idx % 2 === 0}>
+                    <View style={styles.itemHeader}>
+                        <Text>ITEM {idx + 1}: {item.desc}</Text>
                     </View>
-                </View>
-            </View>
-
-            {/* DESCRIÇÃO DOS ITENS (EXEMPLO DO PRIMEIRO ITEM) */}
-            <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>DESCRIÇÃO DOS ITENS</Text>
-            {data.itens.slice(0, 1).map((item) => (
-                <View key={item.id} style={styles.itemSection}>
-                    <View style={styles.photoBox}>
-                        <Text style={{ color: '#ccc' }}>FOTO</Text>
-                    </View>
-                    <View style={styles.detailsBox}>
-                        <View style={styles.itemRow}><Text style={styles.itemLabel}>ITEM DO LAUDO:</Text><Text style={styles.itemValue}>{item.id}</Text></View>
-                        <View style={styles.itemRow}><Text style={styles.itemLabel}>DESCRIÇÃO DO COMP:</Text><Text style={styles.itemValue}>{item.desc}</Text></View>
-                        <View style={styles.itemRow}><Text style={styles.itemLabel}>ESPECIFICAÇÃO:</Text><Text style={styles.itemValue}>{item.especificacao}</Text></View>
-                        <View style={styles.itemRow}><Text style={styles.itemLabel}>QUANTIDADE:</Text><Text style={styles.itemValue}>{item.quantidade}</Text></View>
-                        <View style={styles.itemRow}><Text style={styles.itemLabel}>AVARIA:</Text><Text style={styles.itemValue}>{item.avaria}</Text></View>
-                        <View style={[styles.itemRow, { borderBottomWidth: 0 }]}><Text style={styles.itemLabel}>RECUPERAÇÃO:</Text><Text style={styles.itemValue}>{item.recuperacao}</Text></View>
+                    <View style={styles.itemContent}>
+                        <View style={styles.itemImageColumn}>
+                            {item.foto ? (
+                                <Image src={item.foto} style={styles.itemImage} />
+                            ) : (
+                                <View style={[styles.itemImage, { justifyContent: 'center', alignItems: 'center' }]}>
+                                    <Text style={{ color: '#cbd5e1', fontSize: 8 }}>SEM REGISTRO FOTOGRÁFICO</Text>
+                                </View>
+                            )}
+                        </View>
+                        <View style={styles.itemDataColumn}>
+                            <View style={styles.dataField}><Text style={styles.dataLabel}>Especificação Técnica</Text><Text style={styles.dataValue}>{item.especificacao}</Text></View>
+                            <View style={styles.dataField}><Text style={styles.dataLabel}>Quantidade</Text><Text style={styles.dataValue}>{item.quantidade}</Text></View>
+                            <View style={styles.dataField}><Text style={styles.dataLabel}>Anomalias Detectadas</Text><Text style={styles.dataAlert}>{item.avaria}</Text></View>
+                            <View style={[styles.dataField, { borderTopWidth: 1, borderTopColor: '#f1f5f9', borderTopStyle: 'solid', paddingTop: 5, marginTop: 5 }]}>
+                                <Text style={styles.dataLabel}>Recomendação de Reparo</Text>
+                                <Text style={styles.dataValue}>{item.recuperacao}</Text>
+                            </View>
+                        </View>
                     </View>
                 </View>
             ))}
 
-            {/* INSTRUÇÕES TÉCNICAS (PARTE 1) */}
-            <View style={{ marginTop: 10, borderTopWidth: 1, paddingTop: 10 }}>
-                <Text style={styles.instructionTitle}>01 - IDENTIFICAÇÃO:</Text>
-                <Text style={styles.instructionText}>COLOCAR PLAQUETA DE IDENTIFICAÇÃO RESISTENTE DO RECUPERADOR COM: NÚMERO DO PEDIDO; NÚMERO DO LAUDO; DATA DA RECUPERAÇÃO; NÚMERO DE IDENTIFICAÇÃO DO EQUIPAMENTO (TAG INFORMADA NO LAUDO).</Text>
-
-                <Text style={styles.instructionTitle}>02 - EMBALAGEM:</Text>
-                <Text style={styles.instructionText}>MATERIAL DEVERÁ SER DEVIDAMENTE EMBALADO EM CAIXA DE MADEIRA REFORÇADA, PROTEGIDO CONTRA AMASSAMENTOS, POEIRAS E VIR A DANIFICAR QUANDO MOVIMENTADO. A EMBALAGEM DEVERÁ SER DE FORMA QUE GARANTA O ARMAZENAMENTO PADRÃO POR LONGO PERÍODO GARANTINDO SUAS CARACTERÍSTICAS DE QUALIDADE. O CILINDRO DEVERÁ VIR COM TAMPÕES EM AÇO VEDANDO PERFEITAMENTE.</Text>
-
-                <Text style={styles.instructionTitle}>03 - TESTE DE DESEMPENHO:</Text>
-                <Text style={styles.instructionText}>FORNECER LAUDOS DE TESTES, COM IMAGENS QUE COMPROVEM A CARGA APLICADA E MOVIMENTAÇÃO A QUE O EQUIPAMENTO FOI SUBMETIDO. REALIZAR TESTE PASSAGEM INTERNA, AMORTECIMENTO, TESTE DE ESTANQUEIDADE, VERIFICAR O CURSO CORRETO, CONFERIR DIMENSÕES ENTRE FIXAÇÕES DE ACORDO COM DESENHO. OS TESTES DEVEM SER REALIZADOS CONFORME NORMA ISO 10100.</Text>
-            </View>
+            <Footer />
         </Page>
 
-        <Page size="A4" style={styles.page}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>GERÊNCIA DE OFICINAS DE MANUTENÇÃO</Text>
-                <View style={styles.headerSubInfo}>
-                    <Text>LAUDO REPARO: {data.laudoNum}</Text>
-                    <Text>{data.data} {data.hora}</Text>
-                </View>
-            </View>
-
-            <Text style={styles.instructionTitle}>04 - PINTURA:</Text>
-            <Text style={styles.instructionText}>REALIZAR JATEAMENTO E EFETUAR PINTURA NA COR PADRÃO XXXXXX VERDE CLARO PADRÃO MUNSELL 2.5GY8/2.</Text>
-
-            <Text style={styles.instructionTitle}>05 - MÃO DE OBRA:</Text>
-            <Text style={styles.instructionText}>RECUPERAR CILINDRO CONFORME O LAUDO DE PERITAGEM, TENDO COMO REFERÊNCIA PARA FABRICAÇÃO DESENHO REFERENCIA FABRICANTE E AS PEÇAS QUE SERÃO POSTERIORMENTE ENVIADAS.</Text>
-
-            <Text style={styles.instructionTitle}>06 - TORQUEAMENTO:</Text>
-            <Text style={styles.instructionText}>EFETUAR O TORQUEAMENTO DE TODOS OS ELEMENTOS DE FIXAÇÃO CONFORME DIMENSÃO E CLASSE DE RESISTÊNCIA. FORNECER RELATÓRIO JUNTO AO DATA BOOK DO TORQUE APLICADO.</Text>
-
-            <Text style={styles.instructionTitle}>07 - GARANTIA:</Text>
-            <Text style={styles.instructionText}>FORNECER GARANTIA DE 01 (ANO) A PARTIR DA DATA DE MONTAGEM DO EQUIPAMENTO.</Text>
-
-            <Text style={styles.instructionTitle}>08 - INSPEÇÃO FINAL NO CILINDRO REPARADO:</Text>
-            <Text style={styles.instructionText}>INSPECIONAR AS TOMADAS DE ALIMENTAÇÕES, AS ROSCAS, SOLDAS, REFORÇO NA FIXAÇÃO COM A CAMISA, PORTICOS, FIXAÇÕES APÓS A RECUPERAÇÃO. REALIZAR APLICAÇÃO DE LIQUIDO PROTETIVO NAS PEÇAS EXPOSTAS E NA IDENTIFICAÇÃO. REALIZAR INSPEÇÃO GERAL NO CILINDRO PARA CERTIFICAR QUE O REPARO FOI REALIZADO COM QUALIDADE E CONFORME O LAUDO DE PERITAGEM.</Text>
-
-            <Text style={[styles.instructionText, { marginTop: 10, fontWeight: 'bold' }]}>IMPORTANTES:</Text>
-            <Text style={styles.instructionText}>EVIDENCIAR COM FOTOS E FILMAGENS, QUE AS DIMENSIONAIS, DISTANCIA ENTRE FIXAÇÕES E PRINCIPALMENTE O CURSO ESTÃO CONFORME SOLICITADO NO LAUDO DE PERITAGEM.</Text>
-
-            <Text style={styles.instructionTitle}>09 - ENSAIO NÃO DESTRUTIVO:</Text>
-            <Text style={styles.instructionText}>REALIZAR ENSAIO NÃO DESTRUTIVO NAS REGIÕES QUE POSSUEM SOLDAS, NAS FIXAÇÕES, NOS CANAIS DE COMUNICAÇÃO, REGIÕES MAIS FRÁGEIS, DURANTE O PROCESSO DE RECUPERAÇÃO DAS PEÇAS.</Text>
-
-            <Text style={styles.instructionTitle}>10 - DATA-BOOK:</Text>
-            <Text style={styles.instructionText}>ENVIAR O RELATÓRIO DE REPARO (DATA BOOK), CONTENDO: FOTOS DO PROCESSO DE RECUPERAÇÃO: ANTES E DEPOIS, INCLUINDO OS COMPONENTES; VÍDEOS DOS TESTES DE FUNCIONAMENTO. DOCUMENTO DEVERÁ SER ENVIADO ATRAVÉS DE LINK DA PLATAFORMA DIGITAL GOOGLE DRIVE OU ONEDRIVE. A PASTA DEVERÁ SER NOMEADA COM O PEDIDO E SEU RESPECTIVO ITEM, ONDE DEVERÁ ENVIAR UM DOCUMENTO PARA CADA PROCESSO RECONDICIONADO.</Text>
-
-            <View style={{ borderTopWidth: 1, marginTop: 15, paddingTop: 10 }}>
-                <Text style={{ fontWeight: 'bold' }}>OBS.: DEVOLUÇÃO DOS COMPONENTES:</Text>
-                <Text style={styles.instructionText}>TODOS OS COMPONENTES SUBSTITUÍDOS DEVERÃO SER DEVOLVIDOS À XXXXXX JUNTAMENTE AO EQUIPAMENTO REPARADO.</Text>
-            </View>
-        </Page>
-
-        {/* PÁGINA 3 COM MAIS ITENS */}
-        <Page size="A4" style={styles.page}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>GERÊNCIA DE OFICINAS DE MANUTENÇÃO</Text>
-                <View style={styles.headerSubInfo}>
-                    <Text>LAUDO REPARO: {data.laudoNum}</Text>
-                    <Text>{data.data} {data.hora}</Text>
-                </View>
-            </View>
-
-            <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>CONTINUAÇÃO - DESCRIÇÃO DOS ITENS</Text>
-            {data.itens.slice(1).map((item) => (
-                <View key={item.id} style={[styles.itemSection, { marginBottom: 5, minHeight: 120 }]}>
-                    <View style={styles.photoBox}>
-                        <Text style={{ color: '#ccc' }}>FOTO</Text>
-                    </View>
-                    <View style={styles.detailsBox}>
-                        <View style={styles.itemRow}><Text style={styles.itemLabel}>ITEM DO LAUDO:</Text><Text style={styles.itemValue}>{item.id}</Text></View>
-                        <View style={styles.itemRow}><Text style={styles.itemLabel}>DESCRIÇÃO DO COMP:</Text><Text style={styles.itemValue}>{item.desc}</Text></View>
-                        <View style={styles.itemRow}><Text style={styles.itemLabel}>ESPECIFICAÇÃO:</Text><Text style={styles.itemValue}>{item.especificacao}</Text></View>
-                        <View style={styles.itemRow}><Text style={styles.itemLabel}>QUANTIDADE:</Text><Text style={styles.itemValue}>{item.quantidade}</Text></View>
-                        <View style={styles.itemRow}><Text style={styles.itemLabel}>AVARIA:</Text><Text style={styles.itemValue}>{item.avaria}</Text></View>
-                        <View style={[styles.itemRow, { borderBottomWidth: 0 }]}><Text style={styles.itemLabel}>RECUPERAÇÃO:</Text><Text style={styles.itemValue}>{item.recuperacao}</Text></View>
+        {data.parecerTecnico && (
+            <Page size="A4" style={styles.page}>
+                <View style={styles.header}>
+                    <Image src="/logo.png" style={styles.logoHeader} />
+                    <View style={styles.headerTextGroup}>
+                        <Text style={styles.headerTitle}>Parecer Técnico de Engenharia</Text>
+                        <Text style={styles.headerOS}>O.S. {data.laudoNum}</Text>
                     </View>
                 </View>
-            ))}
 
-            <View style={styles.footer}>
-                <Text>Documento gerado pelo sistema HIDRAUP - Peritagem Hidráulica Industrial</Text>
-            </View>
-        </Page>
+                <Text style={styles.sectionTitle}>3. Análise de Engenharia & Conclusão Técnica</Text>
+                <View style={styles.parecerBox}>
+                    <Text>{data.parecerTecnico}</Text>
+                </View>
+
+                <View style={styles.signatureContainer}>
+                    <View style={styles.signatureLine}>
+                        <Text style={styles.signatureName}>HIDRAUP INDUSTRIAL</Text>
+                        <Text style={styles.signatureBottom}>Departamento de Engenharia</Text>
+                    </View>
+                    <View style={styles.signatureLine}>
+                        <Text style={styles.signatureName}>INSPETOR TÉCNICO</Text>
+                        <Text style={styles.signatureBottom}>Responsável pela Peritagem</Text>
+                    </View>
+                </View>
+
+                <Footer />
+            </Page>
+        )}
     </Document>
 );

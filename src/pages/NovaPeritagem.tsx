@@ -69,7 +69,8 @@ export const NovaPeritagem: React.FC = () => {
         local_equipamento: '',
         data_inspecao: new Date().toISOString().split('T')[0],
         responsavel_tecnico: '',
-        cliente: ''
+        cliente: '',
+        numero_os: ''
     });
 
     // Dimensões
@@ -196,14 +197,14 @@ export const NovaPeritagem: React.FC = () => {
 
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            const timestamp = new Date().getTime().toString().slice(-4);
-            const numeroPeritagem = `P-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${timestamp}`;
+            const numeroPeritagem = fixedData.numero_os.toUpperCase();
 
             // 1. Salvar Peritagem
             const { data: peritagem, error: pError } = await supabase
                 .from('peritagens')
                 .insert([{
                     numero_peritagem: numeroPeritagem,
+                    os: numeroPeritagem,
                     tag: fixedData.tag,
                     cliente: fixedData.cliente,
                     local_equipamento: fixedData.local_equipamento,
@@ -320,6 +321,15 @@ export const NovaPeritagem: React.FC = () => {
                         <h3>Identificação do Equipamento</h3>
                     </div>
                     <div className="grid-form">
+                        <div className="form-group grid-col-2">
+                            <label>NÚMERO DA ORDEM DE SERVIÇO *</label>
+                            <input
+                                required
+                                placeholder="Digite o número da OS..."
+                                value={fixedData.numero_os}
+                                onChange={e => setFixedData({ ...fixedData, numero_os: e.target.value.toUpperCase() })}
+                            />
+                        </div>
                         <div className="form-group grid-col-2">
                             <label>TAG DO CILINDRO *</label>
                             <input
