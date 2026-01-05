@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { LoginPage } from './pages/Login';
 import { RegisterPage } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
@@ -19,12 +20,24 @@ import './index.css';
 const PrivateRoute = ({ children, allowedRoles }: { children: React.ReactNode, allowedRoles?: string[] }) => {
   const { session, role, loading } = useAuth();
 
+  const isApp = Capacitor.getPlatform() !== 'web';
+  const isPerito = role === 'perito';
+  const isRestricted = isApp || isPerito;
+
   if (loading) return <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>Carregando...</div>;
 
   if (!session) return <Navigate to="/login" />;
 
+  // Se for restrito (App ou Perito), só pode acessar Nova Peritagem e Minhas Peritagens
+  const currentPath = window.location.pathname;
+  const isAllowedPath = currentPath === '/nova-peritagem' || currentPath === '/peritagens';
+
+  if (isRestricted && !isAllowedPath) {
+    return <Navigate to="/peritagens" />;
+  }
+
   if (allowedRoles && role && !allowedRoles.includes(role)) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/peritagens" />;
   }
 
   return <>{children}</>;
@@ -35,7 +48,11 @@ function AppRoutes() {
 
   if (loading) return null;
 
-  const defaultPath = role === 'perito' ? "/nova-peritagem" : "/dashboard";
+  const isApp = Capacitor.getPlatform() !== 'web';
+  const isPerito = role === 'perito';
+  const isRestricted = isApp || isPerito;
+
+  const defaultPath = isRestricted ? "/peritagens" : "/dashboard";
 
   return (
     <Routes>

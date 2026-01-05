@@ -2,7 +2,6 @@ import React from 'react';
 import {
     LayoutDashboard,
     FileText,
-    ClipboardList,
     PlusCircle,
     Wrench,
     FileSpreadsheet,
@@ -10,9 +9,11 @@ import {
     LogOut,
     CheckCircle,
     ShoppingCart,
-    ClipboardSignature
+    ClipboardSignature,
+    ClipboardList
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import './Sidebar.css';
@@ -25,6 +26,10 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => {
     const navigate = useNavigate();
     const { role, user } = useAuth();
+
+    const isApp = Capacitor.getPlatform() !== 'web';
+    const isPerito = role === 'perito';
+    const isRestricted = isApp || isPerito;
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -44,71 +49,82 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
             </div>
 
             <nav className="sidebar-nav">
-                {/* PAINEL - Apenas Gestor e PCP veem */}
-                {role !== 'perito' && (
-                    <NavLink to="/dashboard" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                        <LayoutDashboard size={20} />
-                        <span>Painel</span>
-                    </NavLink>
-                )}
-
-                {/* NOVA PERITAGEM - Todos veem */}
-                <NavLink to="/nova-peritagem" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                    <PlusCircle size={20} />
-                    <span>Nova Peritagem</span>
-                </NavLink>
-
-                {/* PERITAGENS - Lista de análises */}
-                <NavLink to="/peritagens" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                    <FileText size={20} />
-                    <span>{role === 'perito' ? 'Minhas Peritagens' : 'Todas as Peritagens'}</span>
-                </NavLink>
-
-                {/* MONITORAMENTO/STATUS - Todos veem para acompanhar o fluxo */}
-                <NavLink to="/monitoramento" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                    <ClipboardList size={20} />
-                    <span>Status de Processos</span>
-                </NavLink>
-
-                {(role === 'pcp' || role === 'gestor') && (
+                {/* ACESSO MOBILE OU PERITO: Apenas 'Nova Peritagem' e 'Minhas Peritagens' */}
+                {isRestricted ? (
                     <>
-                        <div className="sidebar-divider"></div>
-
-                        <NavLink to="/pcp/aprovar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                            <ClipboardSignature size={20} />
-                            <span>1. Aprovar Peritagem</span>
+                        <NavLink to="/nova-peritagem" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <PlusCircle size={20} />
+                            <span>Nova Peritagem</span>
                         </NavLink>
 
-                        <NavLink to="/pcp/liberar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                            <ShoppingCart size={20} />
-                            <span>2. Aguardando liberação do pedido</span>
-                        </NavLink>
-
-                        <NavLink to="/pcp/finalizar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                            <CheckCircle size={20} />
-                            <span>3. Finalizar Processos</span>
-                        </NavLink>
-
-                        <div className="sidebar-divider"></div>
-
-                        <NavLink to="/manutencao" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                            <Wrench size={20} />
-                            <span>Cilindros em Manutenção</span>
-                        </NavLink>
-
-                        <NavLink to="/relatorios" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                            <FileSpreadsheet size={20} />
-                            <span>Relatórios em PDF</span>
+                        <NavLink to="/peritagens" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <FileText size={20} />
+                            <span>Minhas Peritagens</span>
                         </NavLink>
                     </>
-                )}
+                ) : (
+                    /* ACESSO WEB (COMUM/GESTOR/PCP): Total */
+                    <>
+                        <NavLink to="/dashboard" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <LayoutDashboard size={20} />
+                            <span>Painel</span>
+                        </NavLink>
 
-                {/* GESTÃO DE USUÁRIOS - SE o gestor precisar no app */}
-                {role === 'gestor' && (
-                    <NavLink to="/admin/usuarios" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
-                        <Settings size={20} />
-                        <span>Gestão de Usuários</span>
-                    </NavLink>
+                        <NavLink to="/nova-peritagem" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <PlusCircle size={20} />
+                            <span>Nova Peritagem</span>
+                        </NavLink>
+
+                        <NavLink to="/peritagens" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <FileText size={20} />
+                            <span>Peritagens</span>
+                        </NavLink>
+
+                        <NavLink to="/monitoramento" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <ClipboardList size={20} />
+                            <span>Status de Processos</span>
+                        </NavLink>
+
+                        <div className="sidebar-divider"></div>
+
+                        {(role === 'pcp' || role === 'gestor') && (
+                            <>
+                                <NavLink to="/pcp/aprovar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                                    <ClipboardSignature size={20} />
+                                    <span>1. Aprovar Peritagem</span>
+                                </NavLink>
+
+                                <NavLink to="/pcp/liberar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                                    <ShoppingCart size={20} />
+                                    <span>2. Aguardando liberação do pedido</span>
+                                </NavLink>
+
+                                <NavLink to="/pcp/finalizar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                                    <CheckCircle size={20} />
+                                    <span>3. Finalizar Processos</span>
+                                </NavLink>
+
+                                <div className="sidebar-divider"></div>
+
+                                <NavLink to="/manutencao" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                                    <Wrench size={20} />
+                                    <span>Cilindros em Manutenção</span>
+                                </NavLink>
+
+                                <NavLink to="/relatorios" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                                    <FileSpreadsheet size={20} />
+                                    <span>Relatórios em PDF</span>
+                                </NavLink>
+                            </>
+                        )}
+
+                        {role === 'gestor' && (
+                            <NavLink to="/admin/usuarios" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                                <Settings size={20} />
+                                <span>Gestão de Usuários</span>
+                            </NavLink>
+                        )}
+                    </>
                 )}
             </nav>
 
