@@ -321,7 +321,7 @@ export const NovaPeritagem: React.FC = () => {
                         <h3>Identificação do Equipamento</h3>
                     </div>
                     <div className="grid-form">
-                        <div className="form-group grid-col-2">
+                        <div className="form-group full-row">
                             <label>NÚMERO DA ORDEM DE SERVIÇO (O.S) *</label>
                             <input
                                 required
