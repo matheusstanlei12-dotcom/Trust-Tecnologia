@@ -366,17 +366,6 @@ export const NovaPeritagem: React.FC = () => {
                             </div>
                         </div>
                         <div className="dim-group">
-                            <label>Montagem</label>
-                            <select value={dimensions.montagem} onChange={e => { setDimensions({ ...dimensions, montagem: e.target.value }); setDimStatus('verde'); }}>
-                                <option value="">Selecione...</option>
-                                <option value="Flange Dianteira">Flange Dianteira</option>
-                                <option value="Flange Traseira">Flange Traseira</option>
-                                <option value="Munhão Central">Munhão Central</option>
-                                <option value="Pés Lateral">Pés Lateral</option>
-                                <option value="Olhal Traseiro">Olhal Traseiro</option>
-                            </select>
-                        </div>
-                        <div className="dim-group">
                             <label>Pressão Nominal</label>
                             <div className="input-with-unit">
                                 <input type="text" value={dimensions.pressaoNominal} onChange={e => { setDimensions({ ...dimensions, pressaoNominal: e.target.value }); setDimStatus('verde'); }} />
