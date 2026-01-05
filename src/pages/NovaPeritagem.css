@@ -228,6 +228,8 @@
 /* Formulário e Cards */
 .peritagem-dynamic-form {
     padding: 1.25rem;
+    padding-bottom: 8rem;
+    /* Espaço extra para o footer fixo não cobrir o conteúdo */
     max-width: 75rem;
     margin: 0 auto;
     display: flex;

@@ -56,6 +56,9 @@ export const NovaPeritagem: React.FC = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0); // 0: Seleção, 1: Formulário
+    const [editingItemId, setEditingItemId] = useState<string | null>(null);
+    const camInputRef = React.useRef<HTMLInputElement>(null);
+    const galleryInputRef = React.useRef<HTMLInputElement>(null);
 
     // Pergunta Inicial
     const [cylinderType, setCylinderType] = useState<'Hidráulico' | 'Pneumático' | null>(null);
@@ -161,6 +164,30 @@ export const NovaPeritagem: React.FC = () => {
             }
             return item;
         }));
+    };
+
+    const handlePhotoUpload = (itemId: string, mode: 'cam' | 'gallery') => {
+        setEditingItemId(itemId);
+        if (mode === 'cam') camInputRef.current?.click();
+        else galleryInputRef.current?.click();
+    };
+
+    const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file && editingItemId) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                const currentItem = checklistItems.find(i => i.id === editingItemId);
+                if (currentItem) {
+                    const newPhotos = [...currentItem.fotos, base64String];
+                    updateItemDetails(editingItemId, 'fotos', newPhotos);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        // Reset input
+        e.target.value = '';
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -454,11 +481,19 @@ export const NovaPeritagem: React.FC = () => {
                                                     </div>
                                                 ))}
                                                 <div className="photo-upload-actions">
-                                                    <button type="button" className="btn-action-photo camera">
+                                                    <button
+                                                        type="button"
+                                                        className="btn-action-photo camera"
+                                                        onClick={(e) => { e.stopPropagation(); handlePhotoUpload(item.id, 'cam'); }}
+                                                    >
                                                         <Camera size={20} />
                                                         <span>Câmera</span>
                                                     </button>
-                                                    <button type="button" className="btn-action-photo gallery">
+                                                    <button
+                                                        type="button"
+                                                        className="btn-action-photo gallery"
+                                                        onClick={(e) => { e.stopPropagation(); handlePhotoUpload(item.id, 'gallery'); }}
+                                                    >
                                                         <Plus size={20} />
                                                         <span>Galeria</span>
                                                     </button>
@@ -501,6 +536,23 @@ export const NovaPeritagem: React.FC = () => {
                     </button>
                 </div>
             </form>
+
+            {/* Inputs de arquivo invisíveis */}
+            <input
+                type="file"
+                ref={camInputRef}
+                style={{ display: 'none' }}
+                accept="image/*"
+                capture="environment"
+                onChange={onFileChange}
+            />
+            <input
+                type="file"
+                ref={galleryInputRef}
+                style={{ display: 'none' }}
+                accept="image/*"
+                onChange={onFileChange}
+            />
         </div>
     );
 };

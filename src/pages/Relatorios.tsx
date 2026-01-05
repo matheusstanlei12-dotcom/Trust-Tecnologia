@@ -135,12 +135,30 @@ export const Relatorios: React.FC = () => {
                             </div>
 
                             <div className="report-actions">
-                                <button className="btn-outline">
-                                    <FileText size={18} />
-                                    <span>PDF Peritagem</span>
-                                </button>
+                                <div onClick={() => handleGenerateData(p)}>
+                                    {(selectedId === p.id && fullReportData) ? (
+                                        <PDFDownloadLink
+                                            document={<ReportTemplate data={fullReportData} />}
+                                            fileName={`PERITAGEM_${fullReportData.laudoNum}.pdf`}
+                                            className="pdf-download-link"
+                                        >
+                                            {/* @ts-ignore */}
+                                            {({ loading: pdfLoading }) => (
+                                                <button className="btn-outline" disabled={pdfLoading}>
+                                                    <FileText size={18} />
+                                                    <span>{pdfLoading ? '...' : 'PDF Peritagem'}</span>
+                                                </button>
+                                            )}
+                                        </PDFDownloadLink>
+                                    ) : (
+                                        <button className="btn-outline" disabled={generatingPdf && selectedId === p.id}>
+                                            <FileText size={18} />
+                                            <span>PDF Peritagem</span>
+                                        </button>
+                                    )}
+                                </div>
 
-                                <div onMouseEnter={() => handleGenerateData(p)}>
+                                <div onClick={() => handleGenerateData(p)}>
                                     {(selectedId === p.id && fullReportData) ? (
                                         <PDFDownloadLink
                                             document={<ReportTemplate data={fullReportData} />}
@@ -156,7 +174,7 @@ export const Relatorios: React.FC = () => {
                                             )}
                                         </PDFDownloadLink>
                                     ) : (
-                                        <button className="btn-primary" style={{ width: 'auto' }} disabled={generatingPdf}>
+                                        <button className="btn-primary" style={{ width: 'auto' }} disabled={generatingPdf && selectedId === p.id}>
                                             {generatingPdf && selectedId === p.id ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
                                             <span>PDF para o Cliente</span>
                                         </button>
