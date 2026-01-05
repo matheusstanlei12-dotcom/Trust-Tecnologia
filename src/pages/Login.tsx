@@ -15,10 +15,13 @@ export const LoginPage: React.FC = () => {
         setLoading(true);
         setError(null);
 
+        const trimmedEmail = email.trim();
+        const trimmedPassword = password.trim();
+
         try {
             const { data, error: authError } = await supabase.auth.signInWithPassword({
-                email,
-                password,
+                email: trimmedEmail,
+                password: trimmedPassword,
             });
 
             if (authError) throw authError;

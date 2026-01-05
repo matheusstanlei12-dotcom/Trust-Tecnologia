@@ -25,23 +25,43 @@ export const RegisterPage: React.FC = () => {
             return;
         }
 
+        const cleanedEmail = email.trim();
+        const cleanedPassword = password.trim();
+
+        console.log("Tentando cadastrar:", { cleanedEmail });
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(cleanedEmail)) {
+            setError('Formato de e-mail inválido detectado pelo sistema.');
+            setLoading(false);
+            return;
+        }
+
         try {
-            const { error: signUpError } = await supabase.auth.signUp({
-                email,
-                password,
+            const { data, error: signUpError } = await supabase.auth.signUp({
+                email: cleanedEmail,
+                password: cleanedPassword,
                 options: {
                     data: {
-                        full_name: fullName,
-                        role: role,
+                        full_name: fullName.trim(),
+                        role: role.toLowerCase(),
                         status: 'PENDENTE'
                     }
                 }
             });
 
-            if (signUpError) throw signUpError;
+            if (signUpError) {
+                console.error('Supabase Sign Up Error:', signUpError);
+                throw signUpError;
+            }
 
-            setSuccess(true);
-            setTimeout(() => navigate('/login'), 3000);
+            if (data?.user && data?.session === null) {
+                // Email confirmation is likely enabled
+                setSuccess(true);
+            } else if (data?.user) {
+                setSuccess(true);
+                setTimeout(() => navigate('/login'), 3000);
+            }
         } catch (err: any) {
             setError(err.message || 'Erro ao solicitar acesso');
         } finally {

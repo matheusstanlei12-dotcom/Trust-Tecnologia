@@ -1,58 +1,181 @@
+/* CSS para o novo Formulário Dinâmico Antigravity */
+
 .nova-peritagem-container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 0;
+    max-width: 100%;
+    background-color: #f4f7f6;
+    min-height: 100vh;
 }
 
-.header-actions {
+/* Tela de Início / Seleção */
+.start-screen {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.selection-card {
+    background: white;
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+}
+
+.selection-card h2 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.selection-card p {
+    color: #7f8c8d;
     margin-bottom: 2rem;
 }
 
-.btn-back {
+.type-options {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1rem;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.type-btn {
+    padding: 1.2rem;
+    border: 2px solid #e0e0e0;
     background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    color: #4a5568;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #34495e;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.btn-back:hover {
-    background: #f7fafc;
-    border-color: #cbd5e0;
+.type-btn:hover {
+    border-color: #3498db;
+    background-color: #ebf5fb;
 }
 
-.form-section {
-    background: white;
+.type-btn.active {
+    border-color: #2980b9;
+    background-color: #2980b9;
+    color: white;
+}
+
+.btn-start {
+    width: 100%;
+    padding: 1.2rem;
+    background: #27ae60;
+    color: white;
+    border: none;
     border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-.section-title {
-    font-size: 1.25rem;
-    color: #2d3748;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid #edf2f7;
+.btn-start:hover {
+    background: #219150;
 }
 
-.grid-inputs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+/* Header Sticky */
+.header-sticky {
+    position: sticky;
+    top: 64px;
+    /* Ajustar conforme o header principal se houver */
+    z-index: 100;
+    background: white;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
     gap: 1.5rem;
 }
 
-.full-width {
-    grid-column: 1 / -1;
+.btn-back-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-back-circle:hover {
+    background: #f8f9fa;
+}
+
+.title-group .page-title {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #2c3e50;
+}
+
+.title-group .subtitle {
+    font-size: 0.9rem;
+    color: #95a5a6;
+}
+
+/* Formulário e Cards */
+.peritagem-dynamic-form {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.form-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    flex-grow: 1;
+}
+
+.status-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Grid de Formulário */
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
 }
 
 .form-group {
@@ -62,260 +185,326 @@
 }
 
 .form-group label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #4a5568;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .form-group input {
-    padding: 0.75rem;
-    border: 1px solid #e2e8f0;
+    padding: 0.8rem;
+    border: 1px solid #dcdfe6;
     border-radius: 8px;
     font-size: 1rem;
-    transition: all 0.2s;
+    transition: border-color 0.2s;
 }
 
 .form-group input:focus {
+    border-color: #3498db;
     outline: none;
-    border-color: #2b6cb0;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
 }
 
-.dimensions-grid {
+/* Dimensões */
+.grid-dimensions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px dashed #e2e8f0;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
 }
 
-/* Tabelas Checklist */
-.checklist-table-wrapper,
-.vedacoes-table-wrapper {
-    overflow-x: auto;
-    border: 1px solid #edf2f7;
-    border-radius: 8px;
-}
-
-.checklist-table,
-.vedacoes-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-}
-
-.checklist-table th,
-.vedacoes-table th {
-    background: #f8fafc;
-    padding: 0.75rem;
-    text-align: left;
-    border-bottom: 2px solid #edf2f7;
-    color: #4a5568;
-}
-
-.checklist-table td,
-.vedacoes-table td {
-    padding: 0.75rem;
-    border-bottom: 1px solid #edf2f7;
-}
-
-.selected-row {
-    background: #f0f7ff;
-}
-
-.center-cell {
-    text-align: center;
-}
-
-.small-input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background: #fcfcfc;
-}
-
-.full-input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background: #fcfcfc;
-}
-
-/* Vedações Seção */
-.section-header {
+.dim-group {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.btn-add {
-    display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 0.4rem;
-    padding: 0.5rem 0.8rem;
-    background: #ebf8ff;
+}
+
+.dim-group label {
+    font-size: 0.85rem;
+    color: #34495e;
+    font-weight: 600;
+}
+
+.dim-group input,
+.dim-group select {
+    padding: 0.75rem;
+    border: 1.5px solid #ecf0f1;
+    border-radius: 8px;
+    background: #fdfdfd;
+}
+
+.dim-group input:focus {
+    border-color: #3498db;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.auto-msg {
+    font-size: 0.75rem;
+    color: #27ae60;
+    font-weight: 600;
+    background: #e8f8f0;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* Checklist Rows */
+.checklist-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.checklist-row {
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 0.5rem;
+    transition: background 0.2s;
+}
+
+.checklist-row:hover {
+    background-color: #fcfcfc;
+}
+
+.row-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.item-text {
+    font-size: 1rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.item-select {
     border: none;
+    background: #f8f9fa;
+    padding: 0.4rem 0.8rem;
     border-radius: 6px;
-    color: #2b6cb0;
+    font-size: 1rem;
+    color: #2c3e50;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+}
+
+.item-select:hover {
+    background: #e9ecef;
+}
+
+.conformity-toggle {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.conf-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.conf-btn.conforme.active {
+    background-color: #27ae60;
+    color: white;
+    border-color: #27ae60;
+}
+
+.conf-btn.nao-conforme.active {
+    background-color: #e74c3c;
+    color: white;
+    border-color: #e74c3c;
+}
+
+/* Bloco Não Conforme */
+.non-conformity-block {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: #fdf2f2;
+    border-radius: 10px;
+    border-left: 4px solid #e74c3c;
+}
+
+.analysis-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.input-field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #c0392b;
+}
+
+.input-field textarea {
+    width: 100%;
+    height: 80px;
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #fadbd8;
+    resize: none;
+}
+
+/* Fotos */
+.photo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.photo-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #e0e0e0;
+}
+
+.photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.btn-remove-photo {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.photo-upload-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.btn-action-photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border: 2px dashed #dcdfe6;
+    border-radius: 12px;
+    background: white;
+    color: #909399;
+    cursor: pointer;
+    gap: 4px;
+}
+
+.btn-action-photo span {
+    font-size: 0.7rem;
+}
+
+.btn-action-photo:hover {
+    border-color: #c0392b;
+    color: #c0392b;
+}
+
+/* Footer Actions */
+.footer-actions {
+    padding: 2rem 0;
+    margin-bottom: 4rem;
+}
+
+.btn-finalize {
+    width: 100%;
+    padding: 1.5rem;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-finalize:hover {
+    background: #1a252f;
+}
+
+.btn-add-comp {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background: #f1f2f6;
+    border: none;
+    border-radius: 8px;
+    color: #2f3542;
     font-weight: 600;
     cursor: pointer;
 }
 
-.btn-add:hover {
-    background: #bee3f8;
-}
-
-.btn-delete {
-    padding: 0.4rem;
-    color: #e53e3e;
-    background: none;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.btn-delete:hover {
-    background: #fff5f5;
-}
-
-.empty-msg {
-    text-align: center;
-    color: #a0aec0;
-    padding: 2rem !important;
-}
-
-.form-actions-footer {
-    margin-top: 3rem;
-    padding: 2rem;
-    display: flex;
-    justify-content: center;
-    border-top: 1px solid #edf2f7;
-    background: #f8fafc;
-    border-radius: 0 0 12px 12px;
-}
-
-.btn-primary-large {
+.btn-save-top {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 3rem;
-    background: #38a169;
+    gap: 0.6rem;
+    padding: 0.8rem 1.5rem;
+    background: #2980b9;
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
+    border-radius: 10px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 10px 15px -3px rgba(56, 161, 105, 0.3);
-    transition: all 0.2s;
 }
 
-.btn-primary-large:hover {
-    background: #2f855a;
-    transform: translateY(-2px);
-    box-shadow: 0 15px 20px -5px rgba(56, 161, 105, 0.4);
+/* Animações */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.btn-primary-large:disabled {
-    background: #a0aec0;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+.slide-in {
+    animation: slideIn 0.3s ease-out forwards;
 }
 
 @media (max-width: 768px) {
-    .nova-peritagem-container {
-        padding: 1rem;
+    .grid-dimensions {
+        grid-template-columns: 1fr 1fr;
     }
 
-    .header-actions {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-    }
-
-    .page-title {
-        font-size: 1.5rem;
-    }
-
-    .form-section {
-        padding: 1rem;
-        border-radius: 8px;
-    }
-
-    .grid-inputs {
+    .analysis-inputs {
         grid-template-columns: 1fr;
-        gap: 1rem;
     }
 
-    .dimensions-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-    }
-
-    .form-group label {
-        font-size: 0.75rem;
-    }
-
-    .form-group input {
-        padding: 0.85rem;
-        font-size: 1.1rem;
-        /* Maior para facilitar digitação no celular */
-    }
-
-    /* Ajustes das Tabelas para Celular */
-    .checklist-table th,
-    .checklist-table td,
-    .vedacoes-table th,
-    .vedacoes-table td {
-        padding: 0.5rem;
-    }
-
-    .checklist-table td:nth-child(2) {
-        min-width: 150px;
-        /* Garante que a descrição não suma */
-    }
-
-    .small-input,
-    .full-input {
-        padding: 0.75rem;
-    }
-
-    .btn-add {
-        padding: 0.75rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    .form-actions-footer {
-        padding: 1rem;
-        margin-top: 2rem;
-    }
-
-    .btn-primary-large {
-        width: 100%;
-        justify-content: center;
-        padding: 1.25rem;
-        font-size: 1rem;
-    }
-
-    /* Facilita o clique no Checkbox */
-    .checklist-table td.center-cell {
-        padding: 0 1rem;
-    }
-
-    input[type="checkbox"] {
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-    }
-}
-
-@media (max-width: 480px) {
-    .dimensions-grid {
-        grid-template-columns: 1fr;
+    .header-sticky {
+        padding: 0.8rem 1rem;
     }
 }

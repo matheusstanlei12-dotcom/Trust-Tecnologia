@@ -44,7 +44,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
             </div>
 
             <nav className="sidebar-nav">
-                {/* NOVA PERITAGEM - Essencial para o executor */}
+                {/* PAINEL - Apenas Gestor e PCP veem */}
+                {role !== 'perito' && (
+                    <NavLink to="/dashboard" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                        <LayoutDashboard size={20} />
+                        <span>Painel</span>
+                    </NavLink>
+                )}
+
+                {/* NOVA PERITAGEM - Todos veem */}
                 <NavLink to="/nova-peritagem" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <PlusCircle size={20} />
                     <span>Nova Peritagem</span>
@@ -56,13 +64,44 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
                     <span>{role === 'perito' ? 'Minhas Peritagens' : 'Todas as Peritagens'}</span>
                 </NavLink>
 
-                {/* STATUS/MONITORAMENTO - Acompanhar o fluxo */}
+                {/* MONITORAMENTO/STATUS - Todos veem para acompanhar o fluxo */}
                 <NavLink to="/monitoramento" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                     <ClipboardList size={20} />
                     <span>Status de Processos</span>
                 </NavLink>
 
-                {/* Ocultando Dashboard, PCP e Relatórios para todos para manter o app simples */}
+                {(role === 'pcp' || role === 'gestor') && (
+                    <>
+                        <div className="sidebar-divider"></div>
+
+                        <NavLink to="/pcp/aprovar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <ClipboardSignature size={20} />
+                            <span>1. Aprovar Peritagem</span>
+                        </NavLink>
+
+                        <NavLink to="/pcp/liberar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <ShoppingCart size={20} />
+                            <span>2. Aguardando liberação do pedido</span>
+                        </NavLink>
+
+                        <NavLink to="/pcp/finalizar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <CheckCircle size={20} />
+                            <span>3. Finalizar Processos</span>
+                        </NavLink>
+
+                        <div className="sidebar-divider"></div>
+
+                        <NavLink to="/manutencao" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <Wrench size={20} />
+                            <span>Cilindros em Manutenção</span>
+                        </NavLink>
+
+                        <NavLink to="/relatorios" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <FileSpreadsheet size={20} />
+                            <span>Relatórios em PDF</span>
+                        </NavLink>
+                    </>
+                )}
 
                 {/* GESTÃO DE USUÁRIOS - SE o gestor precisar no app */}
                 {role === 'gestor' && (
