@@ -322,7 +322,7 @@ export const NovaPeritagem: React.FC = () => {
                     </div>
                     <div className="grid-form">
                         <div className="form-group grid-col-2">
-                            <label>NÚMERO DA ORDEM DE SERVIÇO *</label>
+                            <label>NÚMERO DA ORDEM DE SERVIÇO (O.S) *</label>
                             <input
                                 required
                                 placeholder="Digite o número da OS..."
