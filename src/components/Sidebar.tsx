@@ -91,17 +91,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
                             <>
                                 <NavLink to="/pcp/aprovar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                                     <ClipboardSignature size={20} />
-                                    <span>1. Aprovar Peritagem</span>
+                                    <span>1. Aprovação de Peritagem</span>
                                 </NavLink>
 
                                 <NavLink to="/pcp/liberar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                                     <ShoppingCart size={20} />
-                                    <span>2. Aguardando liberação do pedido</span>
+                                    <span>2. Liberação de Pedido</span>
                                 </NavLink>
 
                                 <NavLink to="/pcp/finalizar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                                     <CheckCircle size={20} />
-                                    <span>3. Finalizar Processos</span>
+                                    <span>3. Conferência Final</span>
                                 </NavLink>
 
                                 <div className="sidebar-divider"></div>

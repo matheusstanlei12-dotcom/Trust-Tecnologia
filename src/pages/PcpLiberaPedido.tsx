@@ -3,6 +3,7 @@ import { Search, Loader2, ShoppingCart } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import './Peritagens.css';
+import './PcpCommon.css';
 
 interface Peritagem {
     id: string;
@@ -83,7 +84,7 @@ export const PcpLiberaPedido: React.FC = () => {
 
     return (
         <div className="peritagens-container">
-            <h1 className="page-title">2. Liberação de Pedido (PCP/Comercial)</h1>
+            <h1 className="page-title">2. Liberação de Pedido</h1>
 
             <div className="search-bar">
                 <div className="search-input-wrapper">
@@ -102,18 +103,11 @@ export const PcpLiberaPedido: React.FC = () => {
                     <div className="loading-state"><Loader2 className="animate-spin" /></div>
                 ) : (
                     filtered.map(p => (
-                        <div key={p.id} className="pcp-action-card" style={{
-                            background: 'white',
-                            padding: '1.5rem',
-                            borderRadius: '16px',
-                            border: '1px solid #e2e8f0',
-                            marginBottom: '1.5rem',
-                            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
-                        }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                        <div key={p.id} className="pcp-action-card">
+                            <div className="pcp-card-header">
                                 <div>
-                                    <h3 style={{ margin: 0, color: '#2d3748' }}>{p.cliente}</h3>
-                                    <span style={{ fontSize: '0.85rem', color: '#718096' }}>ID: {p.numero_peritagem}</span>
+                                    <h3 className="pcp-card-client">{p.cliente}</h3>
+                                    <span className="pcp-card-id">ID: {p.numero_peritagem}</span>
                                 </div>
                                 <span className="status-badge warning">{p.status}</span>
                             </div>
@@ -124,36 +118,18 @@ export const PcpLiberaPedido: React.FC = () => {
                                 </label>
                                 <input
                                     type="text"
+                                    className="pcp-input"
                                     placeholder="Ex: 4500123456"
                                     value={orderInputs[p.id] || ''}
                                     onChange={(e) => handleInputChange(p.id, e.target.value)}
-                                    style={{
-                                        width: '100%',
-                                        padding: '0.8rem',
-                                        borderRadius: '8px',
-                                        border: '1px solid #cbd5e0',
-                                        fontSize: '1rem'
-                                    }}
                                 />
                             </div>
 
                             <button
+                                className="btn-pcp-action"
                                 onClick={() => handleRelease(p.id)}
                                 disabled={!orderInputs[p.id]}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.8rem',
-                                    background: orderInputs[p.id] ? '#ed8936' : '#e2e8f0',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '8px',
-                                    fontWeight: 'bold',
-                                    cursor: orderInputs[p.id] ? 'pointer' : 'not-allowed',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem'
-                                }}
+                                style={{ background: orderInputs[p.id] ? '#ed8936' : '#e2e8f0' }}
                             >
                                 <ShoppingCart size={18} /> Liberar para Manutenção
                             </button>

@@ -3,6 +3,7 @@ import { Search, Loader2, CheckCircle2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import './Peritagens.css';
+import './PcpCommon.css';
 
 interface Peritagem {
     id: string;
@@ -70,7 +71,7 @@ export const PcpFinalizaProcesso: React.FC = () => {
 
     return (
         <div className="peritagens-container">
-            <h1 className="page-title">3. Conferência Final (PCP)</h1>
+            <h1 className="page-title">3. Conferência Final</h1>
 
             <div className="search-bar">
                 <div className="search-input-wrapper">
@@ -89,18 +90,11 @@ export const PcpFinalizaProcesso: React.FC = () => {
                     <div className="loading-state"><Loader2 className="animate-spin" /></div>
                 ) : (
                     filtered.map(p => (
-                        <div key={p.id} className="pcp-action-card" style={{
-                            background: 'white',
-                            padding: '1.5rem',
-                            borderRadius: '16px',
-                            border: '1px solid #e2e8f0',
-                            marginBottom: '1.5rem',
-                            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
-                        }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                        <div key={p.id} className="pcp-action-card">
+                            <div className="pcp-card-header">
                                 <div>
-                                    <h3 style={{ margin: 0, color: '#2d3748' }}>{p.cliente}</h3>
-                                    <span style={{ fontSize: '0.85rem', color: '#718096' }}>ID: {p.numero_peritagem}</span>
+                                    <h3 className="pcp-card-client">{p.cliente}</h3>
+                                    <span className="pcp-card-id">ID: {p.numero_peritagem}</span>
                                 </div>
                                 <span className="status-badge" style={{ background: '#2d3748', color: 'white' }}>AGUARDANDO PCP</span>
                             </div>
@@ -110,28 +104,15 @@ export const PcpFinalizaProcesso: React.FC = () => {
                                 background: '#f8fafc',
                                 borderRadius: '12px',
                                 marginBottom: '1.5rem',
-                                borderLeft: '4px solid #3182ce'
+                                borderLeft: '4px solid var(--primary)'
                             }}>
                                 <span style={{ fontSize: '0.9rem', color: '#4a5568' }}>Pedido Liberado:</span>
-                                <h2 style={{ margin: '0.5rem 0', color: '#2b6cb0' }}>#{p.numero_pedido || 'NÃO INFORMADO'}</h2>
+                                <h2 style={{ margin: '0.5rem 0', color: 'var(--primary)' }}>#{p.numero_pedido || 'NÃO INFORMADO'}</h2>
                             </div>
 
                             <button
+                                className="btn-pcp-action"
                                 onClick={() => handleFinalize(p.id)}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.8rem',
-                                    background: '#3182ce',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '8px',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem'
-                                }}
                             >
                                 <CheckCircle2 size={18} /> Aprovar e Finalizar Processo
                             </button>

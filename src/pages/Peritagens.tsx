@@ -66,18 +66,16 @@ export const Peritagens: React.FC = () => {
                 <h1 className="page-title">{role === 'perito' ? 'Minhas Peritagens' : 'Todas as Peritagens'}</h1>
 
                 {role === 'perito' && (
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    <div className="filter-group">
                         <button
                             className={`btn-filter ${filterStatus === 'all' ? 'active' : ''}`}
                             onClick={() => setFilterStatus('all')}
-                            style={{ padding: '8px 16px', borderRadius: '20px', border: filterStatus === 'all' ? '2px solid #3182ce' : '1px solid #ccc', background: filterStatus === 'all' ? '#ebf8ff' : 'white' }}
                         >
                             Todas
                         </button>
                         <button
-                            className={`btn-filter ${filterStatus === 'recusadas' ? 'active' : ''}`}
+                            className={`btn-filter recusadas ${filterStatus === 'recusadas' ? 'active' : ''}`}
                             onClick={() => setFilterStatus('recusadas')}
-                            style={{ padding: '8px 16px', borderRadius: '20px', border: filterStatus === 'recusadas' ? '2px solid #e53e3e' : '1px solid #ccc', background: filterStatus === 'recusadas' ? '#fff5f5' : 'white', color: '#e53e3e' }}
                         >
                             🔴 Recusadas
                         </button>

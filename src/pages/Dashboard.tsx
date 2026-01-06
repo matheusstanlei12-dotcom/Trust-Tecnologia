@@ -76,42 +76,47 @@ export const Dashboard: React.FC = () => {
 
     const stats = [
         {
-            label: '1. Aprovar Peritagem',
+            label: '1. Aprovação de Peritagem',
             value: counts.pendentePcp,
-            icon: <FileText size={32} color="#3182ce" />,
-            color: '#ebf8ff',
+            icon: <FileText size={24} />,
+            color: 'rgba(59, 130, 246, 0.15)',
+            iconColor: '#3b82f6',
             link: '/pcp/aprovar',
             show: role === 'pcp' || role === 'gestor'
         },
         {
-            label: '2. Liberar Pedido',
+            label: '2. Liberação de Pedido',
             value: counts.aguardandoCliente,
-            icon: <DollarSign size={32} color="#ed8936" />,
-            color: '#fffaf0',
+            icon: <DollarSign size={24} />,
+            color: 'rgba(245, 158, 11, 0.15)',
+            iconColor: '#f59e0b',
             link: '/pcp/liberar',
             show: role === 'pcp' || role === 'gestor'
         },
         {
             label: '3. Conferência Final',
             value: counts.conferenciaFinal,
-            icon: <CheckCircle2 size={32} color="#2d3748" />,
-            color: '#edf2f7',
+            icon: <CheckCircle2 size={24} />,
+            color: 'rgba(15, 23, 42, 0.1)',
+            iconColor: '#0f172a',
             link: '/pcp/finalizar',
             show: role === 'pcp' || role === 'gestor'
         },
         {
             label: 'Em Manutenção',
             value: counts.manutencao,
-            icon: <Wrench size={32} color="#38a169" />,
-            color: '#f0fff4',
+            icon: <Wrench size={24} />,
+            color: 'rgba(16, 185, 129, 0.15)',
+            iconColor: '#10b981',
             link: '/monitoramento',
             show: true
         },
         {
             label: 'Finalizados',
             value: counts.finalizados,
-            icon: <CheckCircle2 size={32} color="#48bb78" />,
-            color: '#f0fff4',
+            icon: <CheckCircle2 size={24} />,
+            color: 'rgba(16, 185, 129, 0.15)',
+            iconColor: '#10b981',
             link: '/monitoramento',
             show: true
         },
@@ -123,8 +128,9 @@ export const Dashboard: React.FC = () => {
             {
                 label: 'Peritagens',
                 data: [1, 0, 0, 0, 0],
-                backgroundColor: '#1b7a3d',
-                borderRadius: 4,
+                backgroundColor: '#3b82f6',
+                borderRadius: 8,
+                hoverBackgroundColor: '#2563eb',
             },
         ],
     };
@@ -134,7 +140,8 @@ export const Dashboard: React.FC = () => {
         datasets: [
             {
                 data: [counts.finalizados, counts.pendentePcp, counts.aguardandoCliente, counts.manutencao, counts.conferenciaFinal],
-                backgroundColor: ['#48bb78', '#3182ce', '#ed8936', '#ecc94b', '#2d3748'],
+                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#0f172a'],
+                hoverOffset: 12,
                 borderWidth: 0,
             },
         ],
@@ -142,20 +149,22 @@ export const Dashboard: React.FC = () => {
 
     return (
         <div className="dashboard-container">
-            <h1 className="page-title">Painel de Controle HIDRAUP</h1>
+            <h1 className="page-title">Painel de Controle</h1>
+            <p className="page-subtitle">Bem-vindo ao sistema HIDRAUP. Veja o resumo das atividades.</p>
 
             {loading ? (
-                <div style={{ padding: '2rem', textAlign: 'center' }}>Carregando dados...</div>
+                <div style={{ padding: '3rem', textAlign: 'center', background: 'white', borderRadius: '16px' }}>
+                    <span className="loading-spinner"></span> Carregando estatísticas...
+                </div>
             ) : (
                 <div className="stats-grid">
                     {stats.filter(s => s.show).map((stat, index) => (
                         <div
                             key={index}
                             className="stat-card clickable"
-                            style={{ backgroundColor: '#ffffff', cursor: 'pointer' }}
                             onClick={() => navigate(stat.link)}
                         >
-                            <div className="stat-icon-wrapper" style={{ backgroundColor: stat.color }}>
+                            <div className="stat-icon-wrapper" style={{ backgroundColor: stat.color, color: stat.iconColor }}>
                                 {stat.icon}
                             </div>
                             <div className="stat-info">

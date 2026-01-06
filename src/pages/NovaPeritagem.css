@@ -5,32 +5,23 @@
 }
 
 :root {
-    --primary-color: #2c3e50;
-    --secondary-color: #2980b9;
-    --success-color: #27ae60;
-    --danger-color: #e74c3c;
-    --warning-color: #f39c12;
-    --info-color: #7f8c8d;
-    --bg-color: #f4f7f6;
-    --card-bg: #ffffff;
-    --border-color: #e0e0e0;
-    --text-main: #2c3e50;
-    --text-muted: #7f8c8d;
-
     /* Dimensões Base */
-    --input-height-mobile: 3.125rem;
-    /* 50px */
+    --input-height-mobile: 2.75rem;
     --input-height-desktop: 2.75rem;
-    /* 44px */
-    --btn-height-mobile: 3.25rem;
-    /* 52px */
-    --btn-height-desktop: 2.75rem;
-    /* 44px */
-    --font-base-mobile: 1rem;
-    /* 16px */
-    --font-base-desktop: 0.9375rem;
-    /* 15px */
-    --border-radius: 0.75rem;
+    --btn-height-mobile: 3rem;
+    --btn-height-desktop: 3rem;
+    --font-base-mobile: 0.95rem;
+    --font-base-desktop: 0.9rem;
+
+    /* Color Mapping */
+    --primary-color: var(--primary);
+    --secondary-color: var(--accent);
+    --success-color: var(--success);
+    --danger-color: var(--danger);
+    --warning-color: var(--warning);
+    --bg-color: var(--bg-main);
+    --card-bg: var(--bg-card);
+    --border-color: #e2e8f0;
 }
 
 .nova-peritagem-container {
@@ -39,7 +30,7 @@
     max-width: 100vw;
     background-color: var(--bg-color);
     min-height: 100vh;
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: var(--font-family);
     color: var(--text-main);
     font-size: var(--font-base-desktop);
     overflow-x: hidden;
@@ -65,10 +56,11 @@
 }
 
 .selection-card h2 {
-    font-size: 1.75rem;
-    color: var(--primary-color);
+    font-size: 1.875rem;
+    color: var(--primary);
     margin-bottom: 1rem;
     font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
 .selection-card p {
@@ -97,16 +89,17 @@
 }
 
 .type-btn:hover {
-    border-color: var(--secondary-color);
-    background-color: #ebf5fb;
+    border-color: var(--primary);
+    background-color: var(--primary-light);
     transform: translateY(-2px);
+    box-shadow: var(--shadow);
 }
 
 .type-btn.active {
-    border-color: var(--secondary-color);
-    background-color: var(--secondary-color);
+    border-color: var(--primary);
+    background-color: var(--primary);
     color: white;
-    box-shadow: 0 0.5rem 1.5rem rgba(41, 128, 185, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 97, 255, 0.3);
 }
 
 .divider-or {
@@ -213,19 +206,21 @@
 .btn-start {
     width: 100%;
     height: var(--btn-height-mobile);
-    background: var(--success-color);
+    background: var(--primary-color);
     color: white;
     border: none;
     border-radius: 1rem;
     font-size: 1.125rem;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition);
+    box-shadow: 0 4px 14px rgba(0, 97, 255, 0.3);
 }
 
 .btn-start:hover {
-    background: #219150;
-    box-shadow: 0 0.5rem 1rem rgba(39, 174, 96, 0.2);
+    background: var(--primary-hover);
+    box-shadow: 0 6px 20px rgba(0, 97, 255, 0.4);
+    transform: translateY(-2px);
 }
 
 /* Foto Frontal */
@@ -319,7 +314,7 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 0.75rem 3rem;
+        padding: 0.75rem 1.5rem;
     }
 }
 
@@ -397,47 +392,52 @@
 
 /* Formulário e Cards */
 .peritagem-dynamic-form {
-    padding: 1.25rem;
-    padding-bottom: 8rem;
-    /* Espaço extra para o footer fixo não cobrir o conteúdo */
-    max-width: 75rem;
-    margin: 0 auto;
+    padding: 1rem 0;
+    padding-bottom: 6rem;
+    width: 100%;
+    margin: 0;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
 }
 
 .form-card {
-    background: var(--card-bg);
-    border-radius: 1.25rem;
-    padding: 1.25rem;
-    /* Reduzido levemente para mobile */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    background: var(--bg-card);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
     width: 100%;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    transition: var(--transition);
+}
+
+.form-card:hover {
+    box-shadow: var(--shadow);
 }
 
 .card-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.75rem;
     margin-bottom: 1.25rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid #f8f9fa;
+    border-bottom: 1px solid #f1f5f9;
 }
 
 .card-header h3 {
     margin: 0;
-    font-size: 1.0625rem;
-    color: var(--primary-color);
-    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--text-main);
+    font-weight: 800;
     flex-grow: 1;
 }
 
 .status-dot {
-    width: 0.875rem;
-    height: 0.875rem;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Inputs e Grupos */
@@ -479,30 +479,30 @@
 .dim-group select {
     width: 100%;
     height: var(--input-height-mobile);
-    padding: 0 1rem;
-    border: 0.125rem solid #f1f3f5;
-    border-radius: 0.75rem;
+    padding: 0 1.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius);
     font-size: var(--font-base-mobile);
     color: var(--text-main);
     background: #fdfdfd;
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .form-group input:focus,
 .dim-group input:focus,
 .dim-group select:focus {
-    border-color: var(--secondary-color);
+    border-color: var(--primary);
     background: white;
     outline: none;
-    box-shadow: 0 0 0 4px rgba(41, 128, 185, 0.1);
+    box-shadow: 0 0 0 4px rgba(0, 97, 255, 0.1);
 }
 
 /* Grids */
 .grid-form,
 .grid-dimensions {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
     width: 100%;
 }
 
@@ -809,8 +809,9 @@
     .form-group input,
     .dim-group input,
     .dim-group select {
-        height: var(--input-height-desktop);
-        font-size: var(--font-base-desktop);
+        height: 2.75rem;
+        font-size: 0.9rem;
+        padding: 0 1rem;
     }
 
     .checklist-row {
@@ -929,5 +930,121 @@ textarea {
     select,
     textarea {
         font-size: var(--font-base-desktop) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .checklist-header-row {
+        display: none !important;
+    }
+}
+
+.checklist-header-row {
+    display: flex;
+    background: #f8fafc;
+    font-weight: 800;
+    font-size: 0.70rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 10px;
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+.checklist-header-row span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checklist-header-row span:nth-child(2) {
+    justify-content: flex-start;
+}
+
+.cl-num {
+    width: 40px;
+}
+
+.cl-desc {
+    flex: 1;
+}
+
+.cl-x {
+    width: 30px;
+}
+
+.cl-qtd {
+    width: 60px;
+}
+
+.cl-dim {
+    width: 150px;
+}
+
+.cl-status {
+    width: 80px;
+}
+
+/* Dimensões Horizontais */
+.dimensions-horizontal-grid {
+    padding: 15px;
+}
+
+.dim-group-main {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+}
+
+.dim-label {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.dim-fields-wrapper {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.dim-part {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.divider-left {
+    padding-left: 10px;
+    border-left: 1px solid #cbd5e0;
+}
+
+.dim-input-mini {
+    width: 60px;
+    border: none !important;
+    border-bottom: 1px solid #000 !important;
+    border-radius: 0 !important;
+    padding: 2px !important;
+    height: auto !important;
+    text-align: center;
+    background: transparent !important;
+}
+
+.dim-input-medium {
+    width: 80px;
+    border: none !important;
+    border-bottom: 1px solid #000 !important;
+    border-radius: 0 !important;
+    padding: 2px !important;
+    height: auto !important;
+    text-align: center;
+    background: transparent !important;
+}
+
+@media (max-width: 768px) {
+    .divider-left {
+        border-left: none;
+        padding-left: 0;
     }
 }
