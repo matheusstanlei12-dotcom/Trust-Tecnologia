@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Camera, X, CheckCircle, AlertCircle, Save, Info, Trash2, CameraIcon, FilePlus } from 'lucide-react';
+import { ArrowLeft, Plus, Camera, X, CheckCircle, AlertCircle, Save, Info, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { USIMINAS_ITEMS } from '../constants/usiminasItems';
@@ -25,36 +25,6 @@ interface ChecklistItem {
     diametro_ideal?: string;
     material_faltante?: string;
 }
-
-const HIDRAULICO_CHECKLIST = [
-    "Vazamento de óleo externo?",
-    "Vazamento interno (perda de força)?",
-    "Haste com riscos, empeno ou corrosão?",
-    "Vedações danificadas ou ressecadas?",
-    "Camisa com desgaste ou riscos?",
-    "Êmbolo corretamente fixado?",
-    "Óleo contaminado?",
-    "Movimento irregular?",
-    "Ruídos anormais?",
-    "Pressão fora do especificado?",
-    "Mangueiras/conexões com falhas?",
-    "Fixações mecânicas comprometidas?"
-];
-
-const PNEUMATICO_CHECKLIST = [
-    "Vazamento de ar?",
-    "Perda de força no curso?",
-    "Haste desgastada ou empenada?",
-    "Vedações danificadas?",
-    "Movimento irregular?",
-    "Retorno incompleto?",
-    "Conexões soltas?",
-    "Pressão inadequada?",
-    "Umidade excessiva?",
-    "Amortecimento ineficiente?",
-    "Fixações soltas?",
-    "Resposta lenta aos comandos?"
-];
 
 const COMPONENTES = [
     "Êmbolo", "Haste", "Camisa", "Vedações", "Anel guia",
@@ -83,6 +53,7 @@ export const NovaPeritagem: React.FC = () => {
         numero_os: '',
         ni: '',
         pedido: '',
+        ordem: '',
         nota_fiscal: '',
         // Novos campos conforme imagem do formulário
         desenho_conjunto: '',
@@ -128,7 +99,7 @@ export const NovaPeritagem: React.FC = () => {
 
             setChecklistItems(list.map((text, index) => {
                 // Itens 79, 80 e 81 do padrão têm Qtd 1 por padrão
-                const isDefaultService = !fixedData.cliente.includes('USIMINAS') && index >= 79;
+                const isDefaultService = !fixedData.cliente.includes('USIMINAS') && index >= 78;
 
                 return {
                     id: crypto.randomUUID(),
@@ -261,6 +232,7 @@ export const NovaPeritagem: React.FC = () => {
                     tipo_cilindro: cylinderType,
                     ni: fixedData.ni,
                     numero_pedido: fixedData.pedido,
+                    ordem: fixedData.ordem,
                     nota_fiscal: fixedData.nota_fiscal,
                     camisa_int: dimensions.diametroInterno,
                     camisa_ext: dimensions.diametroExterno,
@@ -467,24 +439,36 @@ export const NovaPeritagem: React.FC = () => {
                                 onChange={e => setFixedData({ ...fixedData, cliente: e.target.value.toUpperCase() })}
                             />
                         </div>
-                        <div className="form-group">
-                            <label>NÚMERO DA ORDEM DE SERVIÇO (O.S) *</label>
-                            <input
-                                required
-                                placeholder="Número da OS..."
-                                value={fixedData.numero_os}
-                                onChange={e => setFixedData({ ...fixedData, numero_os: e.target.value.toUpperCase() })}
-                            />
-                        </div>
+
+                        {fixedData.cliente === 'USIMINAS' && (
+                            <div className="form-group">
+                                <label>NÚMERO DA ORDEM DE SERVIÇO (O.S) *</label>
+                                <input
+                                    required
+                                    placeholder="Número da OS..."
+                                    value={fixedData.numero_os}
+                                    onChange={e => setFixedData({ ...fixedData, numero_os: e.target.value.toUpperCase() })}
+                                />
+                            </div>
+                        )}
 
                         {fixedData.cliente !== 'USIMINAS' && (
                             <>
                                 <div className="form-group">
-                                    <label>NI (NÚMERO DE IDENTIFICAÇÃO)</label>
+                                    <label>O.S *</label>
                                     <input
-                                        placeholder="Ex: 123456"
-                                        value={fixedData.ni}
-                                        onChange={e => setFixedData({ ...fixedData, ni: e.target.value.toUpperCase() })}
+                                        required
+                                        placeholder="Número da OS..."
+                                        value={fixedData.numero_os}
+                                        onChange={e => setFixedData({ ...fixedData, numero_os: e.target.value.toUpperCase() })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>ORDEM</label>
+                                    <input
+                                        placeholder="Número da Ordem..."
+                                        value={fixedData.ordem}
+                                        onChange={e => setFixedData({ ...fixedData, ordem: e.target.value.toUpperCase() })}
                                     />
                                 </div>
                                 <div className="form-group">
@@ -495,6 +479,7 @@ export const NovaPeritagem: React.FC = () => {
                                         onChange={e => setFixedData({ ...fixedData, nota_fiscal: e.target.value.toUpperCase() })}
                                     />
                                 </div>
+
                                 <div className="form-group grid-col-2">
                                     <label>DESENHO DE CONJUNTO</label>
                                     <input
@@ -740,63 +725,45 @@ export const NovaPeritagem: React.FC = () => {
                         <h3>Dimensões do Cilindro</h3>
                         <span className="auto-msg">Autoload por TAG habilitado</span>
                     </div>
-                    <div className="grid-dimensions">
-                        <div className="dim-group">
-                            <label>Ø Interno</label>
-                            <div className="input-with-unit">
-                                <input type="text" value={dimensions.diametroInterno} onChange={e => { setDimensions({ ...dimensions, diametroInterno: e.target.value }); setDimStatus('verde'); }} />
-                                <span className="unit">mm</span>
-                            </div>
-                        </div>
-                        <div className="dim-group">
-                            <label>Ø Haste</label>
-                            <div className="input-with-unit">
-                                <input type="text" value={dimensions.diametroHaste} onChange={e => { setDimensions({ ...dimensions, diametroHaste: e.target.value }); setDimStatus('verde'); }} />
-                                <span className="unit">mm</span>
-                            </div>
-                        </div>
-                        <div className="dim-group">
-                            <label>Curso</label>
-                            <div className="input-with-unit">
-                                <input type="text" value={dimensions.curso} onChange={e => { setDimensions({ ...dimensions, curso: e.target.value }); setDimStatus('verde'); }} />
-                                <span className="unit">mm</span>
-                            </div>
-                        </div>
-                        <div className="dim-group">
-                            <label>Comp. Total</label>
-                            <div className="input-with-unit">
-                                <input type="text" value={dimensions.comprimentoTotal} onChange={e => { setDimensions({ ...dimensions, comprimentoTotal: e.target.value }); setDimStatus('verde'); }} />
-                                <span className="unit">mm</span>
-                            </div>
-                        </div>
-                        <div className="dim-group">
-                            <label>Pressão Nominal</label>
-                            <div className="input-with-unit">
-                                <input type="text" value={dimensions.pressaoNominal} onChange={e => { setDimensions({ ...dimensions, pressaoNominal: e.target.value }); setDimStatus('verde'); }} />
-                                <span className="unit">bar</span>
-                            </div>
-                        </div>
-                        {fixedData.cliente === 'USIMINAS' && (
-                            <>
-                                <div className="dim-group">
-                                    <label>Ø Externo Camisa</label>
-                                    <div className="input-with-unit">
-                                        <input type="text" value={dimensions.diametroExterno} onChange={e => { setDimensions({ ...dimensions, diametroExterno: e.target.value }); setDimStatus('verde'); }} />
-                                        <span className="unit">mm</span>
+                    <div className="grid-form">
+                        <div className="form-row-dimensions" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', padding: '15px' }}>
+                            <div className="input-group-dim" style={{ flex: '1 1 300px' }}>
+                                <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#4a5568', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>CAMISA</label>
+                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                    <div className="dim-subgroup">
+                                        <span style={{ fontSize: '0.7rem', color: '#718096' }}>Ø INT</span>
+                                        <input placeholder="Ø INT" value={dimensions.diametroInterno} onChange={e => { setDimensions({ ...dimensions, diametroInterno: e.target.value }); setDimStatus('verde'); }} style={{ width: '80px', height: '38px', borderRadius: '8px', border: '2px solid #edf2f7', padding: '0 10px' }} />
+                                    </div>
+                                    <span>x</span>
+                                    <div className="dim-subgroup">
+                                        <span style={{ fontSize: '0.7rem', color: '#718096' }}>Ø EXT</span>
+                                        <input placeholder="Ø EXT" value={dimensions.diametroExterno} onChange={e => { setDimensions({ ...dimensions, diametroExterno: e.target.value }); setDimStatus('verde'); }} style={{ width: '80px', height: '38px', borderRadius: '8px', border: '2px solid #edf2f7', padding: '0 10px' }} />
+                                    </div>
+                                    <span>x</span>
+                                    <div className="dim-subgroup">
+                                        <span style={{ fontSize: '0.7rem', color: '#718096' }}>COMP.</span>
+                                        <input placeholder="COMP" value={dimensions.comprimentoTotal} onChange={e => { setDimensions({ ...dimensions, comprimentoTotal: e.target.value }); setDimStatus('verde'); }} style={{ width: '80px', height: '38px', borderRadius: '8px', border: '2px solid #edf2f7', padding: '0 10px' }} />
                                     </div>
                                 </div>
-                                <div className="dim-group">
-                                    <label>Comp. Haste</label>
-                                    <div className="input-with-unit">
-                                        <input type="text" value={dimensions.comprimentoHaste} onChange={e => { setDimensions({ ...dimensions, comprimentoHaste: e.target.value }); setDimStatus('verde'); }} />
-                                        <span className="unit">mm</span>
+                            </div>
+                            <div className="input-group-dim" style={{ flex: '1 1 200px' }}>
+                                <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#4a5568', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>HASTE</label>
+                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                    <div className="dim-subgroup">
+                                        <span style={{ fontSize: '0.7rem', color: '#718096' }}>Ø</span>
+                                        <input placeholder="Ø" value={dimensions.diametroHaste} onChange={e => { setDimensions({ ...dimensions, diametroHaste: e.target.value }); setDimStatus('verde'); }} style={{ width: '80px', height: '38px', borderRadius: '8px', border: '2px solid #edf2f7', padding: '0 10px' }} />
+                                    </div>
+                                    <span>x</span>
+                                    <div className="dim-subgroup">
+                                        <span style={{ fontSize: '0.7rem', color: '#718096' }}>COMP.</span>
+                                        <input placeholder="COMP" value={dimensions.comprimentoHaste} onChange={e => { setDimensions({ ...dimensions, comprimentoHaste: e.target.value }); setDimStatus('verde'); }} style={{ width: '80px', height: '38px', borderRadius: '8px', border: '2px solid #edf2f7', padding: '0 10px' }} />
                                     </div>
                                 </div>
-                            </>
-                        )}
-                        <div className="dim-group full-width">
-                            <label>Fabricante / Modelo</label>
-                            <input type="text" value={dimensions.fabricanteModelo} onChange={e => { setDimensions({ ...dimensions, fabricanteModelo: e.target.value }); setDimStatus('verde'); }} />
+                            </div>
+                            <div className="input-group-dim" style={{ flex: '0 1 120px' }}>
+                                <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#4a5568', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>CURSO (MM)</label>
+                                <input placeholder="CURSO" value={dimensions.curso} onChange={e => { setDimensions({ ...dimensions, curso: e.target.value }); setDimStatus('verde'); }} style={{ width: '100px', height: '38px', borderRadius: '8px', border: '2px solid #edf2f7', padding: '0 10px' }} />
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -882,28 +849,26 @@ export const NovaPeritagem: React.FC = () => {
                                             </div>
                                         </div>
 
-                                        {fixedData.cliente === 'USIMINAS' && (
-                                            <div className="usiminas-item-fields" style={{ marginBottom: '1rem' }}>
-                                                <div className="input-field" style={{ flex: '0 0 80px' }}>
-                                                    <label>Qtd</label>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Qtd"
-                                                        value={item.qtd}
-                                                        onChange={e => updateItemDetails(item.id, 'qtd', e.target.value)}
-                                                    />
-                                                </div>
-                                                <div className="input-field" style={{ flex: 1 }}>
-                                                    <label>Dimensões</label>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Dimensões"
-                                                        value={item.dimensoes}
-                                                        onChange={e => updateItemDetails(item.id, 'dimensoes', e.target.value)}
-                                                    />
-                                                </div>
+                                        <div className="usiminas-item-fields" style={{ marginBottom: '1rem' }}>
+                                            <div className="input-field" style={{ flex: '0 0 80px' }}>
+                                                <label>Qtd</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Qtd"
+                                                    value={item.qtd}
+                                                    onChange={e => updateItemDetails(item.id, 'qtd', e.target.value)}
+                                                />
                                             </div>
-                                        )}
+                                            <div className="input-field" style={{ flex: 1 }}>
+                                                <label>Dimensões</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Dimensões"
+                                                    value={item.dimensoes}
+                                                    onChange={e => updateItemDetails(item.id, 'dimensoes', e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
 
                                         <div className="usiminas-diametros-calc" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                                             <div className="input-field">
