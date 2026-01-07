@@ -873,23 +873,6 @@ export const NovaPeritagem: React.FC = () => {
 
                                             <div className="usiminas-diametros-calc" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                                                 <div className="input-field">
-                                                    <label>Diâmetro Encontrado</label>
-                                                    <input
-                                                        type="number"
-                                                        step="0.001"
-                                                        placeholder="0.000"
-                                                        value={item.diametro_encontrado || ''}
-                                                        onChange={e => {
-                                                            const val = e.target.value;
-                                                            const ideal = parseFloat(item.diametro_ideal || '0');
-                                                            const found = parseFloat(val || '0');
-                                                            const diff = (ideal - found).toFixed(3);
-                                                            updateItemDetails(item.id, 'diametro_encontrado', val);
-                                                            updateItemDetails(item.id, 'material_faltante', diff);
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div className="input-field">
                                                     <label>Diâmetro Ideal</label>
                                                     <input
                                                         type="number"
@@ -907,8 +890,25 @@ export const NovaPeritagem: React.FC = () => {
                                                     />
                                                 </div>
                                                 <div className="input-field">
+                                                    <label>Diâmetro Encontrado</label>
+                                                    <input
+                                                        type="number"
+                                                        step="0.001"
+                                                        placeholder="0.000"
+                                                        value={item.diametro_encontrado || ''}
+                                                        onChange={e => {
+                                                            const val = e.target.value;
+                                                            const ideal = parseFloat(item.diametro_ideal || '0');
+                                                            const found = parseFloat(val || '0');
+                                                            const diff = (ideal - found).toFixed(3);
+                                                            updateItemDetails(item.id, 'diametro_encontrado', val);
+                                                            updateItemDetails(item.id, 'material_faltante', diff);
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="input-field">
                                                     <label style={{ color: parseFloat(item.material_faltante || '0') < 0 ? '#e74c3c' : '#27ae60' }}>
-                                                        Material Faltante
+                                                        Desvio
                                                     </label>
                                                     <div className="calc-result" style={{
                                                         background: parseFloat(item.material_faltante || '0') < 0 ? '#fff5f5' : '#f0fff4',

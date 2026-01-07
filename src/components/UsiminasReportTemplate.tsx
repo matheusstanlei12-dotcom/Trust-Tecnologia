@@ -437,15 +437,15 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                             {(item.diametro_encontrado || item.diametro_ideal) && (
                                 <View style={styles.analysisRow}>
                                     <View style={styles.analysisField}>
-                                        <Text style={styles.analysisLabel}>Diâmetro Encontrado</Text>
-                                        <Text style={styles.analysisValue}>{item.diametro_encontrado || '0.000'}</Text>
-                                    </View>
-                                    <View style={styles.analysisField}>
                                         <Text style={styles.analysisLabel}>Diâmetro Ideal</Text>
                                         <Text style={styles.analysisValue}>{item.diametro_ideal || '0.000'}</Text>
                                     </View>
                                     <View style={styles.analysisField}>
-                                        <Text style={[styles.analysisLabel, { color: '#27ae60' }]}>Material Faltante</Text>
+                                        <Text style={styles.analysisLabel}>Diâmetro Encontrado</Text>
+                                        <Text style={styles.analysisValue}>{item.diametro_encontrado || '0.000'}</Text>
+                                    </View>
+                                    <View style={styles.analysisField}>
+                                        <Text style={[styles.analysisLabel, { color: '#27ae60' }]}>Desvio</Text>
                                         <View style={styles.materialFaltanteBox}>
                                             <Text style={{ fontSize: 9, fontWeight: 'bold', color: parseFloat(item.material_faltante || '0') < 0 ? '#e74c3c' : '#27ae60' }}>
                                                 {item.material_faltante || '0.000'} mm

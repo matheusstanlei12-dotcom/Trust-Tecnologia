@@ -370,15 +370,15 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
                                         <Text style={[styles.dataLabel, { marginBottom: 3 }]}>Medições Técnicas (mm)</Text>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                             <View>
-                                                <Text style={{ fontSize: 6, color: '#64748b' }}>Encontrado</Text>
-                                                <Text style={{ fontSize: 8 }}>{item.diametro_encontrado || '0.000'}</Text>
-                                            </View>
-                                            <View>
                                                 <Text style={{ fontSize: 6, color: '#64748b' }}>Ideal</Text>
                                                 <Text style={{ fontSize: 8 }}>{item.diametro_ideal || '0.000'}</Text>
                                             </View>
                                             <View>
-                                                <Text style={{ fontSize: 6, color: '#64748b' }}>Faltante</Text>
+                                                <Text style={{ fontSize: 6, color: '#64748b' }}>Encontrado</Text>
+                                                <Text style={{ fontSize: 8 }}>{item.diametro_encontrado || '0.000'}</Text>
+                                            </View>
+                                            <View>
+                                                <Text style={{ fontSize: 6, color: '#64748b' }}>Desvio</Text>
                                                 <Text style={{ fontSize: 8, color: parseFloat(item.material_faltante || '0') < 0 ? '#e74c3c' : '#27ae60', fontWeight: 'bold' }}>
                                                     {item.material_faltante || '0.000'}
                                                 </Text>
