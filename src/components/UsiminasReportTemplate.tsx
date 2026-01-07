@@ -233,7 +233,7 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                 <Image src={data.logo_trusteng} style={styles.logo} />
                 <View style={styles.titleContainer}>
                     <Text style={styles.reportTitle}>LAUDO TÉCNICO DE PERITAGEM</Text>
-                    <Text style={styles.reportSubtitle}>PADRÃO USIMINAS</Text>
+                    <Text style={styles.reportSubtitle}>{data.cliente.toUpperCase() === 'USIMINAS' ? 'PADRÃO USIMINAS' : 'RELATÓRIO TÉCNICO DE PERITAGEM'}</Text>
                 </View>
             </View>
 

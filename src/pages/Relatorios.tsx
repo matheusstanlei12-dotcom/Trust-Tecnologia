@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, FileText, Download, Loader2 } from 'lucide-react';
 import { pdf } from '@react-pdf/renderer';
-import { ReportTemplate } from '../components/ReportTemplate';
 import { UsiminasReportTemplate } from '../components/UsiminasReportTemplate';
 import { supabase } from '../lib/supabase';
 import { generateTechnicalOpinion } from '../lib/reportUtils';
@@ -106,7 +105,7 @@ export const Relatorios: React.FC = () => {
                 responsavel_tecnico: String(peritagem.responsavel_tecnico || ''),
                 logo_trusteng: '/logo.png',
                 itens: (analise || [])
-                    .filter((i: any) => i.conformidade === 'conforme' || i.conformidade === 'não conforme')
+                    .filter((i: any) => i.conformidade === 'não conforme')
                     .map((i: any, idx: number) => ({
                         id: idx + 1,
                         desc: String(i.componente || ''),
@@ -121,7 +120,7 @@ export const Relatorios: React.FC = () => {
                         foto: i.fotos && i.fotos.length > 0 ? i.fotos[0] : undefined
                     })),
                 items: (analise || [])
-                    .filter((i: any) => i.tipo !== 'vedação' && (i.conformidade === 'conforme' || i.conformidade === 'não conforme'))
+                    .filter((i: any) => i.tipo !== 'vedação' && i.conformidade === 'não conforme')
                     .map((i: any, idx: number) => ({
                         id: idx + 1,
                         descricao: String(i.componente || ''),
@@ -137,14 +136,14 @@ export const Relatorios: React.FC = () => {
                         fotos: i.fotos || []
                     })),
                 vedacoes: (analise || [])
-                    .filter((i: any) => i.tipo === 'vedação' && (i.conformidade === 'conforme' || i.conformidade === 'não conforme'))
+                    .filter((i: any) => i.tipo === 'vedação' && i.conformidade === 'não conforme')
                     .map((i: any) => ({
                         descricao: String(i.componente || ''),
                         qtd: String(i.qtd || '1'),
                         unidade: 'UN',
                         observacao: String(i.anomalias || ''),
-                        conformidade: String(i.conformidade || 'conforme'),
-                        selecionado: i.conformidade === 'não conforme'
+                        conformidade: String(i.conformidade || 'não conforme'),
+                        selecionado: true
                     })),
                 parecer_tecnico: String(parecer || ''),
                 parecerTecnico: String(parecer || ''),
@@ -170,9 +169,7 @@ export const Relatorios: React.FC = () => {
             const data = await handleGenerateData(peritagem);
             if (!data) return;
 
-            const template = peritagem.cliente.toUpperCase() === 'USIMINAS'
-                ? <UsiminasReportTemplate data={data} />
-                : <ReportTemplate data={data} />;
+            const template = <UsiminasReportTemplate data={data} />;
 
             const blob = await pdf(template).toBlob();
             const url = URL.createObjectURL(blob);
