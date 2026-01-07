@@ -729,7 +729,7 @@ export const NovaPeritagem: React.FC = () => {
                     </div>
                     <div className="checklist-items">
                         <div className="checklist-header-row">
-                            <span className="cl-num"></span>
+                            <span className="cl-num" style={{ width: '60px' }}>N°</span>
                             <span className="cl-desc">DESCRIÇÃO DE PEÇAS / SERVIÇOS</span>
                             <span className="cl-x"></span>
                             <span className="cl-qtd"></span>
@@ -739,7 +739,16 @@ export const NovaPeritagem: React.FC = () => {
                             <div key={item.id} className="checklist-row" onClick={() => handleChecklistItemClick(item.id)}>
                                 <div className="row-main">
                                     <div className="item-info">
-                                        <span style={{ width: '40px', fontSize: '0.8rem', color: '#7f8c8d' }}></span>
+                                        <div style={{ width: '60px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <div style={{
+                                                width: '10px',
+                                                height: '10px',
+                                                borderRadius: '50%',
+                                                backgroundColor: item.conformidade ? '#2ecc71' : '#e74c3c',
+                                                flexShrink: 0
+                                            }} />
+                                            <span style={{ fontSize: '0.8rem', color: '#7f8c8d' }}>{index + 1}</span>
+                                        </div>
                                         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '10px' }}>
                                             {COMPONENTES.includes(item.text) || item.text === 'Selecione o componente...' ? (
                                                 <select
