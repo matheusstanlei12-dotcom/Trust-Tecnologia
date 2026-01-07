@@ -35,18 +35,35 @@
     margin-bottom: 2.5rem;
 }
 
-.stat-card {
-    background: rgba(255, 255, 255, 0.8);
+.stat-card.with-mini-chart {
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
+    border-radius: 24px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    justify-content: space-between;
+    height: 200px;
+}
+
+.stat-main-content {
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    padding: 1.75rem;
-    border-radius: 24px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
+    padding: 1.75rem 1.75rem 1rem 1.75rem;
+}
+
+.stat-mini-chart {
+    height: 60px;
+    width: 100%;
+    margin-top: auto;
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
     overflow: hidden;
 }
 

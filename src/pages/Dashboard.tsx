@@ -16,9 +16,12 @@ import {
     Title,
     Tooltip,
     Legend,
-    ArcElement
+    ArcElement,
+    PointElement,
+    LineElement,
+    Filler
 } from 'chart.js';
-import { Bar, Doughnut } from 'react-chartjs-2';
+import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import './Dashboard.css';
 
 ChartJS.register(
@@ -28,7 +31,10 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    ArcElement
+    ArcElement,
+    PointElement,
+    LineElement,
+    Filler
 );
 
 export const Dashboard: React.FC = () => {
@@ -44,6 +50,7 @@ export const Dashboard: React.FC = () => {
         conferenciaFinal: 0
     });
     const [clientStats, setClientStats] = React.useState<{ name: string; count: number }[]>([]);
+    const [trends, setTrends] = React.useState<any>({});
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
@@ -54,7 +61,7 @@ export const Dashboard: React.FC = () => {
         try {
             const { data, error } = await supabase
                 .from('peritagens')
-                .select('status, cliente');
+                .select('status, cliente, created_at');
 
             if (error) throw error;
 
@@ -68,7 +75,32 @@ export const Dashboard: React.FC = () => {
 
                 setCounts({ total, aguardando: aguardandoCliente, manutencao, finalizados, pendentePcp, aguardandoCliente, conferenciaFinal });
 
+                // Calcular tendências (últimos 7 dias)
+                const last7Days = [...Array(7)].map((_, i) => {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    return d.toISOString().split('T')[0];
+                }).reverse();
+
+                const calculateTrend = (filterFn: (p: any) => boolean) => {
+                    return last7Days.map(day => {
+                        return data.filter(p => {
+                            const pDate = p.created_at?.split('T')[0];
+                            return pDate === day && filterFn(p);
+                        }).length;
+                    });
+                };
+
+                setTrends({
+                    pcp: calculateTrend(p => p.status === 'AGUARDANDO APROVAÇÃO DO PCP' || p.status === 'PERITAGEM CRIADA'),
+                    cliente: calculateTrend(p => p.status === 'AGUARDANDO APROVAÇÃO DO CLIENTE' || p.status === 'Aguardando Clientes'),
+                    manutencao: calculateTrend(p => p.status === 'EM MANUTENÇÃO' || p.status === 'Cilindros em Manutenção'),
+                    conferencia: calculateTrend(p => p.status === 'AGUARDANDO CONFERÊNCIA FINAL'),
+                    finalizados: calculateTrend(p => p.status === 'PROCESSO FINALIZADO' || p.status === 'Finalizados' || p.status === 'ORÇAMENTO FINALIZADO')
+                });
+
                 // Processar estatísticas por cliente
+                // ... (rest of client processing remains similar)
                 const clients = data.map(p => p.cliente || 'Sem Cliente');
                 const clientCounts: { [key: string]: number } = {};
                 clients.forEach(c => {
@@ -97,7 +129,8 @@ export const Dashboard: React.FC = () => {
             color: 'rgba(59, 130, 246, 0.15)',
             iconColor: '#3b82f6',
             link: '/pcp/aprovar',
-            show: role === 'pcp' || role === 'gestor'
+            show: role === 'pcp' || role === 'gestor',
+            trendData: trends.pcp || [0, 0, 0, 0, 0, 0, 0]
         },
         {
             label: '2. Liberação de Pedido',
@@ -106,16 +139,18 @@ export const Dashboard: React.FC = () => {
             color: 'rgba(245, 158, 11, 0.15)',
             iconColor: '#f59e0b',
             link: '/pcp/liberar',
-            show: role === 'pcp' || role === 'gestor'
+            show: role === 'pcp' || role === 'gestor',
+            trendData: trends.cliente || [0, 0, 0, 0, 0, 0, 0]
         },
         {
             label: '3. Conferência Final',
             value: counts.conferenciaFinal,
             icon: <CheckCircle2 size={24} />,
-            color: 'rgba(15, 23, 42, 0.1)',
-            iconColor: '#0f172a',
+            color: 'rgba(30, 41, 59, 0.1)',
+            iconColor: '#1e293b',
             link: '/pcp/finalizar',
-            show: role === 'pcp' || role === 'gestor'
+            show: role === 'pcp' || role === 'gestor',
+            trendData: trends.conferencia || [0, 0, 0, 0, 0, 0, 0]
         },
         {
             label: 'Em Manutenção',
@@ -124,7 +159,8 @@ export const Dashboard: React.FC = () => {
             color: 'rgba(16, 185, 129, 0.15)',
             iconColor: '#10b981',
             link: '/monitoramento',
-            show: true
+            show: true,
+            trendData: trends.manutencao || [0, 0, 0, 0, 0, 0, 0]
         },
         {
             label: 'Finalizados',
@@ -133,9 +169,30 @@ export const Dashboard: React.FC = () => {
             color: 'rgba(16, 185, 129, 0.15)',
             iconColor: '#10b981',
             link: '/monitoramento',
-            show: true
+            show: true,
+            trendData: trends.finalizados || [0, 0, 0, 0, 0, 0, 0]
         },
     ];
+
+    const getMiniChartOptions = (color: string) => ({
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: {
+            x: { display: false },
+            y: { display: false, min: 0 }
+        },
+        elements: {
+            line: {
+                borderColor: color,
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+                backgroundColor: `${color}20`
+            },
+            point: { radius: 0 }
+        }
+    });
 
     const barData = {
         labels: clientStats.length > 0 ? clientStats.map(s => s.name) : ['Sem dados'],
@@ -286,15 +343,28 @@ export const Dashboard: React.FC = () => {
                     {stats.filter(s => s.show).map((stat, index) => (
                         <div
                             key={index}
-                            className="stat-card clickable"
+                            className="stat-card clickable with-mini-chart"
                             onClick={() => navigate(stat.link)}
                         >
-                            <div className="stat-icon-wrapper" style={{ backgroundColor: stat.color, color: stat.iconColor }}>
-                                {stat.icon}
+                            <div className="stat-main-content">
+                                <div className="stat-icon-wrapper" style={{ backgroundColor: stat.color, color: stat.iconColor }}>
+                                    {stat.icon}
+                                </div>
+                                <div className="stat-info">
+                                    <span className="stat-label">{stat.label}</span>
+                                    <span className="stat-value">{stat.value}</span>
+                                </div>
                             </div>
-                            <div className="stat-info">
-                                <span className="stat-label">{stat.label}</span>
-                                <span className="stat-value">{stat.value}</span>
+                            <div className="stat-mini-chart">
+                                <Line
+                                    data={{
+                                        labels: ['', '', '', '', '', '', ''],
+                                        datasets: [{
+                                            data: stat.trendData,
+                                        }]
+                                    }}
+                                    options={getMiniChartOptions(stat.iconColor) as any}
+                                />
                             </div>
                         </div>
                     ))}
