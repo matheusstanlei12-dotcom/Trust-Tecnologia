@@ -733,7 +733,6 @@ export const NovaPeritagem: React.FC = () => {
                             <span className="cl-desc">DESCRIÇÃO DE PEÇAS / SERVIÇOS</span>
                             <span className="cl-x"></span>
                             <span className="cl-qtd"></span>
-                            <span className="cl-dim"></span>
                         </div>
                         {checklistItems.map((item, index) => (
                             <div key={item.id} className="checklist-row" onClick={() => handleChecklistItemClick(item.id)}>
@@ -741,11 +740,12 @@ export const NovaPeritagem: React.FC = () => {
                                     <div className="item-info">
                                         <div style={{ width: '60px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                                             <div style={{
-                                                width: '10px',
-                                                height: '10px',
+                                                width: '14px',
+                                                height: '14px',
                                                 borderRadius: '50%',
                                                 backgroundColor: item.conformidade ? '#2ecc71' : '#e74c3c',
-                                                flexShrink: 0
+                                                flexShrink: 0,
+                                                boxShadow: '0 0 4px rgba(0,0,0,0.1)'
                                             }} />
                                             <span style={{ fontSize: '0.8rem', color: '#7f8c8d' }}>{index + 1}</span>
                                         </div>
@@ -778,18 +778,6 @@ export const NovaPeritagem: React.FC = () => {
                                                 onChange={e => updateItemDetails(item.id, 'qtd', e.target.value)}
                                                 onClick={e => e.stopPropagation()}
                                                 style={{ width: '100%', textAlign: 'center', border: 'none', background: 'transparent' }}
-                                            />
-                                        </div>
-
-                                        {/* Coluna Dimensões */}
-                                        <div style={{ width: '150px' }}>
-                                            <input
-                                                className="inline-input"
-                                                placeholder="Dimensões..."
-                                                value={item.dimensoes || ''}
-                                                onChange={e => updateItemDetails(item.id, 'dimensoes', e.target.value)}
-                                                onClick={e => e.stopPropagation()}
-                                                style={{ width: '100%', border: 'none', background: 'transparent' }}
                                             />
                                         </div>
                                     </div>
