@@ -729,7 +729,7 @@ export const NovaPeritagem: React.FC = () => {
                     </div>
                     <div className="checklist-items">
                         <div className="checklist-header-row">
-                            <span className="cl-num">N°</span>
+                            <span className="cl-num"></span>
                             <span className="cl-desc">DESCRIÇÃO DE PEÇAS / SERVIÇOS</span>
                             <span className="cl-x"></span>
                             <span className="cl-qtd"></span>
@@ -739,7 +739,7 @@ export const NovaPeritagem: React.FC = () => {
                             <div key={item.id} className="checklist-row" onClick={() => handleChecklistItemClick(item.id)}>
                                 <div className="row-main">
                                     <div className="item-info">
-                                        <span style={{ width: '40px', fontSize: '0.8rem', color: '#7f8c8d' }}>{index + 1}</span>
+                                        <span style={{ width: '40px', fontSize: '0.8rem', color: '#7f8c8d' }}></span>
                                         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '10px' }}>
                                             {COMPONENTES.includes(item.text) || item.text === 'Selecione o componente...' ? (
                                                 <select
