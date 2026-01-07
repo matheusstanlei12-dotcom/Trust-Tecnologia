@@ -163,14 +163,12 @@ export const Dashboard: React.FC = () => {
             {
                 label: 'Peritagens',
                 data: clientStats.length > 0 ? clientStats.map(s => s.count) : [0],
-                backgroundColor: (context: any) => {
-                    const index = context.dataIndex;
-                    return index === 0 ? '#1e293b' : '#3b82f6';
-                },
+                backgroundColor: '#3b82f6',
                 borderRadius: 4,
                 borderWidth: 1,
-                borderColor: 'rgba(0,0,0,0.1)',
-                barPercentage: 0.7,
+                borderColor: 'rgba(59, 130, 246, 0.2)',
+                barPercentage: 0.45,
+                categoryPercentage: 0.8,
             },
         ],
     };
