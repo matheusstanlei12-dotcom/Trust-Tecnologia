@@ -385,7 +385,7 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
             {data.vedacoes && data.vedacoes.length > 0 && (
                 <>
                     <View style={styles.sectionTitle}>
-                        <Text>VEDAÇÕES</Text>
+                        <Text>EMPENHO DE MATERIAIS</Text>
                     </View>
                     <View style={styles.table}>
                         <View style={styles.tableHeader}>
@@ -480,12 +480,7 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                 </>
             )}
 
-            <View style={[styles.sectionTitle, { marginTop: 20 }]}>
-                <Text>PARECER TÉCNICO / CONCLUSÃO</Text>
-            </View>
-            <View style={styles.technicalOpinion}>
-                <Text>{data.parecer_tecnico || 'Nenhum parecer técnico gerado.'}</Text>
-            </View>
+
 
             <View style={styles.footer} fixed>
                 <Text>Documento gerado automaticamente pela TrustEng. LTDA - Unidade Especialista em Hidráulica</Text>

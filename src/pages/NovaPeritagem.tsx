@@ -561,23 +561,15 @@ export const NovaPeritagem: React.FC = () => {
                                         style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
                                     />
                                 </div>
+
                                 <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
                                     <div className="form-group" style={{ flex: 1 }}>
-                                        <label style={{ fontWeight: 'bold' }}>ORDEM DE SERVIÇO *</label>
+                                        <label style={{ fontWeight: 'bold' }}>Ordem de serviço *</label>
                                         <input
                                             required
                                             placeholder="Ex: 1234"
                                             value={fixedData.numero_os}
                                             onChange={e => setFixedData({ ...fixedData, numero_os: e.target.value.toUpperCase() })}
-                                            style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
-                                        />
-                                    </div>
-                                    <div className="form-group" style={{ flex: 1 }}>
-                                        <label style={{ fontWeight: 'bold' }}>ORDEM</label>
-                                        <input
-                                            placeholder="Ex: 5678"
-                                            value={fixedData.ordem}
-                                            onChange={e => setFixedData({ ...fixedData, ordem: e.target.value.toUpperCase() })}
                                             style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
                                         />
                                     </div>
@@ -590,118 +582,127 @@ export const NovaPeritagem: React.FC = () => {
                                             style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
                                         />
                                     </div>
+                                    <div className="form-group" style={{ flex: 1 }}>
+                                        <label style={{ fontWeight: 'bold' }}>NI</label>
+                                        <input
+                                            placeholder="Ex: NI-99"
+                                            value={fixedData.ni}
+                                            onChange={e => setFixedData({ ...fixedData, ni: e.target.value.toUpperCase() })}
+                                            style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
+                                        />
+                                    </div>
                                 </div>
-                                <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                                    <div className="form-group" style={{ flex: 1 }}>
-                                        <label style={{ fontWeight: 'bold' }}>TAG DO CILINDRO *</label>
-                                        <input
-                                            required
-                                            placeholder="Digite a TAG..."
-                                            value={fixedData.tag}
-                                            onChange={e => setFixedData({ ...fixedData, tag: e.target.value.toUpperCase() })}
-                                            style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
-                                        />
+
+                                <div className="form-group full-row">
+                                    <label style={{ fontWeight: 'bold' }}>Desenho de conjunto:</label>
+                                    <input
+                                        placeholder="Referência do desenho..."
+                                        value={fixedData.desenho_conjunto}
+                                        onChange={e => setFixedData({ ...fixedData, desenho_conjunto: e.target.value.toUpperCase() })}
+                                        style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
+                                    />
+                                </div>
+
+                                <div className="form-group full-row">
+                                    <label style={{ fontWeight: 'bold' }}>Tipo/modelo:</label>
+                                    <input
+                                        placeholder="Ex: H-123"
+                                        value={fixedData.tipo_modelo}
+                                        onChange={e => setFixedData({ ...fixedData, tipo_modelo: e.target.value.toUpperCase() })}
+                                        style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
+                                    />
+                                </div>
+
+                                <div className="form-group full-row">
+                                    <label style={{ fontWeight: 'bold' }}>Fabricante:</label>
+                                    <input
+                                        placeholder="Fabricante..."
+                                        value={fixedData.fabricante}
+                                        onChange={e => setFixedData({ ...fixedData, fabricante: e.target.value.toUpperCase() })}
+                                        style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
+                                    />
+                                </div>
+
+                                <div className="form-group full-row">
+                                    <label style={{ fontWeight: 'bold' }}>Lubrificante:</label>
+                                    <input
+                                        placeholder="Óleo, Graxa..."
+                                        value={fixedData.lubrificante}
+                                        onChange={e => setFixedData({ ...fixedData, lubrificante: e.target.value.toUpperCase() })}
+                                        style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
+                                    />
+                                </div>
+
+                                <div className="form-group full-row">
+                                    <label style={{ fontWeight: 'bold' }}>Volume:</label>
+                                    <input
+                                        placeholder="Volume..."
+                                        value={fixedData.volume}
+                                        onChange={e => setFixedData({ ...fixedData, volume: e.target.value.toUpperCase() })}
+                                        style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
+                                    />
+                                </div>
+
+                                <div className="form-group full-row">
+                                    <label style={{ fontWeight: 'bold' }}>Recebido com acoplamento ou polia?</label>
+                                    <div style={{ display: 'flex', gap: '15px', marginTop: '5px' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'normal', cursor: 'pointer' }}>
+                                            <input type="radio" name="acoplamento" value="SIM" checked={fixedData.acoplamento_polia === 'SIM'} onChange={e => setFixedData({ ...fixedData, acoplamento_polia: e.target.value })} />
+                                            ( )Sim (OLHAL)
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'normal', cursor: 'pointer' }}>
+                                            <input type="radio" name="acoplamento" value="NÃO" checked={fixedData.acoplamento_polia === 'NÃO'} onChange={e => setFixedData({ ...fixedData, acoplamento_polia: e.target.value })} />
+                                            ( )Não
+                                        </label>
                                     </div>
-                                    <div className="form-group" style={{ flex: 1 }}>
-                                        <label style={{ fontWeight: 'bold' }}>LOCAL / EQUIPAMENTO</label>
-                                        <input
-                                            placeholder="Ex: Prensa 01"
-                                            value={fixedData.local_equipamento}
-                                            onChange={e => setFixedData({ ...fixedData, local_equipamento: e.target.value.toUpperCase() })}
-                                            style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
-                                        />
+                                </div>
+
+                                <div className="form-group full-row">
+                                    <label style={{ fontWeight: 'bold' }}>Recebido com sistema de lubrificação?</label>
+                                    <div style={{ display: 'flex', gap: '15px', marginTop: '5px' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'normal', cursor: 'pointer' }}>
+                                            <input type="radio" name="sistema_lub" value="SIM" checked={fixedData.sistema_lubrificacao === 'SIM'} onChange={e => setFixedData({ ...fixedData, sistema_lubrificacao: e.target.value })} />
+                                            ( )Sim
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'normal', cursor: 'pointer' }}>
+                                            <input type="radio" name="sistema_lub" value="NÃO" checked={fixedData.sistema_lubrificacao === 'NÃO'} onChange={e => setFixedData({ ...fixedData, sistema_lubrificacao: e.target.value })} />
+                                            ( )Não
+                                        </label>
                                     </div>
-                                    <div className="form-group" style={{ flex: 1 }}>
-                                        <label style={{ fontWeight: 'bold' }}>RESPONSÁVEL TÉCNICO</label>
-                                        <input
-                                            placeholder="Nome do Responsável"
-                                            value={fixedData.responsavel_tecnico}
-                                            onChange={e => setFixedData({ ...fixedData, responsavel_tecnico: e.target.value })}
-                                            style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
-                                        />
-                                    </div>
+                                </div>
+
+                                <div className="form-group full-row">
+                                    <label style={{ fontWeight: 'bold' }}>Outros (especificar):</label>
+                                    <input
+                                        placeholder="Outros detalhes..."
+                                        value={fixedData.outros_especificar}
+                                        onChange={e => setFixedData({ ...fixedData, outros_especificar: e.target.value.toUpperCase() })}
+                                        style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
+                                    />
+                                </div>
+
+                                <div className="form-group full-row">
+                                    <label style={{ fontWeight: 'bold' }}>TAG DO CILINDRO *</label>
+                                    <input
+                                        required
+                                        placeholder="Digite a TAG..."
+                                        value={fixedData.tag}
+                                        onChange={e => setFixedData({ ...fixedData, tag: e.target.value.toUpperCase() })}
+                                        style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
+                                    />
+                                </div>
+
+                                <div className="form-group full-row">
+                                    <label style={{ fontWeight: 'bold' }}>Observações:</label>
+                                    <textarea
+                                        style={{ width: '100%', minHeight: '80px', padding: '10px', borderRadius: '8px', border: '2px solid #f1f3f5' }}
+                                        placeholder="Observações complementares..."
+                                        value={fixedData.observacoes_gerais}
+                                        onChange={e => setFixedData({ ...fixedData, observacoes_gerais: e.target.value.toUpperCase() })}
+                                    />
                                 </div>
                             </div>
                         )}
-                        <div className="form-group full-row">
-                            <label>DESENHO DE CONJUNTO</label>
-                            <input
-                                placeholder="Referência do desenho..."
-                                value={fixedData.desenho_conjunto}
-                                onChange={e => setFixedData({ ...fixedData, desenho_conjunto: e.target.value.toUpperCase() })}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>TIPO/MODELO</label>
-                            <input
-                                placeholder="Ex: H-123"
-                                value={fixedData.tipo_modelo}
-                                onChange={e => setFixedData({ ...fixedData, tipo_modelo: e.target.value.toUpperCase() })}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>FABRICANTE</label>
-                            <input
-                                placeholder="Fabricante..."
-                                value={fixedData.fabricante}
-                                onChange={e => setFixedData({ ...fixedData, fabricante: e.target.value.toUpperCase() })}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>LUBRIFICANTE</label>
-                            <input
-                                placeholder="Óleo, Graxa..."
-                                value={fixedData.lubrificante}
-                                onChange={e => setFixedData({ ...fixedData, lubrificante: e.target.value.toUpperCase() })}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>VOLUME</label>
-                            <input
-                                placeholder="Volume..."
-                                value={fixedData.volume}
-                                onChange={e => setFixedData({ ...fixedData, volume: e.target.value.toUpperCase() })}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>RECEBIDO COM ACOPLAMENTO OU POLIA?</label>
-                            <select
-                                value={fixedData.acoplamento_polia}
-                                onChange={e => setFixedData({ ...fixedData, acoplamento_polia: e.target.value })}
-                            >
-                                <option value="">Selecione...</option>
-                                <option value="SIM">SIM</option>
-                                <option value="NÃO">NÃO</option>
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label>RECEBIDO COM SISTEMA DE LUBRIFICAÇÃO?</label>
-                            <select
-                                value={fixedData.sistema_lubrificacao}
-                                onChange={e => setFixedData({ ...fixedData, sistema_lubrificacao: e.target.value })}
-                            >
-                                <option value="">Selecione...</option>
-                                <option value="SIM">SIM</option>
-                                <option value="NÃO">NÃO</option>
-                            </select>
-                        </div>
-                        <div className="form-group full-row">
-                            <label>OUTROS (ESPECIFICAR)</label>
-                            <input
-                                placeholder="Outros detalhes..."
-                                value={fixedData.outros_especificar}
-                                onChange={e => setFixedData({ ...fixedData, outros_especificar: e.target.value.toUpperCase() })}
-                            />
-                        </div>
-                        <div className="form-group full-row">
-                            <label>OBSERVAÇÕES</label>
-                            <textarea
-                                style={{ width: '100%', minHeight: '80px', padding: '10px', borderRadius: '8px', border: '2px solid #f1f3f5' }}
-                                placeholder="Observações complementares..."
-                                value={fixedData.observacoes_gerais}
-                                onChange={e => setFixedData({ ...fixedData, observacoes_gerais: e.target.value.toUpperCase() })}
-                            />
-                        </div>
                     </div>
                 </section>
 
@@ -978,7 +979,7 @@ export const NovaPeritagem: React.FC = () => {
                 <section className="form-card">
                     <div className="card-header">
                         <Info size={20} color="#7f8c8d" />
-                        <h3>Materiais e Vedações</h3>
+                        <h3>Empenho de Materiais</h3>
                     </div>
                     <div className="vedacoes-list">
                         <div className="vedacao-row header" style={{ background: '#f8fafc', fontWeight: 'bold', fontSize: '0.7rem', display: 'flex', borderBottom: '1px solid #e2e8f0', padding: '10px' }}>

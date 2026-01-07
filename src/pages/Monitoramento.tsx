@@ -468,7 +468,7 @@ export const Monitoramento: React.FC = () => {
                                                     onClick={(e) => { e.stopPropagation(); handleUpdateStatus(processo, 'EM MANUTENÇÃO'); }}
                                                 >
                                                     <ShoppingCart size={16} />
-                                                    <span>Liberar Pedido</span>
+                                                    <span>Empenho de Materiais</span>
                                                 </button>
                                             )}
                                             {isMaintenance && (isAdmin || role === 'perito') && (

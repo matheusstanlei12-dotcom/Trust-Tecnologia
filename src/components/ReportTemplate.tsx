@@ -404,34 +404,6 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
             <Footer />
         </Page>
 
-        {data.parecerTecnico && (
-            <Page size="A4" style={styles.page}>
-                <View style={styles.header}>
-                    <Image src="/logo.png" style={styles.logoHeader} />
-                    <View style={styles.headerTextGroup}>
-                        <Text style={styles.headerTitle}>Parecer Técnico de Engenharia</Text>
-                        <Text style={styles.headerOS}>O.S. {data.laudoNum}</Text>
-                    </View>
-                </View>
 
-                <Text style={styles.sectionTitle}>3. Análise de Engenharia & Conclusão Técnica</Text>
-                <View style={styles.parecerBox}>
-                    <Text>{data.parecerTecnico}</Text>
-                </View>
-
-                <View style={styles.signatureContainer}>
-                    <View style={styles.signatureLine}>
-                        <Text style={styles.signatureName}>HIDRAUP INDUSTRIAL</Text>
-                        <Text style={styles.signatureBottom}>Departamento de Engenharia</Text>
-                    </View>
-                    <View style={styles.signatureLine}>
-                        <Text style={styles.signatureName}>INSPETOR TÉCNICO</Text>
-                        <Text style={styles.signatureBottom}>Responsável pela Peritagem</Text>
-                    </View>
-                </View>
-
-                <Footer />
-            </Page>
-        )}
     </Document>
 );

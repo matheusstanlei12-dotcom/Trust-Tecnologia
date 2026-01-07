@@ -96,7 +96,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
 
                                 <NavLink to="/pcp/liberar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
                                     <ShoppingCart size={20} />
-                                    <span>2. Liberação de Pedido</span>
+                                    <span>2. Empenho de Materiais</span>
                                 </NavLink>
 
                                 <NavLink to="/pcp/finalizar" onClick={handleLinkClick} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
