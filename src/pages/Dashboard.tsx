@@ -100,7 +100,7 @@ export const Dashboard: React.FC = () => {
             show: isAdmin
         },
         {
-            label: '2. Liberação de Pedido',
+            label: '2. Empenho de Materiais',
             value: counts.aguardandoCliente,
             icon: <DollarSign size={24} />,
             color: 'rgba(245, 158, 11, 0.15)',
