@@ -419,7 +419,7 @@ export const Monitoramento: React.FC = () => {
                 ) : (
                     <>
                         {filteredProcessos.map(processo => {
-                            const showActions = (role === 'pcp' || role === 'gestor');
+                            const showActions = (role === 'pcp' || role === 'gestor' || role === 'perito');
                             const isPcpAwaiting = processo.statusTexto === 'PERITAGEM CRIADA' || processo.statusTexto === 'AGUARDANDO APROVAÇÃO DO PCP';
                             const isClientAwaiting = processo.statusTexto === 'AGUARDANDO APROVAÇÃO DO CLIENTE' || processo.statusTexto === 'AGUARDANDO CLIENTES';
                             const isMaintenance = processo.statusTexto === 'EM MANUTENÇÃO' || processo.statusTexto === 'CILINDROS EM MANUTENÇÃO';
