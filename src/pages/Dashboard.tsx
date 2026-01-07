@@ -16,12 +16,9 @@ import {
     Title,
     Tooltip,
     Legend,
-    ArcElement,
-    PointElement,
-    LineElement,
-    Filler
+    ArcElement
 } from 'chart.js';
-import { Bar, Doughnut, Line } from 'react-chartjs-2';
+import { Bar, Doughnut } from 'react-chartjs-2';
 import './Dashboard.css';
 
 ChartJS.register(
@@ -31,10 +28,7 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    ArcElement,
-    PointElement,
-    LineElement,
-    Filler
+    ArcElement
 );
 
 export const Dashboard: React.FC = () => {
@@ -50,7 +44,6 @@ export const Dashboard: React.FC = () => {
         conferenciaFinal: 0
     });
     const [clientStats, setClientStats] = React.useState<{ name: string; count: number }[]>([]);
-    const [trends, setTrends] = React.useState<any>({});
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
@@ -61,7 +54,7 @@ export const Dashboard: React.FC = () => {
         try {
             const { data, error } = await supabase
                 .from('peritagens')
-                .select('status, cliente, created_at');
+                .select('status, cliente');
 
             if (error) throw error;
 
@@ -75,32 +68,7 @@ export const Dashboard: React.FC = () => {
 
                 setCounts({ total, aguardando: aguardandoCliente, manutencao, finalizados, pendentePcp, aguardandoCliente, conferenciaFinal });
 
-                // Calcular tendências (últimos 7 dias)
-                const last7Days = [...Array(7)].map((_, i) => {
-                    const d = new Date();
-                    d.setDate(d.getDate() - i);
-                    return d.toISOString().split('T')[0];
-                }).reverse();
-
-                const calculateTrend = (filterFn: (p: any) => boolean) => {
-                    return last7Days.map(day => {
-                        return data.filter(p => {
-                            const pDate = p.created_at?.split('T')[0];
-                            return pDate === day && filterFn(p);
-                        }).length;
-                    });
-                };
-
-                setTrends({
-                    pcp: calculateTrend(p => p.status === 'AGUARDANDO APROVAÇÃO DO PCP' || p.status === 'PERITAGEM CRIADA'),
-                    cliente: calculateTrend(p => p.status === 'AGUARDANDO APROVAÇÃO DO CLIENTE' || p.status === 'Aguardando Clientes'),
-                    manutencao: calculateTrend(p => p.status === 'EM MANUTENÇÃO' || p.status === 'Cilindros em Manutenção'),
-                    conferencia: calculateTrend(p => p.status === 'AGUARDANDO CONFERÊNCIA FINAL'),
-                    finalizados: calculateTrend(p => p.status === 'PROCESSO FINALIZADO' || p.status === 'Finalizados' || p.status === 'ORÇAMENTO FINALIZADO')
-                });
-
                 // Processar estatísticas por cliente
-                // ... (rest of client processing remains similar)
                 const clients = data.map(p => p.cliente || 'Sem Cliente');
                 const clientCounts: { [key: string]: number } = {};
                 clients.forEach(c => {
@@ -129,8 +97,7 @@ export const Dashboard: React.FC = () => {
             color: 'rgba(59, 130, 246, 0.15)',
             iconColor: '#3b82f6',
             link: '/pcp/aprovar',
-            show: role === 'pcp' || role === 'gestor',
-            trendData: trends.pcp || [0, 0, 0, 0, 0, 0, 0]
+            show: role === 'pcp' || role === 'gestor'
         },
         {
             label: '2. Liberação de Pedido',
@@ -139,18 +106,16 @@ export const Dashboard: React.FC = () => {
             color: 'rgba(245, 158, 11, 0.15)',
             iconColor: '#f59e0b',
             link: '/pcp/liberar',
-            show: role === 'pcp' || role === 'gestor',
-            trendData: trends.cliente || [0, 0, 0, 0, 0, 0, 0]
+            show: role === 'pcp' || role === 'gestor'
         },
         {
             label: '3. Conferência Final',
             value: counts.conferenciaFinal,
             icon: <CheckCircle2 size={24} />,
-            color: 'rgba(30, 41, 59, 0.1)',
-            iconColor: '#1e293b',
+            color: 'rgba(15, 23, 42, 0.1)',
+            iconColor: '#0f172a',
             link: '/pcp/finalizar',
-            show: role === 'pcp' || role === 'gestor',
-            trendData: trends.conferencia || [0, 0, 0, 0, 0, 0, 0]
+            show: role === 'pcp' || role === 'gestor'
         },
         {
             label: 'Em Manutenção',
@@ -159,8 +124,7 @@ export const Dashboard: React.FC = () => {
             color: 'rgba(16, 185, 129, 0.15)',
             iconColor: '#10b981',
             link: '/monitoramento',
-            show: true,
-            trendData: trends.manutencao || [0, 0, 0, 0, 0, 0, 0]
+            show: true
         },
         {
             label: 'Finalizados',
@@ -169,30 +133,9 @@ export const Dashboard: React.FC = () => {
             color: 'rgba(16, 185, 129, 0.15)',
             iconColor: '#10b981',
             link: '/monitoramento',
-            show: true,
-            trendData: trends.finalizados || [0, 0, 0, 0, 0, 0, 0]
+            show: true
         },
     ];
-
-    const getMiniChartOptions = (color: string) => ({
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { enabled: false } },
-        scales: {
-            x: { display: false },
-            y: { display: false, min: 0 }
-        },
-        elements: {
-            line: {
-                borderColor: color,
-                borderWidth: 2,
-                tension: 0.4,
-                fill: true,
-                backgroundColor: `${color}20`
-            },
-            point: { radius: 0 }
-        }
-    });
 
     const barData = {
         labels: clientStats.length > 0 ? clientStats.map(s => s.name) : ['Sem dados'],
@@ -200,31 +143,9 @@ export const Dashboard: React.FC = () => {
             {
                 label: 'Peritagens',
                 data: clientStats.length > 0 ? clientStats.map(s => s.count) : [0],
-                backgroundColor: [
-                    'rgba(59, 130, 246, 0.8)',
-                    'rgba(16, 185, 129, 0.8)',
-                    'rgba(245, 158, 11, 0.8)',
-                    'rgba(139, 92, 246, 0.8)',
-                    'rgba(236, 72, 153, 0.8)'
-                ],
-                borderColor: [
-                    '#3b82f6',
-                    '#10b981',
-                    '#f59e0b',
-                    '#8b5cf6',
-                    '#ec4899'
-                ],
-                borderWidth: 2,
-                borderRadius: 12,
-                hoverBackgroundColor: [
-                    '#3b82f6',
-                    '#10b981',
-                    '#f59e0b',
-                    '#8b5cf6',
-                    '#ec4899'
-                ],
-                hoverBorderWidth: 0,
-                barPercentage: 0.6,
+                backgroundColor: '#3b82f6',
+                borderRadius: 8,
+                hoverBackgroundColor: '#2563eb',
             },
         ],
     };
@@ -234,137 +155,36 @@ export const Dashboard: React.FC = () => {
         datasets: [
             {
                 data: [counts.finalizados, counts.pendentePcp, counts.aguardandoCliente, counts.manutencao, counts.conferenciaFinal],
-                backgroundColor: [
-                    '#10b981', // Sucesso
-                    '#3b82f6', // Info
-                    '#f59e0b', // Alerta
-                    '#ec4899', // Oficina
-                    '#1e293b'  // Dark
-                ],
-                hoverOffset: 20,
-                borderWidth: 4,
-                borderColor: '#ffffff',
-                spacing: 5,
-                borderRadius: 8
+                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#0f172a'],
+                hoverOffset: 12,
+                borderWidth: 0,
             },
         ],
     };
 
-    const barOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                titleColor: '#1e293b',
-                bodyColor: '#64748b',
-                padding: 12,
-                borderColor: '#e2e8f0',
-                borderWidth: 1,
-                usePointStyle: true,
-                boxPadding: 6,
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    display: true,
-                    color: 'rgba(0, 0, 0, 0.03)',
-                    drawTicks: false,
-                },
-                ticks: {
-                    stepSize: 1,
-                    font: { weight: 'bold' }
-                },
-                border: { display: false }
-            },
-            x: {
-                grid: { display: false },
-                ticks: {
-                    font: { weight: 'bold' }
-                },
-                border: { display: false }
-            }
-        },
-        animation: {
-            duration: 2000,
-            easing: 'easeOutQuart'
-        }
-    } as const;
-
-    const doughnutOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '75%',
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    usePointStyle: true,
-                    padding: 25,
-                    font: {
-                        size: 12,
-                        weight: 'bold'
-                    },
-                    color: '#64748b'
-                }
-            },
-            tooltip: {
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                titleColor: '#1e293b',
-                bodyColor: '#64748b',
-                padding: 12,
-                borderColor: '#e2e8f0',
-                borderWidth: 1,
-            }
-        },
-        animation: {
-            animateRotate: true,
-            animateScale: true,
-            duration: 2000,
-            easing: 'easeOutBack'
-        }
-    } as const;
-
     return (
         <div className="dashboard-container">
             <h1 className="page-title">Painel de Controle</h1>
-            <p className="page-subtitle">Acompanhe a performance operacional da Hidraup em tempo real.</p>
+            <p className="page-subtitle">Bem-vindo ao sistema HIDRAUP. Veja o resumo das atividades.</p>
 
             {loading ? (
-                <div style={{ padding: '3rem', textAlign: 'center', background: 'white', borderRadius: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
-                    <span className="loading-spinner"></span>
-                    <p style={{ marginTop: '1rem', color: '#64748b', fontWeight: 600 }}>Carregando estatísticas inteligentes...</p>
+                <div style={{ padding: '3rem', textAlign: 'center', background: 'white', borderRadius: '16px' }}>
+                    <span className="loading-spinner"></span> Carregando estatísticas...
                 </div>
             ) : (
                 <div className="stats-grid">
                     {stats.filter(s => s.show).map((stat, index) => (
                         <div
                             key={index}
-                            className="stat-card clickable with-mini-chart"
+                            className="stat-card clickable"
                             onClick={() => navigate(stat.link)}
                         >
-                            <div className="stat-main-content">
-                                <div className="stat-icon-wrapper" style={{ backgroundColor: stat.color, color: stat.iconColor }}>
-                                    {stat.icon}
-                                </div>
-                                <div className="stat-info">
-                                    <span className="stat-label">{stat.label}</span>
-                                    <span className="stat-value">{stat.value}</span>
-                                </div>
+                            <div className="stat-icon-wrapper" style={{ backgroundColor: stat.color, color: stat.iconColor }}>
+                                {stat.icon}
                             </div>
-                            <div className="stat-mini-chart">
-                                <Line
-                                    data={{
-                                        labels: ['', '', '', '', '', '', ''],
-                                        datasets: [{
-                                            data: stat.trendData,
-                                        }]
-                                    }}
-                                    options={getMiniChartOptions(stat.iconColor) as any}
-                                />
+                            <div className="stat-info">
+                                <span className="stat-label">{stat.label}</span>
+                                <span className="stat-value">{stat.value}</span>
                             </div>
                         </div>
                     ))}
@@ -373,21 +193,37 @@ export const Dashboard: React.FC = () => {
 
             <div className="charts-grid">
                 <div className="chart-card">
-                    <h3>Volume de Peritagens por Cliente</h3>
+                    <h3>Peritagens por Cliente (Top 5)</h3>
                     <div className="chart-wrapper">
                         <Bar
                             data={barData}
-                            options={barOptions}
+                            options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } }
+                            }}
                         />
                     </div>
                 </div>
 
                 <div className="chart-card">
-                    <h3>Distribuição Estratégica</h3>
+                    <h3>Distribuição por Status</h3>
                     <div className="doughnut-wrapper">
                         <Doughnut
                             data={doughnutData}
-                            options={doughnutOptions}
+                            options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'right',
+                                        labels: {
+                                            usePointStyle: true,
+                                            padding: 20
+                                        }
+                                    }
+                                }
+                            }}
                         />
                     </div>
                 </div>
