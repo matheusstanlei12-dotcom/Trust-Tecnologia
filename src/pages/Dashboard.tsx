@@ -143,9 +143,31 @@ export const Dashboard: React.FC = () => {
             {
                 label: 'Peritagens',
                 data: clientStats.length > 0 ? clientStats.map(s => s.count) : [0],
-                backgroundColor: '#3b82f6',
-                borderRadius: 8,
-                hoverBackgroundColor: '#2563eb',
+                backgroundColor: [
+                    'rgba(59, 130, 246, 0.8)',
+                    'rgba(16, 185, 129, 0.8)',
+                    'rgba(245, 158, 11, 0.8)',
+                    'rgba(139, 92, 246, 0.8)',
+                    'rgba(236, 72, 153, 0.8)'
+                ],
+                borderColor: [
+                    '#3b82f6',
+                    '#10b981',
+                    '#f59e0b',
+                    '#8b5cf6',
+                    '#ec4899'
+                ],
+                borderWidth: 2,
+                borderRadius: 12,
+                hoverBackgroundColor: [
+                    '#3b82f6',
+                    '#10b981',
+                    '#f59e0b',
+                    '#8b5cf6',
+                    '#ec4899'
+                ],
+                hoverBorderWidth: 0,
+                barPercentage: 0.6,
             },
         ],
     };
@@ -155,21 +177,109 @@ export const Dashboard: React.FC = () => {
         datasets: [
             {
                 data: [counts.finalizados, counts.pendentePcp, counts.aguardandoCliente, counts.manutencao, counts.conferenciaFinal],
-                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#0f172a'],
-                hoverOffset: 12,
-                borderWidth: 0,
+                backgroundColor: [
+                    '#10b981', // Sucesso
+                    '#3b82f6', // Info
+                    '#f59e0b', // Alerta
+                    '#ec4899', // Oficina
+                    '#1e293b'  // Dark
+                ],
+                hoverOffset: 20,
+                borderWidth: 4,
+                borderColor: '#ffffff',
+                spacing: 5,
+                borderRadius: 8
             },
         ],
     };
 
+    const barOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                titleColor: '#1e293b',
+                bodyColor: '#64748b',
+                padding: 12,
+                borderColor: '#e2e8f0',
+                borderWidth: 1,
+                usePointStyle: true,
+                boxPadding: 6,
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    display: true,
+                    color: 'rgba(0, 0, 0, 0.03)',
+                    drawTicks: false,
+                },
+                ticks: {
+                    stepSize: 1,
+                    font: { weight: 'bold' }
+                },
+                border: { display: false }
+            },
+            x: {
+                grid: { display: false },
+                ticks: {
+                    font: { weight: 'bold' }
+                },
+                border: { display: false }
+            }
+        },
+        animation: {
+            duration: 2000,
+            easing: 'easeOutQuart'
+        }
+    } as const;
+
+    const doughnutOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '75%',
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    usePointStyle: true,
+                    padding: 25,
+                    font: {
+                        size: 12,
+                        weight: 'bold'
+                    },
+                    color: '#64748b'
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                titleColor: '#1e293b',
+                bodyColor: '#64748b',
+                padding: 12,
+                borderColor: '#e2e8f0',
+                borderWidth: 1,
+            }
+        },
+        animation: {
+            animateRotate: true,
+            animateScale: true,
+            duration: 2000,
+            easing: 'easeOutBack'
+        }
+    } as const;
+
     return (
         <div className="dashboard-container">
             <h1 className="page-title">Painel de Controle</h1>
-            <p className="page-subtitle">Bem-vindo ao sistema HIDRAUP. Veja o resumo das atividades.</p>
+            <p className="page-subtitle">Acompanhe a performance operacional da Hidraup em tempo real.</p>
 
             {loading ? (
-                <div style={{ padding: '3rem', textAlign: 'center', background: 'white', borderRadius: '16px' }}>
-                    <span className="loading-spinner"></span> Carregando estatísticas...
+                <div style={{ padding: '3rem', textAlign: 'center', background: 'white', borderRadius: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+                    <span className="loading-spinner"></span>
+                    <p style={{ marginTop: '1rem', color: '#64748b', fontWeight: 600 }}>Carregando estatísticas inteligentes...</p>
                 </div>
             ) : (
                 <div className="stats-grid">
@@ -193,37 +303,21 @@ export const Dashboard: React.FC = () => {
 
             <div className="charts-grid">
                 <div className="chart-card">
-                    <h3>Peritagens por Cliente (Top 5)</h3>
+                    <h3>Volume de Peritagens por Cliente</h3>
                     <div className="chart-wrapper">
                         <Bar
                             data={barData}
-                            options={{
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: { legend: { display: false } }
-                            }}
+                            options={barOptions}
                         />
                     </div>
                 </div>
 
                 <div className="chart-card">
-                    <h3>Distribuição por Status</h3>
+                    <h3>Distribuição Estratégica</h3>
                     <div className="doughnut-wrapper">
                         <Doughnut
                             data={doughnutData}
-                            options={{
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: {
-                                        position: 'right',
-                                        labels: {
-                                            usePointStyle: true,
-                                            padding: 20
-                                        }
-                                    }
-                                }
-                            }}
+                            options={doughnutOptions}
                         />
                     </div>
                 </div>
