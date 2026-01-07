@@ -110,7 +110,7 @@ export const NovaPeritagem: React.FC = () => {
                     solucao: '',
                     fotos: [],
                     dimensoes: '',
-                    qtd: '',
+                    qtd: '1',
                     tipo: 'componente'
                 };
             }));
@@ -785,7 +785,7 @@ export const NovaPeritagem: React.FC = () => {
                                         <div style={{ width: '150px' }}>
                                             <input
                                                 className="inline-input"
-                                                placeholder=""
+                                                placeholder="Dimensões..."
                                                 value={item.dimensoes || ''}
                                                 onChange={e => updateItemDetails(item.id, 'dimensoes', e.target.value)}
                                                 onClick={e => e.stopPropagation()}
