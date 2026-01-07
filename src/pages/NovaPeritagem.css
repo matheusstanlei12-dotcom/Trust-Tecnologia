@@ -642,19 +642,22 @@
 .clear-item-btn {
     background: none;
     border: none;
-    color: #cbd5e0;
+    color: #000000;
+    /* Black as requested */
     cursor: pointer;
-    padding: 4px;
+    padding: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: 50%;
     transition: all 0.2s;
+    margin-left: 10px;
 }
 
 .clear-item-btn:hover {
     color: var(--danger);
-    background: #fff5f5;
+    background: #f1f5f9;
+    transform: scale(1.1);
 }
 
 .conformity-toggle {

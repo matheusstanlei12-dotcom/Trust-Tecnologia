@@ -765,16 +765,6 @@ export const NovaPeritagem: React.FC = () => {
                                             ) : (
                                                 <span>{item.text}</span>
                                             )}
-                                            {item.conformidade && (
-                                                <button
-                                                    type="button"
-                                                    className="clear-item-btn"
-                                                    onClick={(e) => { e.stopPropagation(); handleResetItem(item.id); }}
-                                                    title="Limpar resposta"
-                                                >
-                                                    <X size={14} />
-                                                </button>
-                                            )}
                                         </div>
 
                                         {/* Coluna X (Conformidade Marcada) */}
@@ -811,140 +801,152 @@ export const NovaPeritagem: React.FC = () => {
                                             Não Conforme
                                         </button>
                                     </div>
+                                    {item.conformidade && (
+                                        <button
+                                            type="button"
+                                            className="clear-item-btn"
+                                            onClick={(e) => { e.stopPropagation(); handleResetItem(item.id); }}
+                                            title="Limpar resposta"
+                                        >
+                                            <X size={20} />
+                                        </button>
+                                    )}
                                 </div>
 
-                                {item.conformidade === 'não conforme' && (
-                                    <div className="non-conformity-block slide-in" onClick={(e) => e.stopPropagation()}>
-                                        {/* FOTOS EM PRIMEIRO - Conforme solicitado pelo usuário */}
-                                        <div className="photo-section" style={{ marginBottom: '1.5rem', borderBottom: '1px solid #edf2f7', paddingBottom: '1rem' }}>
-                                            <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#4a5568', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Evidências Fotográficas (Componente)</label>
-                                            <div className="photo-grid">
-                                                {item.fotos.map((foto, idx) => (
-                                                    <div key={idx} className="photo-preview">
-                                                        <img src={foto} alt={`Anomalia ${idx}`} />
-                                                        <button type="button" className="btn-remove-photo" onClick={() => {
-                                                            const newPhotos = item.fotos.filter((_, i) => i !== idx);
-                                                            updateItemDetails(item.id, 'fotos', newPhotos);
-                                                        }}><X size={14} /></button>
+                                {
+                                    item.conformidade === 'não conforme' && (
+                                        <div className="non-conformity-block slide-in" onClick={(e) => e.stopPropagation()}>
+                                            {/* FOTOS EM PRIMEIRO - Conforme solicitado pelo usuário */}
+                                            <div className="photo-section" style={{ marginBottom: '1.5rem', borderBottom: '1px solid #edf2f7', paddingBottom: '1rem' }}>
+                                                <label style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#4a5568', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Evidências Fotográficas (Componente)</label>
+                                                <div className="photo-grid">
+                                                    {item.fotos.map((foto, idx) => (
+                                                        <div key={idx} className="photo-preview">
+                                                            <img src={foto} alt={`Anomalia ${idx}`} />
+                                                            <button type="button" className="btn-remove-photo" onClick={() => {
+                                                                const newPhotos = item.fotos.filter((_, i) => i !== idx);
+                                                                updateItemDetails(item.id, 'fotos', newPhotos);
+                                                            }}><X size={14} /></button>
+                                                        </div>
+                                                    ))}
+                                                    <div className="photo-upload-actions">
+                                                        <button
+                                                            type="button"
+                                                            className="btn-action-photo camera"
+                                                            onClick={(e) => { e.stopPropagation(); handlePhotoUpload(item.id, 'cam'); }}
+                                                        >
+                                                            <Camera size={20} />
+                                                            <span>Câmera</span>
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-action-photo gallery"
+                                                            onClick={(e) => { e.stopPropagation(); handlePhotoUpload(item.id, 'gallery'); }}
+                                                        >
+                                                            <Plus size={20} />
+                                                            <span>Galeria</span>
+                                                        </button>
                                                     </div>
-                                                ))}
-                                                <div className="photo-upload-actions">
-                                                    <button
-                                                        type="button"
-                                                        className="btn-action-photo camera"
-                                                        onClick={(e) => { e.stopPropagation(); handlePhotoUpload(item.id, 'cam'); }}
-                                                    >
-                                                        <Camera size={20} />
-                                                        <span>Câmera</span>
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn-action-photo gallery"
-                                                        onClick={(e) => { e.stopPropagation(); handlePhotoUpload(item.id, 'gallery'); }}
-                                                    >
-                                                        <Plus size={20} />
-                                                        <span>Galeria</span>
-                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className="usiminas-item-fields" style={{ marginBottom: '1rem' }}>
+                                                <div className="input-field" style={{ flex: '0 0 80px' }}>
+                                                    <label>Qtd</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Qtd"
+                                                        value={item.qtd}
+                                                        onChange={e => updateItemDetails(item.id, 'qtd', e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="input-field" style={{ flex: 1 }}>
+                                                    <label>Dimensões</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Dimensões"
+                                                        value={item.dimensoes}
+                                                        onChange={e => updateItemDetails(item.id, 'dimensoes', e.target.value)}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="usiminas-diametros-calc" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                                                <div className="input-field">
+                                                    <label>Diâmetro Encontrado</label>
+                                                    <input
+                                                        type="number"
+                                                        step="0.001"
+                                                        placeholder="0.000"
+                                                        value={item.diametro_encontrado || ''}
+                                                        onChange={e => {
+                                                            const val = e.target.value;
+                                                            const ideal = parseFloat(item.diametro_ideal || '0');
+                                                            const found = parseFloat(val || '0');
+                                                            const diff = (ideal - found).toFixed(3);
+                                                            updateItemDetails(item.id, 'diametro_encontrado', val);
+                                                            updateItemDetails(item.id, 'material_faltante', diff);
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="input-field">
+                                                    <label>Diâmetro Ideal</label>
+                                                    <input
+                                                        type="number"
+                                                        step="0.001"
+                                                        placeholder="0.000"
+                                                        value={item.diametro_ideal || ''}
+                                                        onChange={e => {
+                                                            const val = e.target.value;
+                                                            const found = parseFloat(item.diametro_encontrado || '0');
+                                                            const ideal = parseFloat(val || '0');
+                                                            const diff = (ideal - found).toFixed(3);
+                                                            updateItemDetails(item.id, 'diametro_ideal', val);
+                                                            updateItemDetails(item.id, 'material_faltante', diff);
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="input-field">
+                                                    <label style={{ color: parseFloat(item.material_faltante || '0') < 0 ? '#e74c3c' : '#27ae60' }}>
+                                                        Material Faltante
+                                                    </label>
+                                                    <div className="calc-result" style={{
+                                                        background: parseFloat(item.material_faltante || '0') < 0 ? '#fff5f5' : '#f0fff4',
+                                                        border: `2px solid ${parseFloat(item.material_faltante || '0') < 0 ? '#e74c3c' : '#27ae60'}`,
+                                                        borderRadius: '0.75rem',
+                                                        height: '3rem',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontWeight: 'bold',
+                                                        color: parseFloat(item.material_faltante || '0') < 0 ? '#e74c3c' : '#27ae60'
+                                                    }}>
+                                                        {item.material_faltante || '0.000'} mm
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="analysis-inputs">
+                                                <div className="input-field">
+                                                    <label>Anomalia encontrada</label>
+                                                    <textarea
+                                                        placeholder="Descreva o defeito..."
+                                                        value={item.anomalia}
+                                                        onChange={(e) => updateItemDetails(item.id, 'anomalia', e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="input-field">
+                                                    <label>Solução recomendada</label>
+                                                    <textarea
+                                                        placeholder="O que deve ser feito?"
+                                                        value={item.solucao}
+                                                        onChange={(e) => updateItemDetails(item.id, 'solucao', e.target.value)}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div className="usiminas-item-fields" style={{ marginBottom: '1rem' }}>
-                                            <div className="input-field" style={{ flex: '0 0 80px' }}>
-                                                <label>Qtd</label>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Qtd"
-                                                    value={item.qtd}
-                                                    onChange={e => updateItemDetails(item.id, 'qtd', e.target.value)}
-                                                />
-                                            </div>
-                                            <div className="input-field" style={{ flex: 1 }}>
-                                                <label>Dimensões</label>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Dimensões"
-                                                    value={item.dimensoes}
-                                                    onChange={e => updateItemDetails(item.id, 'dimensoes', e.target.value)}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="usiminas-diametros-calc" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                                            <div className="input-field">
-                                                <label>Diâmetro Encontrado</label>
-                                                <input
-                                                    type="number"
-                                                    step="0.001"
-                                                    placeholder="0.000"
-                                                    value={item.diametro_encontrado || ''}
-                                                    onChange={e => {
-                                                        const val = e.target.value;
-                                                        const ideal = parseFloat(item.diametro_ideal || '0');
-                                                        const found = parseFloat(val || '0');
-                                                        const diff = (ideal - found).toFixed(3);
-                                                        updateItemDetails(item.id, 'diametro_encontrado', val);
-                                                        updateItemDetails(item.id, 'material_faltante', diff);
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="input-field">
-                                                <label>Diâmetro Ideal</label>
-                                                <input
-                                                    type="number"
-                                                    step="0.001"
-                                                    placeholder="0.000"
-                                                    value={item.diametro_ideal || ''}
-                                                    onChange={e => {
-                                                        const val = e.target.value;
-                                                        const found = parseFloat(item.diametro_encontrado || '0');
-                                                        const ideal = parseFloat(val || '0');
-                                                        const diff = (ideal - found).toFixed(3);
-                                                        updateItemDetails(item.id, 'diametro_ideal', val);
-                                                        updateItemDetails(item.id, 'material_faltante', diff);
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="input-field">
-                                                <label style={{ color: parseFloat(item.material_faltante || '0') < 0 ? '#e74c3c' : '#27ae60' }}>
-                                                    Material Faltante
-                                                </label>
-                                                <div className="calc-result" style={{
-                                                    background: parseFloat(item.material_faltante || '0') < 0 ? '#fff5f5' : '#f0fff4',
-                                                    border: `2px solid ${parseFloat(item.material_faltante || '0') < 0 ? '#e74c3c' : '#27ae60'}`,
-                                                    borderRadius: '0.75rem',
-                                                    height: '3rem',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    fontWeight: 'bold',
-                                                    color: parseFloat(item.material_faltante || '0') < 0 ? '#e74c3c' : '#27ae60'
-                                                }}>
-                                                    {item.material_faltante || '0.000'} mm
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="analysis-inputs">
-                                            <div className="input-field">
-                                                <label>Anomalia encontrada</label>
-                                                <textarea
-                                                    placeholder="Descreva o defeito..."
-                                                    value={item.anomalia}
-                                                    onChange={(e) => updateItemDetails(item.id, 'anomalia', e.target.value)}
-                                                />
-                                            </div>
-                                            <div className="input-field">
-                                                <label>Solução recomendada</label>
-                                                <textarea
-                                                    placeholder="O que deve ser feito?"
-                                                    value={item.solucao}
-                                                    onChange={(e) => updateItemDetails(item.id, 'solucao', e.target.value)}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+                                    )
+                                }
                             </div>
                         ))}
                     </div>
