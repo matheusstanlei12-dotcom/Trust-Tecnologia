@@ -30,6 +30,19 @@ interface Processo {
     foto_frontal?: string;
     created_at?: string;
     criado_por_nome?: string;
+    desenho_conjunto?: string;
+    lubrificante?: string;
+    volume?: string;
+    acoplamento_polia?: string;
+    sistema_lubrificacao?: string;
+    outros_especificar?: string;
+    observacoes_gerais?: string;
+    fabricante?: string;
+    tipo_modelo?: string;
+    ni?: string;
+    ordem?: string;
+    tag?: string;
+    tipo_cilindro?: string;
 }
 
 interface AnaliseTecnica {
@@ -40,7 +53,8 @@ interface AnaliseTecnica {
     solucao?: string;
     fotos?: string[];
     dimensoes?: string;
-    qtd?: string;
+    qtd?: string | number;
+    tipo?: string;
 }
 
 interface Historico {
@@ -139,7 +153,20 @@ export const Monitoramento: React.FC = () => {
             fabricante_modelo: p.fabricante_modelo,
             foto_frontal: p.foto_frontal,
             created_at: p.created_at,
-            criado_por_nome: p.criador?.full_name || 'Usuário do Sistema'
+            criado_por_nome: p.criador?.full_name || 'Usuário do Sistema',
+            desenho_conjunto: p.desenho_conjunto,
+            lubrificante: p.lubrificante,
+            volume: p.volume,
+            acoplamento_polia: p.acoplamento_polia,
+            sistema_lubrificacao: p.sistema_lubrificacao,
+            outros_especificar: p.outros_especificar,
+            observacoes_gerais: p.observacoes_gerais,
+            fabricante: p.fabricante,
+            tipo_modelo: p.tipo_modelo,
+            ni: p.ni,
+            ordem: p.ordem,
+            tag: p.tag,
+            tipo_cilindro: p.tipo_cilindro
         }));
 
         setProcessos(mapped);
@@ -319,105 +346,159 @@ export const Monitoramento: React.FC = () => {
                 </div>
 
                 {/* AREA DE AÇÃO DO PCP / GESTOR */}
-                {(role === 'pcp' || role === 'gestor') && (
-                    <div className="pcp-actions-card">
-                        <h3>Controle de Processo (Ações PCP)</h3>
+                <div className="pcp-actions-card">
+                    <h3 style={{ marginBottom: '1rem', borderBottom: '2px solid #edf2f7', paddingBottom: '0.5rem' }}>Dados Completos da Peritagem</h3>
 
-                        {(selectedProcess.statusTexto === 'AGUARDANDO APROVAÇÃO DO PCP' || selectedProcess.statusTexto === 'PERITAGEM CRIADA' || selectedProcess.statusTexto === 'REVISÃO NECESSÁRIA') && (
-                            <>
-                                <p style={{ marginBottom: '1.5rem', fontWeight: '500' }}>Dados da Peritagem para Aprovação:</p>
+                    <div className="peritagem-full-review">
+                        {selectedProcess.foto_frontal && (
+                            <div className="review-section">
+                                <h4 className="review-subtitle">Foto Frontal do Equipamento</h4>
+                                <div className="review-image-container">
+                                    <img src={selectedProcess.foto_frontal} alt="Frontal" className="review-image-main" />
+                                </div>
+                            </div>
+                        )}
 
-                                <div className="peritagem-full-review">
-                                    {selectedProcess.foto_frontal && (
-                                        <div className="review-section">
-                                            <h4 className="review-subtitle">Foto Frontal do Equipamento</h4>
-                                            <div className="review-image-container">
-                                                <img src={selectedProcess.foto_frontal} alt="Frontal" className="review-image-main" />
-                                            </div>
-                                        </div>
-                                    )}
+                        <div className="review-section">
+                            <h4 className="review-subtitle">Identificação e Dimensões</h4>
+                            <div className="peritagem-details-grid">
+                                <div className="detail-item"><strong>O.S.:</strong> {selectedProcess.os}</div>
+                                <div className="detail-item"><strong>Cliente:</strong> {selectedProcess.cliente}</div>
+                                <div className="detail-item"><strong>TAG:</strong> {selectedProcess.tag || '---'}</div>
+                                <div className="detail-item"><strong>Tipo:</strong> {selectedProcess.tipo_cilindro || '---'}</div>
+                                <div className="detail-item"><strong>N.F.:</strong> {selectedProcess.nota_fiscal || '---'}</div>
+                                <div className="detail-item"><strong>NI:</strong> {selectedProcess.ni || '---'}</div>
+                                <div className="detail-item"><strong>Ordem:</strong> {selectedProcess.ordem || '---'}</div>
+                                <div className="detail-item"><strong>Ø Interno:</strong> {selectedProcess.camisa_int || '---'}mm</div>
+                                <div className="detail-item"><strong>Ø Haste:</strong> {selectedProcess.haste_diam || '---'}mm</div>
+                                <div className="detail-item"><strong>Curso:</strong> {selectedProcess.curso || '---'}mm</div>
+                                <div className="detail-item"><strong>Comp. Total:</strong> {selectedProcess.camisa_comp || '---'}mm</div>
+                                <div className="detail-item"><strong>Comp. Haste:</strong> {selectedProcess.haste_comp || '---'}mm</div>
+                                <div className="detail-item"><strong>Pressão Nom.:</strong> {selectedProcess.pressao_nominal || '---'}</div>
+                                <div className="detail-item full-row"><strong>Montagem:</strong> {selectedProcess.montagem || '---'}</div>
+                                <div className="detail-item full-row"><strong>Fabricante/Modelo:</strong> {selectedProcess.fabricante_modelo || '---'}</div>
 
-                                    <div className="review-section">
-                                        <h4 className="review-subtitle">Identificação e Dimensões</h4>
-                                        <div className="peritagem-details-grid">
-                                            <div className="detail-item"><strong>O.S.:</strong> {selectedProcess.os}</div>
-                                            <div className="detail-item"><strong>Cliente:</strong> {selectedProcess.cliente}</div>
-                                            <div className="detail-item"><strong>NI:</strong> {selectedProcess.id.split('-')[0].toUpperCase()}</div> {/* Fallback UI for NI if not in Processo, though selectedProcess has it from fetch */}
-                                            <div className="detail-item"><strong>N.F.:</strong> {selectedProcess.nota_fiscal || '---'}</div>
-                                            <div className="detail-item"><strong>Ø Interno:</strong> {selectedProcess.camisa_int || '---'}mm</div>
-                                            <div className="detail-item"><strong>Ø Haste:</strong> {selectedProcess.haste_diam || '---'}mm</div>
-                                            <div className="detail-item"><strong>Curso:</strong> {selectedProcess.curso || '---'}mm</div>
-                                            <div className="detail-item"><strong>Comp. Total:</strong> {selectedProcess.camisa_comp || '---'}mm</div>
-                                            <div className="detail-item"><strong>Comp. Haste:</strong> {selectedProcess.haste_comp || '---'}mm</div>
-                                            <div className="detail-item"><strong>Pressão Nom.:</strong> {selectedProcess.pressao_nominal || '---'} bar</div>
-                                            <div className="detail-item full-row"><strong>Montagem:</strong> {selectedProcess.montagem || '---'}</div>
-                                            <div className="detail-item full-row"><strong>Fabricante/Modelo:</strong> {selectedProcess.fabricante_modelo || '---'}</div>
-                                        </div>
-                                    </div>
+                                {/* Novos campos */}
+                                <div className="detail-item"><strong>Desenho:</strong> {selectedProcess.desenho_conjunto || '---'}</div>
+                                <div className="detail-item"><strong>Lubrificante:</strong> {selectedProcess.lubrificante || '---'}</div>
+                                <div className="detail-item"><strong>Volume:</strong> {selectedProcess.volume || '---'}</div>
+                                <div className="detail-item"><strong>Acoplamento:</strong> {selectedProcess.acoplamento_polia || '---'}</div>
+                                <div className="detail-item"><strong>Sist. Lub.:</strong> {selectedProcess.sistema_lubrificacao || '---'}</div>
+                                <div className="detail-item"><strong>Fabricante:</strong> {selectedProcess.fabricante || '---'}</div>
+                                <div className="detail-item"><strong>Modelo:</strong> {selectedProcess.tipo_modelo || '---'}</div>
+                                {selectedProcess.outros_especificar && (
+                                    <div className="detail-item full-row"><strong>Outros:</strong> {selectedProcess.outros_especificar}</div>
+                                )}
+                                {selectedProcess.observacoes_gerais && (
+                                    <div className="detail-item full-row"><strong>Obs. Gerais:</strong> {selectedProcess.observacoes_gerais}</div>
+                                )}
+                            </div>
+                        </div>
 
-                                    <div className="review-section">
-                                        <h4 className="review-subtitle">Análise Técnica (Checklist)</h4>
-                                        {loadingAnalyses ? (
-                                            <div className="loading-mini"><Loader2 size={24} className="spinning-icon" /> Carregando análise...</div>
-                                        ) : (
-                                            <div className="analysis-review-list">
-                                                {technicalAnalyses.length > 0 ? (
-                                                    technicalAnalyses.map(analise => (
-                                                        <div key={analise.id} className={`review-item-card ${analise.conformidade === 'não conforme' ? 'not-ok' : 'ok'}`}>
-                                                            <div className="review-item-header">
-                                                                <div className="item-info">
-                                                                    <span className="item-name">{analise.componente}</span>
-                                                                    {(analise.dimensoes || analise.qtd) && (
-                                                                        <div className="item-subtext">
-                                                                            {analise.dimensoes && <span>Dim: {analise.dimensoes}</span>}
-                                                                            {analise.qtd && <span>Qtd: {analise.qtd}</span>}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                                <span className={`badge-conformity ${analise.conformidade === 'conforme' ? 'ok' : 'nok'}`}>
-                                                                    {analise.conformidade.toUpperCase()}
-                                                                </span>
+                        <div className="review-section">
+                            <h4 className="review-subtitle">Análise Técnica (Componentes)</h4>
+                            {loadingAnalyses ? (
+                                <div className="loading-mini"><Loader2 size={24} className="spinning-icon" /> Carregando análise...</div>
+                            ) : (
+                                <div className="analysis-review-list">
+                                    {technicalAnalyses.filter(a => a.tipo !== 'vedação').length > 0 ? (
+                                        technicalAnalyses.filter(a => a.tipo !== 'vedação').map(analise => (
+                                            <div key={analise.id} className={`review-item-card ${analise.conformidade === 'não conforme' ? 'not-ok' : 'ok'}`}>
+                                                <div className="review-item-header">
+                                                    <div className="item-info">
+                                                        <span className="item-name">{analise.componente}</span>
+                                                        {(analise.dimensoes || analise.qtd) && (
+                                                            <div className="item-subtext">
+                                                                {analise.dimensoes && <span>Dim: {analise.dimensoes}</span>}
+                                                                {analise.qtd && <span>Qtd: {analise.qtd}</span>}
                                                             </div>
+                                                        )}
+                                                    </div>
+                                                    <span className={`badge-conformity ${analise.conformidade === 'conforme' ? 'ok' : 'nok'}`}>
+                                                        {analise.conformidade.toUpperCase()}
+                                                    </span>
+                                                </div>
 
-                                                            {analise.conformidade === 'não conforme' && (
-                                                                <div className="review-item-details">
-                                                                    {analise.anomalias && (
-                                                                        <div className="detail-field">
-                                                                            <label>Anomalia</label>
-                                                                            <p>{analise.anomalias}</p>
+                                                {analise.conformidade === 'não conforme' && (
+                                                    <div className="review-item-details">
+                                                        {analise.anomalias && (
+                                                            <div className="detail-field">
+                                                                <label>Anomalia</label>
+                                                                <p>{analise.anomalias}</p>
+                                                            </div>
+                                                        )}
+                                                        {analise.solucao && (
+                                                            <div className="detail-field">
+                                                                <label>Solução Sugerida</label>
+                                                                <p>{analise.solucao}</p>
+                                                            </div>
+                                                        )}
+                                                        {analise.fotos && analise.fotos.length > 0 && (
+                                                            <div className="detail-field">
+                                                                <label>Evidências Fotográficas</label>
+                                                                <div className="review-photo-grid">
+                                                                    {analise.fotos.map((foto, idx) => (
+                                                                        <div key={idx} className="review-photo-item" onClick={() => window.open(foto, '_blank')}>
+                                                                            <img src={foto} alt={`Dano ${idx + 1}`} />
                                                                         </div>
-                                                                    )}
-                                                                    {analise.solucao && (
-                                                                        <div className="detail-field">
-                                                                            <label>Solução Sugerida</label>
-                                                                            <p>{analise.solucao}</p>
-                                                                        </div>
-                                                                    )}
-                                                                    {analise.fotos && analise.fotos.length > 0 && (
-                                                                        <div className="detail-field">
-                                                                            <label>Evidências Fotográficas</label>
-                                                                            <div className="review-photo-grid">
-                                                                                {analise.fotos.map((foto, idx) => (
-                                                                                    <div key={idx} className="review-photo-item" onClick={() => window.open(foto, '_blank')}>
-                                                                                        <img src={foto} alt={`Dano ${idx + 1}`} />
-                                                                                    </div>
-                                                                                ))}
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
+                                                                    ))}
                                                                 </div>
-                                                            )}
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <div style={{ textAlign: 'center', padding: '1rem', color: '#718096' }}>Nenhuma análise detalhada encontrada.</div>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </div>
-                                        )}
-                                    </div>
+                                        ))
+                                    ) : (
+                                        <div style={{ textAlign: 'center', padding: '1rem', color: '#718096' }}>Nenhuma análise de componente encontrada.</div>
+                                    )}
                                 </div>
+                            )}
+                        </div>
 
-                                <div className="pcp-buttons" style={{ marginTop: '2rem' }}>
+                        {/* Nova seção de vedações */}
+                        <div className="review-section">
+                            <h4 className="review-subtitle">Lista de Vedações Necessárias</h4>
+                            {loadingAnalyses ? (
+                                <div className="loading-mini"><Loader2 size={24} className="spinning-icon" /> Carregando...</div>
+                            ) : (
+                                <div className="analysis-review-list">
+                                    {technicalAnalyses.filter(a => a.tipo === 'vedação').length > 0 ? (
+                                        <div className="vedacoes-table-view">
+                                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                                                <thead>
+                                                    <tr style={{ background: '#f7fafc', textAlign: 'left' }}>
+                                                        <th style={{ padding: '8px', borderBottom: '2px solid #edf2f7' }}>Descrição</th>
+                                                        <th style={{ padding: '8px', borderBottom: '2px solid #edf2f7', textAlign: 'center' }}>Qtd</th>
+                                                        <th style={{ padding: '8px', borderBottom: '2px solid #edf2f7', textAlign: 'center' }}>UN</th>
+                                                        <th style={{ padding: '8px', borderBottom: '2px solid #edf2f7' }}>Observação</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {technicalAnalyses.filter(a => a.tipo === 'vedação').map(v => (
+                                                        <tr key={v.id}>
+                                                            <td style={{ padding: '8px', borderBottom: '1px solid #edf2f7' }}>{v.componente}</td>
+                                                            <td style={{ padding: '8px', borderBottom: '1px solid #edf2f7', textAlign: 'center' }}>{v.qtd}</td>
+                                                            <td style={{ padding: '8px', borderBottom: '1px solid #edf2f7', textAlign: 'center' }}>{v.dimensoes}</td>
+                                                            <td style={{ padding: '8px', borderBottom: '1px solid #edf2f7' }}>{v.anomalias}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ) : (
+                                        <div style={{ textAlign: 'center', padding: '1rem', color: '#718096' }}>Nenhuma vedação registrada.</div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* AREA DE AÇÃO DO PCP / GESTOR (Apenas botões agora) */}
+                    {(role === 'pcp' || role === 'gestor') && (
+                        <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '2px dashed #edf2f7' }}>
+                            {(selectedProcess.statusTexto === 'AGUARDANDO APROVAÇÃO DO PCP' || selectedProcess.statusTexto === 'PERITAGEM CRIADA' || selectedProcess.statusTexto === 'REVISÃO NECESSÁRIA') && (
+                                <div className="pcp-buttons">
                                     <button
                                         className="btn-approve"
                                         onClick={() => handleUpdateStatus('AGUARDANDO APROVAÇÃO DO CLIENTE')}
@@ -433,80 +514,80 @@ export const Monitoramento: React.FC = () => {
                                         <span>Solicitar Revisão ao Perito</span>
                                     </button>
                                 </div>
-                            </>
-                        )}
+                            )}
 
-                        {(selectedProcess.statusTexto === 'AGUARDANDO APROVAÇÃO DO CLIENTE' || selectedProcess.statusTexto === 'Aguardando Clientes') && (
-                            <>
-                                <p>Informe o número do pedido do cliente para liberar para manutenção:</p>
-                                <div style={{ marginBottom: '1.5rem' }}>
-                                    <input
-                                        type="text"
-                                        className="pcp-input"
-                                        placeholder="Digite o número do pedido..."
-                                        value={pedidoInput}
-                                        onChange={(e) => setPedidoInput(e.target.value)}
-                                        style={{
-                                            padding: '0.75rem',
-                                            borderRadius: '8px',
-                                            border: '1px solid #cbd5e0',
-                                            width: '100%',
-                                            fontSize: '1rem'
-                                        }}
-                                    />
-                                </div>
-                                <div className="pcp-buttons">
-                                    <button
-                                        className="btn-approve"
-                                        disabled={!pedidoInput}
-                                        onClick={() => handleUpdateStatus('EM MANUTENÇÃO', { numero_pedido: pedidoInput })}
-                                    >
-                                        <ShoppingCart size={18} />
-                                        <span>Aprovar Liberação do Cliente</span>
-                                    </button>
-                                </div>
-                            </>
-                        )}
+                            {(selectedProcess.statusTexto === 'AGUARDANDO APROVAÇÃO DO CLIENTE' || selectedProcess.statusTexto === 'Aguardando Clientes') && (
+                                <>
+                                    <p>Informe o número do pedido do cliente para liberar para manutenção:</p>
+                                    <div style={{ marginBottom: '1.5rem' }}>
+                                        <input
+                                            type="text"
+                                            className="pcp-input"
+                                            placeholder="Digite o número do pedido..."
+                                            value={pedidoInput}
+                                            onChange={(e) => setPedidoInput(e.target.value)}
+                                            style={{
+                                                padding: '0.75rem',
+                                                borderRadius: '8px',
+                                                border: '1px solid #cbd5e0',
+                                                width: '100%',
+                                                fontSize: '1rem'
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="pcp-buttons">
+                                        <button
+                                            className="btn-approve"
+                                            disabled={!pedidoInput}
+                                            onClick={() => handleUpdateStatus('EM MANUTENÇÃO', { numero_pedido: pedidoInput })}
+                                        >
+                                            <ShoppingCart size={18} />
+                                            <span>Aprovar Liberação do Cliente</span>
+                                        </button>
+                                    </div>
+                                </>
+                            )}
 
-                        {(selectedProcess.statusTexto === 'EM MANUTENÇÃO' || selectedProcess.statusTexto === 'Cilindros em Manutenção') && (
-                            <>
-                                <p>A manutenção foi concluída? Envie para conferência final do PCP.</p>
-                                <div className="pcp-buttons">
-                                    <button
-                                        className="btn-approve"
-                                        onClick={() => handleUpdateStatus('AGUARDANDO CONFERÊNCIA FINAL')}
-                                    >
-                                        <Wrench size={18} />
-                                        <span>Finalizar Manutenção</span>
-                                    </button>
-                                </div>
-                            </>
-                        )}
+                            {(selectedProcess.statusTexto === 'EM MANUTENÇÃO' || selectedProcess.statusTexto === 'Cilindros em Manutenção') && (
+                                <>
+                                    <p>A manutenção foi concluída? Envie para conferência final do PCP.</p>
+                                    <div className="pcp-buttons">
+                                        <button
+                                            className="btn-approve"
+                                            onClick={() => handleUpdateStatus('AGUARDANDO CONFERÊNCIA FINAL')}
+                                        >
+                                            <Wrench size={18} />
+                                            <span>Finalizar Manutenção</span>
+                                        </button>
+                                    </div>
+                                </>
+                            )}
 
-                        {selectedProcess.statusTexto === 'AGUARDANDO CONFERÊNCIA FINAL' && (
-                            <>
-                                <p>Confira todos os dados e o pedido <strong>#{selectedProcess.numero_pedido}</strong> antes de finalizar o processo.</p>
-                                <div className="pcp-buttons">
-                                    <button
-                                        className="btn-approve"
-                                        onClick={() => handleUpdateStatus('PROCESSO FINALIZADO')}
-                                    >
-                                        <CheckCircle2 size={18} />
-                                        <span>Aprovar Finalização e Expedir</span>
-                                    </button>
-                                </div>
-                            </>
-                        )}
+                            {selectedProcess.statusTexto === 'AGUARDANDO CONFERÊNCIA FINAL' && (
+                                <>
+                                    <p>Confira todos os dados e o pedido <strong>#{selectedProcess.numero_pedido}</strong> antes de finalizar o processo.</p>
+                                    <div className="pcp-buttons">
+                                        <button
+                                            className="btn-approve"
+                                            onClick={() => handleUpdateStatus('PROCESSO FINALIZADO')}
+                                        >
+                                            <CheckCircle2 size={18} />
+                                            <span>Aprovar Finalização e Expedir</span>
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    )}
 
-                        {selectedProcess.statusTexto === 'PROCESSO FINALIZADO' && (
-                            <p style={{ color: '#38a169', fontWeight: 'bold' }}>✅ Este processo já foi finalizado e aprovado.</p>
-                        )}
+                    {selectedProcess.statusTexto === 'PROCESSO FINALIZADO' && (
+                        <p style={{ color: '#38a169', fontWeight: 'bold', marginTop: '1rem' }}>✅ Este processo já foi finalizado e aprovado.</p>
+                    )}
 
-                        {selectedProcess.statusTexto === 'REVISÃO NECESSÁRIA' && (
-                            <p style={{ color: '#e53e3e', fontWeight: 'bold' }}>⚠️ Aguardando revisão dos dados da peritagem.</p>
-                        )}
-                    </div>
-                )}
+                    {selectedProcess.statusTexto === 'REVISÃO NECESSÁRIA' && (
+                        <p style={{ color: '#e53e3e', fontWeight: 'bold', marginTop: '1rem' }}>⚠️ Aguardando revisão dos dados da peritagem.</p>
+                    )}
+                </div>
 
                 <h2 className="page-title" style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>Monitoramento de Processos</h2>
 

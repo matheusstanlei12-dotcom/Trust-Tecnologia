@@ -131,7 +131,7 @@ export const Peritagens: React.FC = () => {
                                     <td data-label="Prioridade">{p.prioridade}</td>
                                     <td>
                                         <button className="btn-action" onClick={() => navigate(`/monitoramento?id=${p.id}`)}>
-                                            <span>VER STATUS</span>
+                                            <span>VER DETALHES</span>
                                             <ExternalLink size={16} />
                                         </button>
                                     </td>
