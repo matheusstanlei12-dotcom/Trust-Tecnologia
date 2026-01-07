@@ -597,7 +597,16 @@ export const NovaPeritagem: React.FC = () => {
                                             style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
                                         />
                                     </div>
-                                    <div className="form-group" style={{ flex: 2 }}>
+                                    <div className="form-group" style={{ flex: 1 }}>
+                                        <label style={{ fontWeight: 'bold' }}>LOCAL / EQUIPAMENTO</label>
+                                        <input
+                                            placeholder="Ex: Prensa 01"
+                                            value={fixedData.local_equipamento}
+                                            onChange={e => setFixedData({ ...fixedData, local_equipamento: e.target.value.toUpperCase() })}
+                                            style={{ borderBottom: '1px solid #000', borderRadius: 0, padding: '5px' }}
+                                        />
+                                    </div>
+                                    <div className="form-group" style={{ flex: 1 }}>
                                         <label style={{ fontWeight: 'bold' }}>RESPONSÁVEL TÉCNICO</label>
                                         <input
                                             placeholder="Nome do Responsável"
@@ -781,32 +790,34 @@ export const NovaPeritagem: React.FC = () => {
                                     </div>
 
 
-                                    <div className="conformity-toggle">
-                                        <button
-                                            type="button"
-                                            className={`conf-btn conforme ${item.conformidade === 'conforme' ? 'active' : ''}`}
-                                            onClick={(e) => { e.stopPropagation(); handleResponse(item.id, 'conforme'); }}
-                                        >
-                                            Conforme
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className={`conf-btn nao-conforme ${item.conformidade === 'não conforme' ? 'active' : ''}`}
-                                            onClick={(e) => { e.stopPropagation(); handleResponse(item.id, 'não conforme'); }}
-                                        >
-                                            Não Conforme
-                                        </button>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                        <div className="conformity-toggle">
+                                            <button
+                                                type="button"
+                                                className={`conf-btn conforme ${item.conformidade === 'conforme' ? 'active' : ''}`}
+                                                onClick={(e) => { e.stopPropagation(); handleResponse(item.id, 'conforme'); }}
+                                            >
+                                                Conforme
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`conf-btn nao-conforme ${item.conformidade === 'não conforme' ? 'active' : ''}`}
+                                                onClick={(e) => { e.stopPropagation(); handleResponse(item.id, 'não conforme'); }}
+                                            >
+                                                Não Conforme
+                                            </button>
+                                        </div>
+                                        {item.conformidade && (
+                                            <button
+                                                type="button"
+                                                className="clear-item-btn"
+                                                onClick={(e) => { e.stopPropagation(); handleResetItem(item.id); }}
+                                                title="Limpar resposta"
+                                            >
+                                                <X size={20} color="#000" />
+                                            </button>
+                                        )}
                                     </div>
-                                    {item.conformidade && (
-                                        <button
-                                            type="button"
-                                            className="clear-item-btn"
-                                            onClick={(e) => { e.stopPropagation(); handleResetItem(item.id); }}
-                                            title="Limpar resposta"
-                                        >
-                                            <X size={20} />
-                                        </button>
-                                    )}
                                 </div>
 
                                 {
