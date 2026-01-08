@@ -284,8 +284,8 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
 
         <Page size="A4" style={styles.coverPage}>
             <Image src="/logo.png" style={styles.coverLogo} />
+            <Text style={{ fontSize: 12, color: 'red', marginBottom: 20, fontWeight: 'bold', textTransform: 'uppercase' }}>Serviços Hidráulicos e Pneumáticos Ltda</Text>
             <Text style={styles.coverTitle}>Relatório Técnico de Peritagem</Text>
-            <Text style={styles.coverSubtitle}>Diagnóstico e Avaliação de Performance Hidráulica</Text>
 
             <View style={styles.coverDetails}>
                 <View style={styles.coverDetailRow}>
