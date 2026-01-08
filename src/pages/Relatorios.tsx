@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, FileText, Download, Loader2 } from 'lucide-react';
 import { pdf } from '@react-pdf/renderer';
 import { UsiminasReportTemplate } from '../components/UsiminasReportTemplate';
+import { ReportTemplate } from '../components/ReportTemplate';
 import { supabase } from '../lib/supabase';
 import { generateTechnicalOpinion } from '../lib/reportUtils';
 import './Relatorios.css';
@@ -187,21 +188,25 @@ export const Relatorios: React.FC = () => {
             const data = await handleGenerateData(peritagem);
             if (!data) return;
 
-            const template = <UsiminasReportTemplate data={data} />;
+            const isUsiminas = data.cliente && data.cliente.toUpperCase().includes('USIMINAS');
+            const template = isUsiminas
+                ? <UsiminasReportTemplate data={data} />
+                : <ReportTemplate data={data} />;
 
             const blob = await pdf(template).toBlob();
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
+
             let fileName = '';
-            if (type === 'peritagem') {
-                if (data.cliente && data.cliente.toUpperCase().includes('USIMINAS')) {
-                    fileName = `Peritagem Usiminas_${data.laudoNum}.pdf`;
-                } else {
-                    fileName = `PERITAGEM_${data.laudoNum}.pdf`;
-                }
+            // Se for Usiminas, usa prefixo específico. Caso contrário, padrão.
+            // O usuário pediu "Peritagem Usiminas" para o relatório Usiminas.
+            if (isUsiminas) {
+                fileName = `Peritagem Usiminas_${data.laudoNum}.pdf`;
             } else {
-                fileName = `LAUDO_${data.laudoNum}.pdf`;
+                fileName = type === 'peritagem'
+                    ? `PERITAGEM_${data.laudoNum}.pdf`
+                    : `LAUDO_${data.laudoNum}.pdf`;
             }
 
             link.download = fileName;
