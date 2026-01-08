@@ -373,15 +373,14 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
             <View style={styles.table}>
                 <View style={styles.tableHeader}>
                     <Text style={styles.colNo}>N°</Text>
-                    <Text style={styles.colDesc}>DESCRIÇÃO</Text>
+                    <Text style={{ width: '67%' }}>DESCRIÇÃO</Text>
                     <Text style={styles.colX}>X</Text>
                     <Text style={styles.colQtd}>QTD</Text>
-                    <Text style={styles.colDim}>DIMENSÕES</Text>
                 </View>
                 {data.items.slice(0, 30).map((item, index) => (
                     <View key={index} style={styles.tableRow} wrap={false}>
                         <Text style={styles.colNo}>{index + 1}</Text>
-                        <Text style={styles.colDesc}>{item.descricao}</Text>
+                        <Text style={{ width: '67%' }}>{item.descricao}</Text>
                         <Text style={[styles.colX, {
                             color: item.selecionado ? '#e67e22' : '#27ae60',
                             fontSize: item.selecionado ? 7 : 7,
@@ -390,7 +389,6 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                             {item.selecionado ? 'NÃO CONFORME' : 'CONFORME'}
                         </Text>
                         <Text style={styles.colQtd}>{item.qtd || '-'}</Text>
-                        <Text style={styles.colDim}>{item.selecionado ? '-' : (item.dimensoes || '-')}</Text>
                     </View>
                 ))}
             </View>
@@ -408,7 +406,7 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                         {data.items.slice(30).map((item, index) => (
                             <View key={index + 30} style={styles.tableRow} wrap={false}>
                                 <Text style={styles.colNo}>{index + 31}</Text>
-                                <Text style={styles.colDesc}>{item.descricao}</Text>
+                                <Text style={{ width: '67%' }}>{item.descricao}</Text>
                                 <Text style={[styles.colX, {
                                     color: item.selecionado ? '#e67e22' : '#27ae60',
                                     fontSize: 7,
@@ -417,7 +415,6 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                                     {item.selecionado ? 'NÃO CONFORME' : 'CONFORME'}
                                 </Text>
                                 <Text style={styles.colQtd}>{item.qtd || '-'}</Text>
-                                <Text style={styles.colDim}>{item.selecionado ? '-' : (item.dimensoes || '-')}</Text>
                             </View>
                         ))}
                     </View>
@@ -468,13 +465,9 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                                 <Text>ITEM {item.id || (index + 1)}: {item.descricao}</Text>
                             </View>
                             <View style={styles.analysisRow}>
-                                <View style={{ width: '15%' }}>
+                                <View style={{ width: '100%' }}>
                                     <Text style={styles.analysisLabel}>Qtd</Text>
                                     <Text style={styles.analysisValue}>{item.qtd}</Text>
-                                </View>
-                                <View style={{ width: '85%' }}>
-                                    <Text style={styles.analysisLabel}>Dimensões</Text>
-                                    <Text style={styles.analysisValue}>{item.dimensoes || '-'}</Text>
                                 </View>
                             </View>
                             {/* Diâmetro Externo */}
@@ -574,5 +567,5 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                 <Text>Documento gerado automaticamente pela TrustEng. LTDA - Unidade Especialista em Hidráulica</Text>
             </View>
         </Page>
-    </Document>
+    </Document >
 );
