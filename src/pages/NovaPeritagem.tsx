@@ -37,11 +37,7 @@ interface ChecklistItem {
     isCustom?: boolean;
 }
 
-const COMPONENTES = [
-    "Êmbolo", "Haste", "Camisa", "Vedações", "Anel guia",
-    "Anel retentor", "Olhal superior", "Olhal inferior",
-    "Rótula", "Pino graxeiro", "Cabeçote da guia"
-];
+
 
 export const NovaPeritagem: React.FC = () => {
     const navigate = useNavigate();
@@ -111,7 +107,7 @@ export const NovaPeritagem: React.FC = () => {
                 list = STANDARD_ITEMS;
             }
 
-            setChecklistItems(list.map((text, index) => {
+            setChecklistItems(list.map((text) => {
                 return {
                     id: crypto.randomUUID(),
                     text,
