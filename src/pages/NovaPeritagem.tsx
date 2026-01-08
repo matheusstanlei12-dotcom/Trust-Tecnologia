@@ -489,8 +489,8 @@ export const NovaPeritagem: React.FC = () => {
                                         style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px' }}
                                     />
                                 </div>
-                                <div className="form-group" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', height: '100%' }}>
-                                    <label style={{ fontWeight: 'bold' }}>ORDEM DE SERVIÇO *</label>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 'bold', minHeight: '35px', display: 'flex', alignItems: 'flex-end' }}>ORDEM DE SERVIÇO *</label>
                                     <input
                                         required
                                         placeholder="Ex: 1234"
@@ -499,8 +499,8 @@ export const NovaPeritagem: React.FC = () => {
                                         style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px', textAlign: 'center' }}
                                     />
                                 </div>
-                                <div className="form-group" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', height: '100%' }}>
-                                    <label style={{ fontWeight: 'bold' }}>NF</label>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 'bold', minHeight: '35px', display: 'flex', alignItems: 'flex-end' }}>NF</label>
                                     <input
                                         placeholder="Ex: 9012"
                                         value={fixedData.nota_fiscal}
@@ -508,8 +508,8 @@ export const NovaPeritagem: React.FC = () => {
                                         style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px', textAlign: 'center' }}
                                     />
                                 </div>
-                                <div className="form-group" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', height: '100%' }}>
-                                    <label style={{ fontWeight: 'bold' }}>NI</label>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 'bold', minHeight: '35px', display: 'flex', alignItems: 'flex-end' }}>NI</label>
                                     <input
                                         placeholder="Ex: NI-99"
                                         value={fixedData.ni}
