@@ -152,17 +152,20 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     photoContainer: {
-        width: '49%', // Duas fotos por linha
-        height: 120,
+        width: '48%', // Slightly less than 50% to ensure gap fitting
+        height: 220, // Increased height for better visibility
         borderWidth: 1,
         borderColor: '#eee',
-        borderRadius: 3,
+        borderRadius: 4,
         overflow: 'hidden',
+        padding: 2, // Small padding to prevent image touching border
+        backgroundColor: '#fff'
     },
     itemPhoto: {
         width: '100%',
         height: '100%',
-        objectFit: 'cover',
+        objectFit: 'contain',
+        backgroundColor: '#f8fafc' // Light background to show boundaries if image is smaller
     },
     footer: {
         position: 'absolute',
@@ -514,7 +517,7 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                             {item.fotos && item.fotos.length > 0 && (
                                 <View style={styles.photoGrid}>
                                     {item.fotos.map((foto, fIdx) => (
-                                        <View key={fIdx} style={styles.photoContainer}>
+                                        <View key={fIdx} style={styles.photoContainer} wrap={false}>
                                             <Image src={foto} style={styles.itemPhoto} />
                                         </View>
                                     ))}

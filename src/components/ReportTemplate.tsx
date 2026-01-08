@@ -353,7 +353,7 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
                             <Text>ITEM {idx + 1}: {item.desc}</Text>
                         </View>
                         <View style={styles.itemContent}>
-                            <View style={styles.itemImageColumn}>
+                            <View style={styles.itemImageColumn} wrap={false}>
                                 {item.foto ? (
                                     <Image src={item.foto} style={styles.itemImage} />
                                 ) : (
