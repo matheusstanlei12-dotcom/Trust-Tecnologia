@@ -304,7 +304,20 @@
     display: flex !important;
     gap: 1rem;
     width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+    .header-sticky {
+        /* Mobile: Counteract Layout padding (1.25rem) to go edge-to-edge */
+        margin-left: -1.25rem;
+        margin-right: -1.25rem;
+        width: calc(100% + 2.5rem) !important;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
 }
 
 @media (min-width: 1024px) {
@@ -313,6 +326,10 @@
         justify-content: space-between;
         align-items: center;
         padding: 0.75rem 1.5rem;
+        /* Desktop: Standard full width */
+        margin-left: 0;
+        margin-right: 0;
+        width: 100% !important;
     }
 }
 
