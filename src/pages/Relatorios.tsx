@@ -41,6 +41,8 @@ interface Peritagem {
     sistema_lubrificacao?: string;
     outros_especificar?: string;
     observacoes_gerais?: string;
+    area?: string;
+    linha?: string;
     itens?: any[];
 }
 
@@ -51,8 +53,7 @@ export const Relatorios: React.FC = () => {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [fullReportData, setFullReportData] = useState<any>(null);
     const [generatingPdf, setGeneratingPdf] = useState(false);
-    const [showParecerModal, setShowParecerModal] = useState(false);
-    const [currentParecer, setCurrentParecer] = useState('');
+
 
     useEffect(() => {
         fetchPeritagens();
@@ -93,10 +94,10 @@ export const Relatorios: React.FC = () => {
             const reportData = {
                 laudoNum: String(peritagem.numero_peritagem || ''),
                 numero_os: String(peritagem.numero_peritagem || ''),
-                data: peritagem.data_execucao ? new Date(peritagem.data_execucao).toLocaleDateString('pt-BR') : '',
+                data: new Date().toLocaleDateString('pt-BR'),
                 hora: peritagem.data_execucao ? new Date(peritagem.data_execucao).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '',
-                area: String(peritagem.setor || 'GERAL'),
-                linha: String(peritagem.local_equipamento || 'OFICINA'),
+                area: String(peritagem.area || '-'),
+                linha: String(peritagem.linha || '-'),
                 local_equipamento: String(peritagem.local_equipamento || 'OFICINA'),
                 equipamento: String(peritagem.equipamento || 'CILINDRO HIDRÁULICO'),
                 tag: String(peritagem.tag || 'N/A'),
@@ -281,21 +282,7 @@ export const Relatorios: React.FC = () => {
                                     <span>{generatingPdf && selectedId === p.id ? 'Gerando...' : 'PDF para o Cliente'}</span>
                                 </button>
 
-                                <button
-                                    className="btn-outline"
-                                    style={{ width: 'auto' }}
-                                    onClick={async () => {
-                                        const { data: analise } = await supabase
-                                            .from('peritagem_analise_tecnica')
-                                            .select('*')
-                                            .eq('peritagem_id', p.id);
-                                        const text = generateTechnicalOpinion(p as any, analise || []);
-                                        setCurrentParecer(text);
-                                        setShowParecerModal(true);
-                                    }}
-                                >
-                                    <span>Ver Parecer</span>
-                                </button>
+
                             </div>
                         </div>
                     ))
@@ -305,26 +292,7 @@ export const Relatorios: React.FC = () => {
                 )}
             </div>
 
-            {showParecerModal && (
-                <div className="modal-overlay" onClick={() => setShowParecerModal(false)}>
-                    <div className="modal-content" onClick={e => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h2>Parecer Técnico Automático</h2>
-                            <button className="close-btn" onClick={() => setShowParecerModal(false)}>&times;</button>
-                        </div>
-                        <div className="modal-body">
-                            <pre className="parecer-text">{currentParecer}</pre>
-                        </div>
-                        <div className="modal-footer">
-                            <button className="btn-primary" onClick={() => {
-                                navigator.clipboard.writeText(currentParecer);
-                                alert('Texto copiado para a área de transferência!');
-                            }}>Copiar Texto</button>
-                            <button className="btn-outline" onClick={() => setShowParecerModal(false)}>Fechar</button>
-                        </div>
-                    </div>
-                </div>
-            )}
+
         </div>
     );
 };

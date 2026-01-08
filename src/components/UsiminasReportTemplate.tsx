@@ -6,11 +6,70 @@ const FONT_FAMILY = 'Helvetica';
 
 const styles = StyleSheet.create({
     page: {
-        padding: 30,
+        paddingTop: 30,
+        paddingBottom: 60,
+        paddingLeft: 30,
+        paddingRight: 30,
         fontSize: 10,
         fontFamily: FONT_FAMILY,
         color: '#333',
         backgroundColor: '#fff'
+    },
+    // Estilos da Capa
+    coverPage: {
+        padding: 60,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        backgroundColor: '#FFFFFF',
+    },
+    coverLogo: {
+        width: 180,
+        marginBottom: -35,
+        marginTop: -30
+    },
+    coverTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 8,
+        textAlign: 'center',
+        textTransform: 'uppercase',
+    },
+    coverSubtitle: {
+        fontSize: 10,
+        color: '#7f8c8d',
+        marginBottom: 30,
+        textAlign: 'center',
+    },
+    coverDivider: {
+        width: '60%',
+        height: 1,
+        backgroundColor: '#bdc3c7',
+        marginBottom: 30,
+    },
+    coverDetails: {
+        width: '100%',
+        alignItems: 'center',
+        gap: 15
+    },
+    coverDetailItem: {
+        alignItems: 'center',
+        marginBottom: 10
+    },
+    coverDetailLabel: {
+        fontSize: 8,
+        color: '#95a5a6',
+        fontWeight: 'bold',
+        marginBottom: 2,
+        textTransform: 'uppercase',
+        letterSpacing: 1
+    },
+    coverDetailValue: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: '#2c3e50',
     },
     header: {
         flexDirection: 'row',
@@ -39,12 +98,11 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 11,
         fontWeight: 'bold',
-        backgroundColor: '#f4f4f4',
+        backgroundColor: '#005696',
+        color: '#fff',
         padding: 5,
         marginTop: 15,
         marginBottom: 8,
-        borderLeftWidth: 3,
-        borderLeftColor: '#005696'
     },
     infoGrid: {
         flexDirection: 'row',
@@ -243,22 +301,65 @@ interface ReportData {
     acoplamento_polia?: string;
     sistema_lubrificacao?: string;
     outros_especificar?: string;
+
     observacoes_gerais?: string;
+    area?: string;
+    linha?: string;
 }
 
 export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
     <Document>
+        {/* PÁGINA 0: CAPA */}
+        <Page size="A4" style={styles.coverPage}>
+            <Image src="/logo.png" style={styles.coverLogo} />
+            <Text style={{ fontSize: 12, color: 'red', marginBottom: 30, fontWeight: 'bold', textTransform: 'uppercase' }}>Serviços Hidráulicos e Pneumáticos Ltda</Text>
+            <Text style={styles.coverTitle}>RELATÓRIO TÉCNICO DE PERITAGEM</Text>
+
+
+            <View style={styles.coverDivider} />
+
+            <View style={styles.coverDetails}>
+                <View style={styles.coverDetailItem}>
+                    <Text style={styles.coverDetailLabel}>CLIENTE</Text>
+                    <Text style={styles.coverDetailValue}>{data.cliente}</Text>
+                </View>
+                <View style={styles.coverDetailItem}>
+                    <Text style={styles.coverDetailLabel}>ORDEM DE SERVIÇO</Text>
+                    <Text style={styles.coverDetailValue}>{data.numero_os}</Text>
+                </View>
+                <View style={styles.coverDetailItem}>
+                    <Text style={styles.coverDetailLabel}>EQUIPAMENTO</Text>
+                    <Text style={styles.coverDetailValue}>CILINDRO HIDRÁULICO</Text>
+                </View>
+                <View style={styles.coverDetailItem}>
+                    <Text style={styles.coverDetailLabel}>DATA DE EMISSÃO</Text>
+                    <Text style={styles.coverDetailValue}>{data.data}</Text>
+                </View>
+            </View>
+        </Page>
+
         {/* PÁGINA 1: Identificação e Lista de Peças */}
         <Page size="A4" style={styles.page}>
+            {/* Foto Frontal no topo da página 2 */}
+            {data.foto_frontal && (
+                <View style={{ marginBottom: 20, alignItems: 'center' }}>
+                    <Image src={data.foto_frontal} style={{ width: '100%', maxHeight: 250, objectFit: 'contain' }} />
+                </View>
+            )}
+
             <View style={{ marginBottom: 20 }}>
                 {/* Título Central */}
-                <View style={{ alignItems: 'center', marginBottom: 10 }}>
-                    <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase' }}>GERÊNCIA DE OFICINAS DE MANUTENÇÃO</Text>
-                    <Text style={{ fontSize: 10, marginTop: 5 }}>LAUDO REPARO: {data.numero_os}</Text>
-                </View>
+
 
                 {/* Tabela de Cabeçalho */}
                 <View style={{ borderWidth: 1, borderColor: '#000' }}>
+                    {/* Título */}
+                    <View style={{ borderBottomWidth: 1, borderColor: '#000', padding: 5, alignItems: 'center', justifyContent: 'center' }}>
+                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>GERÊNCIA DE OFICINAS DE MANUTENÇÃO</Text>
+                    </View>
+                    <View style={{ borderBottomWidth: 1, borderColor: '#000', padding: 5 }}>
+                        <Text style={{ fontSize: 10 }}>LAUDO REPARO: {data.numero_os}</Text>
+                    </View>
                     {/* Linha 1 */}
                     <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderColor: '#000', height: 25 }}>
                         <View style={{ flex: 1, borderRightWidth: 1, borderColor: '#000', padding: 4, justifyContent: 'center' }}>
@@ -279,11 +380,11 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                     <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderColor: '#000', height: 25 }}>
                         <View style={{ flex: 1, borderRightWidth: 1, borderColor: '#000', padding: 4, justifyContent: 'center' }}>
                             <Text style={{ fontSize: 8, fontWeight: 'bold' }}>ÁREA:</Text>
-                            <Text style={{ fontSize: 9 }}>-</Text>
+                            <Text style={{ fontSize: 9 }}>{data.area || '-'}</Text>
                         </View>
                         <View style={{ flex: 1, borderRightWidth: 1, borderColor: '#000', padding: 4, justifyContent: 'center' }}>
                             <Text style={{ fontSize: 8, fontWeight: 'bold' }}>LINHA:</Text>
-                            <Text style={{ fontSize: 9 }}>-</Text>
+                            <Text style={{ fontSize: 9 }}>{data.linha || '-'}</Text>
                         </View>
                         <View style={{ flex: 0.8, padding: 4, justifyContent: 'center' }}>
                             <Text style={{ fontSize: 8, fontWeight: 'bold' }}>EQUIPAMENTO:</Text>
@@ -361,12 +462,19 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
                 </View>
                 <View style={styles.infoItem}>
                     <Text style={styles.label}>SIST. LUBRIFICAÇÃO: <Text style={styles.value}>{data.sistema_lubrificacao}</Text></Text>
-                </View>
-                <View style={{ width: '100%', marginTop: 4 }}>
-                    <Text style={styles.label}>OUTROS: <Text style={styles.value}>{data.outros_especificar}</Text></Text>
+                    <View style={{ width: '100%', marginTop: 4 }}>
+                        <Text style={styles.label}>OUTROS: <Text style={styles.value}>{data.outros_especificar}</Text></Text>
+                    </View>
                 </View>
             </View>
 
+            <View style={styles.footer} fixed>
+                <Text>Documento gerado automaticamente pela TrustEng. LTDA - Unidade Especialista em Hidráulica</Text>
+            </View>
+        </Page>
+
+        {/* PÁGINA 2: Tabela de Itens (0 a 30) */}
+        <Page size="A4" style={styles.page}>
             <View style={styles.sectionTitle}>
                 <Text>DESCRIÇÃO DE PEÇAS / SERVIÇOS</Text>
             </View>
@@ -398,7 +506,7 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
             </View>
         </Page>
 
-        {/* PÁGINA 2+: Continuação da Tabela se necessário, Vedações e Análise */}
+        {/* PÁGINA 3+: Continuação da Tabela se necessário, Vedações e Análise */}
         <Page size="A4" style={styles.page}>
             {data.items.length > 30 && (
                 <>
