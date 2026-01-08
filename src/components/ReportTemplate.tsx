@@ -7,7 +7,7 @@ const FONT_FAMILY = 'Helvetica';
 const styles = StyleSheet.create({
     page: {
         paddingTop: 40,
-        paddingBottom: 40,
+        paddingBottom: 80,
         paddingLeft: 40,
         paddingRight: 40,
         fontSize: 10,
@@ -422,7 +422,7 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
 
 
             {/* Tabela de Dimensões sem bordas com cabeçalho azul */}
-            <View style={{ marginTop: 15 }}>
+            <View style={{ marginTop: 15 }} wrap={false}>
                 <View style={{ backgroundColor: '#005696', padding: 5, marginBottom: 2 }}>
                     <Text style={{ fontSize: 11, fontWeight: 'bold', color: '#fff' }}>DIMENSÕES TÉCNICAS (MM)</Text>
                 </View>
@@ -451,7 +451,7 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
 
             {/* Início da Tabela de Itens na mesma página */}
 
-            <View style={styles.table}>
+            <View style={styles.table} wrap={false}>
                 <View style={styles.tableHeader}>
                     <Text style={styles.colNo}>N°</Text>
                     <Text style={{ width: '67%' }}>DESCRIÇÃO DE PEÇA/SERVIÇO</Text>
@@ -461,7 +461,7 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
                 {data.items.map((item, index) => (
                     <View key={index} style={styles.tableRow} wrap={false}>
                         <Text style={styles.colNo}>{index + 1}</Text>
-                        <Text style={{ width: '67%' }}>{item.descricao}</Text>
+                        <Text style={{ width: '67%' }} hyphenationCallback={(word) => [word]}>{item.descricao}</Text>
                         <Text style={[styles.colX, {
                             color: item.selecionado ? '#e67e22' : '#27ae60',
                             fontSize: item.selecionado ? 7 : 7,
@@ -493,7 +493,7 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
                         {data.vedacoes.map((v, index) => (
                             <View key={index} style={styles.tableRow} wrap={false}>
                                 <Text style={styles.colNo}>{index + 1}</Text>
-                                <Text style={styles.colDesc}>{v.descricao}</Text>
+                                <Text style={styles.colDesc} hyphenationCallback={(word) => [word]}>{v.descricao}</Text>
                                 <Text style={[styles.colX, {
                                     color: v.selecionado ? '#e67e22' : '#27ae60',
                                     fontSize: 7,
@@ -519,7 +519,7 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
                                     <Text>ANÁLISE DETALHADA DE NÃO CONFORMIDADES</Text>
                                 </View>
                             )}
-                            <View style={styles.analysisBlock}>
+                            <View style={styles.analysisBlock} wrap={false}>
                                 <View style={styles.analysisHeader}>
                                     <Text>ITEM {item.id || (index + 1)}: {item.descricao}</Text>
                                 </View>
