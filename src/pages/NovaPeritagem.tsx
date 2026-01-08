@@ -654,7 +654,7 @@ export const NovaPeritagem: React.FC = () => {
                                     <div style={{ display: 'flex', gap: '15px', marginTop: '5px' }}>
                                         <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'normal', cursor: 'pointer' }}>
                                             <input type="radio" name="acoplamento" value="SIM" checked={fixedData.acoplamento_polia === 'SIM'} onChange={e => setFixedData({ ...fixedData, acoplamento_polia: e.target.value })} style={{ width: '20px', height: '20px' }} />
-                                            Sim (OLHAL)
+                                            Sim
                                         </label>
                                         <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'normal', cursor: 'pointer' }}>
                                             <input type="radio" name="acoplamento" value="NÃO" checked={fixedData.acoplamento_polia === 'NÃO'} onChange={e => setFixedData({ ...fixedData, acoplamento_polia: e.target.value })} style={{ width: '20px', height: '20px' }} />
