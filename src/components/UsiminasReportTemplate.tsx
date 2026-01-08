@@ -191,6 +191,15 @@ interface Item {
     diametro_encontrado?: string;
     diametro_ideal?: string;
     material_faltante?: string;
+    diametro_externo_encontrado?: string;
+    diametro_externo_especificado?: string;
+    desvio_externo?: string;
+    diametro_interno_encontrado?: string;
+    diametro_interno_especificado?: string;
+    desvio_interno?: string;
+    comprimento_encontrado?: string;
+    comprimento_especificado?: string;
+    desvio_comprimento?: string;
     anomalias?: string;
     solucao?: string;
     fotos?: string[];
