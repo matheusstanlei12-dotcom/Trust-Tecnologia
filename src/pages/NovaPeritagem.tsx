@@ -496,25 +496,7 @@ export const NovaPeritagem: React.FC = () => {
                                         placeholder="Ex: 1234"
                                         value={fixedData.numero_os}
                                         onChange={e => setFixedData({ ...fixedData, numero_os: e.target.value.toUpperCase() })}
-                                        style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px' }}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label style={{ fontWeight: 'bold' }}>NI</label>
-                                    <input
-                                        placeholder="Ex: NI-99"
-                                        value={fixedData.ni}
-                                        onChange={e => setFixedData({ ...fixedData, ni: e.target.value.toUpperCase() })}
-                                        style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px' }}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label style={{ fontWeight: 'bold' }}>PEDIDO</label>
-                                    <input
-                                        placeholder="Ex: P-123"
-                                        value={fixedData.pedido}
-                                        onChange={e => setFixedData({ ...fixedData, pedido: e.target.value.toUpperCase() })}
-                                        style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px' }}
+                                        style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px', textAlign: 'center' }}
                                     />
                                 </div>
                                 <div className="form-group">
@@ -523,7 +505,25 @@ export const NovaPeritagem: React.FC = () => {
                                         placeholder="Ex: 9012"
                                         value={fixedData.nota_fiscal}
                                         onChange={e => setFixedData({ ...fixedData, nota_fiscal: e.target.value.toUpperCase() })}
-                                        style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px' }}
+                                        style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px', textAlign: 'center' }}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 'bold' }}>NI</label>
+                                    <input
+                                        placeholder="Ex: NI-99"
+                                        value={fixedData.ni}
+                                        onChange={e => setFixedData({ ...fixedData, ni: e.target.value.toUpperCase() })}
+                                        style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px', textAlign: 'center' }}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 'bold' }}>PEDIDO</label>
+                                    <input
+                                        placeholder="Ex: P-123"
+                                        value={fixedData.pedido}
+                                        onChange={e => setFixedData({ ...fixedData, pedido: e.target.value.toUpperCase() })}
+                                        style={{ width: '100%', borderBottom: '1px solid #000', borderRadius: 0, padding: '8px 5px', textAlign: 'center' }}
                                     />
                                 </div>
                                 <div className="form-group">
