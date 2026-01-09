@@ -8,8 +8,8 @@
     /* Dimensões Base */
     --input-height-mobile: 2.75rem;
     --input-height-desktop: 2.75rem;
-    --btn-height-mobile: 3rem;
-    --btn-height-desktop: 3rem;
+    --btn-height-mobile: 44px;
+    --btn-height-desktop: 44px;
     --font-base-mobile: 0.95rem;
     --font-base-desktop: 0.9rem;
 
@@ -78,11 +78,11 @@
 }
 
 .type-btn {
-    padding: 1.25rem;
+    padding: 1rem;
     border: 0.125rem solid var(--border-color);
     background: var(--card-bg);
-    border-radius: 1rem;
-    font-size: 1.125rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--primary-color);
     cursor: pointer;
@@ -210,9 +210,9 @@
     background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
     color: white;
     border: none;
-    border-radius: 1.25rem;
-    font-size: 1.125rem;
-    font-weight: 800;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 700;
     cursor: pointer;
     transition: var(--transition);
     box-shadow: 0 8px 20px rgba(33, 64, 142, 0.3);

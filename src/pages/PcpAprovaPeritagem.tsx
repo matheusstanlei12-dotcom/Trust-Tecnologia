@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Loader2, Check } from 'lucide-react';
+import { Search, Loader2, Check, XCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import './Peritagens.css';
@@ -109,6 +109,35 @@ export const PcpAprovaPeritagem: React.FC = () => {
             alert('Peritagem aprovada e enviada para o comercial.');
         } catch (err) {
             alert('Erro ao aprovar.');
+        }
+    };
+
+    const handleReject = async (id: string) => {
+        if (!user) return;
+        // Opcional: Solicitar motivo
+        const motivo = window.prompt("Motivo da reprovação (será enviado ao perito):");
+        if (motivo === null) return; // Cancelou
+
+        try {
+            const { error } = await supabase
+                .from('peritagens')
+                .update({ status: 'REVISÃO NECESSÁRIA' })
+                .eq('id', id);
+
+            if (error) throw error;
+
+            await supabase.from('peritagem_historico').insert([{
+                peritagem_id: id,
+                status_antigo: 'AGUARDANDO APROVAÇÃO DO PCP',
+                status_novo: 'REVISÃO NECESSÁRIA',
+                alterado_por: user.id
+            }]);
+
+            setPeritagens(prev => prev.filter(p => p.id !== id));
+            alert('Peritagem reprovada e devolvida ao perito.');
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao reprovar.');
         }
     };
 
@@ -231,6 +260,13 @@ export const PcpAprovaPeritagem: React.FC = () => {
                                     </div>
 
                                     <div className="pcp-approval-actions">
+                                        <button
+                                            className="btn-pcp-action"
+                                            style={{ backgroundColor: '#ef4444' }}
+                                            onClick={() => { handleReject(selectedPeritagem.id); setSelectedPeritagem(null); }}
+                                        >
+                                            <XCircle size={24} /> Reprovar
+                                        </button>
                                         <button
                                             className="btn-pcp-action approve-all"
                                             onClick={() => { handleApprove(selectedPeritagem.id); setSelectedPeritagem(null); }}

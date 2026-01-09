@@ -81,12 +81,17 @@
 }
 
 .btn-pcp-action {
-    width: 100%;
-    padding: 0.875rem;
+    /* width: 100%; Removed to allow flex sizing */
+    flex: 1;
+    max-width: 260px;
+    /* Limit width */
+    height: 40px;
+    padding: 0 20px;
     background: var(--primary);
     color: white;
-    border-radius: var(--border-radius);
-    font-weight: 700;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9375rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -332,14 +337,16 @@
     gap: 1.25rem;
 }
 
+
 .pcp-approval-actions {
     margin-top: 2.5rem;
     display: flex;
     gap: 1rem;
+    justify-content: center;
+    /* Center buttons */
 }
 
 .approve-all {
-    flex: 1;
-    font-size: 1.1rem;
-    padding: 1.25rem;
+    /* flex: 2; Removed to ensure equality */
+    font-size: 0.9375rem;
 }
