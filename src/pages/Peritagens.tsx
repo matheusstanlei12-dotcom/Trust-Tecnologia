@@ -130,9 +130,27 @@ export const Peritagens: React.FC = () => {
                                     </td>
                                     <td data-label="Prioridade">{p.prioridade}</td>
                                     <td>
-                                        <button className="btn-action" onClick={() => navigate(`/monitoramento?id=${p.id}`)}>
-                                            <span>VER DETALHES</span>
-                                            <ExternalLink size={16} />
+                                        <button
+                                            className={`btn-action ${p.status === 'REVISÃO NECESSÁRIA' ? 'btn-edit' : ''}`}
+                                            onClick={() => {
+                                                if (p.status === 'REVISÃO NECESSÁRIA') {
+                                                    navigate(`/nova-peritagem?id=${p.id}`);
+                                                } else {
+                                                    navigate(`/monitoramento?id=${p.id}`);
+                                                }
+                                            }}
+                                        >
+                                            {p.status === 'REVISÃO NECESSÁRIA' ? (
+                                                <>
+                                                    <span>EDITAR</span>
+                                                    <ExternalLink size={16} />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span>VER DETALHES</span>
+                                                    <ExternalLink size={16} />
+                                                </>
+                                            )}
                                         </button>
                                     </td>
                                 </tr>

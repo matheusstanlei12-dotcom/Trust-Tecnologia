@@ -196,6 +196,17 @@
     box-shadow: 0 4px 10px rgba(0, 97, 255, 0.2);
 }
 
+.btn-edit {
+    background-color: var(--warning) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-edit:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
+}
+
 .loading-state {
     padding: 4rem;
     display: flex;

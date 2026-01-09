@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Plus, Camera, X, CheckCircle, AlertCircle, Save, Info } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { USIMINAS_ITEMS } from '../constants/usiminasItems';
 import { STANDARD_ITEMS } from '../constants/standardItems';
@@ -42,6 +42,8 @@ interface ChecklistItem {
 
 export const NovaPeritagem: React.FC = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const editId = searchParams.get('id');
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0); // 0: Seleção, 1: Formulário
     const [editingItemId, setEditingItemId] = useState<string | null>(null);
@@ -99,9 +101,176 @@ export const NovaPeritagem: React.FC = () => {
     const [checklistItems, setChecklistItems] = useState<ChecklistItem[]>([]);
     const [vedacoes, setVedacoes] = useState<ChecklistItem[]>([]);
 
-    // Quando mudar o tipo de cilindro, inicializa o checklist
     useEffect(() => {
-        if (cylinderType) {
+        if (editId) {
+            loadPeritagem(editId);
+        }
+    }, [editId]);
+
+    const loadPeritagem = async (id: string) => {
+        setLoading(true);
+        try {
+            // 1. Fetch Peritagem Data
+            const { data: pData, error: pError } = await supabase
+                .from('peritagens')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+            if (pError) throw pError;
+
+            // 2. Fetch Analyses
+            const { data: aData, error: aError } = await supabase
+                .from('peritagem_analise_tecnica')
+                .select('*')
+                .eq('peritagem_id', id);
+
+            if (aError) throw aError;
+
+            // Populate States
+            setStep(1);
+            setCylinderType(pData.tipo_cilindro || 'Cilindros');
+            setFotoFrontal(pData.foto_frontal || '');
+
+            setFixedData({
+                tag: pData.tag || '',
+                local_equipamento: pData.local_equipamento || '',
+                data_inspecao: pData.created_at ? pData.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
+                responsavel_tecnico: pData.responsavel_tecnico || '',
+                cliente: pData.cliente || '',
+                numero_os: pData.os || '',
+                ni: pData.ni || '',
+                pedido: pData.numero_pedido || '',
+                ordem: pData.ordem || '',
+                nota_fiscal: pData.nota_fiscal || '',
+                desenho_conjunto: pData.desenho_conjunto || '',
+                tipo_modelo: pData.tipo_modelo || '',
+                fabricante: pData.fabricante || '',
+                lubrificante: pData.lubrificante || '',
+                volume: pData.volume || '',
+                acoplamento_polia: pData.acoplamento_polia || '',
+                sistema_lubrificacao: pData.sistema_lubrificacao || '',
+                outros_especificar: pData.outros_especificar || '',
+                observacoes_gerais: pData.observacoes_gerais || '',
+                area: pData.area || '',
+                linha: pData.linha || '',
+                os_interna: pData.os_interna || ''
+            });
+
+            setDimensions({
+                diametroInterno: pData.camisa_int || '',
+                diametroHaste: pData.haste_diam || '',
+                curso: pData.curso || '',
+                comprimentoTotal: pData.camisa_comp || '',
+                diametroExterno: pData.camisa_ext || '',
+                comprimentoHaste: pData.haste_comp || '',
+                montagem: pData.montagem || '',
+                pressaoNominal: pData.pressao_nominal || '',
+                fabricanteModelo: pData.fabricante_modelo || ''
+            });
+
+            // Map Analyses to Checklist/Vedacoes
+            // First, re-initialize list based on client to preserve order and structure
+            let list = [];
+            if (pData.cliente === 'USIMINAS') {
+                list = USIMINAS_ITEMS;
+            } else {
+                list = STANDARD_ITEMS;
+            }
+
+            const mappedChecklist = list.map(text => {
+                // Try to find existing analysis
+                const existing = aData?.find((a: any) => a.componente === text && a.tipo !== 'vedação');
+                if (existing) {
+                    return {
+                        id: crypto.randomUUID(),
+                        text,
+                        status: 'azul' as StatusColor,
+                        conformidade: existing.conformidade,
+                        anomalia: existing.anomalias || '',
+                        solucao: existing.solucao || '',
+                        fotos: existing.fotos || [],
+                        dimensoes: existing.dimensoes || '',
+                        qtd: existing.qtd || '',
+                        tipo: 'componente' as 'componente',
+                        diametro_encontrado: existing.diametro_encontrado || '',
+                        diametro_ideal: existing.diametro_ideal || '',
+                        material_faltante: existing.material_faltante || '',
+                        diametro_externo_encontrado: existing.diametro_externo_encontrado,
+                        diametro_externo_especificado: existing.diametro_externo_especificado,
+                        desvio_externo: existing.desvio_externo,
+                        diametro_interno_encontrado: existing.diametro_interno_encontrado,
+                        diametro_interno_especificado: existing.diametro_interno_especificado,
+                        desvio_interno: existing.desvio_interno,
+                        comprimento_encontrado: existing.comprimento_encontrado,
+                        comprimento_especificado: existing.comprimento_especificado,
+                        desvio_comprimento: existing.desvio_comprimento
+                    };
+                }
+                return {
+                    id: crypto.randomUUID(),
+                    text,
+                    status: 'vermelho' as StatusColor,
+                    conformidade: null as any,
+                    anomalia: '',
+                    solucao: '',
+                    fotos: [],
+                    dimensoes: '',
+                    qtd: '',
+                    tipo: 'componente' as 'componente'
+                };
+            });
+            setChecklistItems(mappedChecklist);
+
+            // Vedacoes
+            const vedacoesData = aData?.filter((a: any) => a.tipo === 'vedação') || [];
+            if (vedacoesData.length > 0) {
+                setVedacoes(vedacoesData.map((v: any) => ({
+                    id: crypto.randomUUID(),
+                    text: v.componente || '',
+                    qtd: v.qtd || '',
+                    unidade: v.dimensoes || 'PC', // Reusing dimensions field for Unit/Dim
+                    status: 'azul' as StatusColor,
+                    conformidade: 'não conforme' as 'não conforme',
+                    anomalia: '',
+                    solucao: '',
+                    fotos: [],
+                    observacao: v.anomalias || '', // Mapping anomalias to observacao for vedacao
+                    tipo: 'vedação' as 'vedação'
+                })));
+            } else if (pData.cliente !== 'USIMINAS') {
+                const emptyVedacoes = Array.from({ length: 10 }).map(() => ({
+                    id: crypto.randomUUID(),
+                    text: '',
+                    qtd: '',
+                    unidade: 'PC',
+                    status: 'azul' as StatusColor,
+                    conformidade: 'não conforme' as 'não conforme',
+                    anomalia: '',
+                    solucao: '',
+                    fotos: [],
+                    observacao: '',
+                    tipo: 'vedação' as 'vedação'
+                }));
+                // Only set if we didn't find any (which is weird for edit, but ok)
+                setVedacoes(emptyVedacoes);
+            } else {
+                setVedacoes([]);
+            }
+
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao carregar peritagem.');
+            navigate('/peritagens');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
+    // Quando mudar o tipo de cilindro, inicializa o checklist APENAS SE NÃO ESTIVER EDITANDO
+    useEffect(() => {
+        if (cylinderType && !editId) {
             let list = [];
             if (fixedData.cliente === 'USIMINAS') {
                 list = USIMINAS_ITEMS;
@@ -144,7 +313,7 @@ export const NovaPeritagem: React.FC = () => {
                 setVedacoes([]);
             }
         }
-    }, [cylinderType, fixedData.cliente]);
+    }, [cylinderType, fixedData.cliente, editId]);
 
     // Lógica de Autoload por TAG
     useEffect(() => {
@@ -270,57 +439,108 @@ export const NovaPeritagem: React.FC = () => {
             // Se não tiver OS, gera um ID único temporário para não dar erro de duplicidade
             let numeroPeritagem = fixedData.numero_os ? fixedData.numero_os.toUpperCase() : `S/OS-${Date.now()}`;
 
-            // 1. Salvar Peritagem
-            const { data: peritagem, error: pError } = await supabase
-                .from('peritagens')
-                .insert([{
-                    numero_peritagem: numeroPeritagem,
-                    os: numeroPeritagem,
-                    tag: fixedData.tag,
-                    cliente: fixedData.cliente,
-                    local_equipamento: fixedData.local_equipamento,
-                    responsavel_tecnico: fixedData.responsavel_tecnico,
-                    tipo_cilindro: cylinderType,
-                    ni: fixedData.ni,
-                    numero_pedido: fixedData.pedido,
-                    ordem: fixedData.ordem,
-                    nota_fiscal: fixedData.nota_fiscal,
-                    camisa_int: dimensions.diametroInterno,
-                    camisa_ext: dimensions.diametroExterno,
-                    haste_diam: dimensions.diametroHaste,
-                    haste_comp: dimensions.comprimentoHaste,
-                    curso: dimensions.curso,
-                    camisa_comp: dimensions.comprimentoTotal,
-                    montagem: dimensions.montagem,
-                    pressao_nominal: dimensions.pressaoNominal,
-                    fabricante_modelo: dimensions.fabricanteModelo,
-                    foto_frontal: fotoFrontal,
-                    criado_por: user?.id,
-                    status: 'AGUARDANDO APROVAÇÃO DO PCP',
-                    // Novos campos de cabeçalho
-                    desenho_conjunto: fixedData.desenho_conjunto,
-                    lubrificante: fixedData.lubrificante,
-                    volume: fixedData.volume,
-                    acoplamento_polia: fixedData.acoplamento_polia,
-                    sistema_lubrificacao: fixedData.sistema_lubrificacao,
-                    outros_especificar: fixedData.outros_especificar,
-                    observacoes_gerais: fixedData.observacoes_gerais,
-                    fabricante: fixedData.fabricante,
-                    tipo_modelo: fixedData.tipo_modelo,
-                    area: fixedData.area,
-                    linha: fixedData.linha,
-                    os_interna: fixedData.os_interna
-                }])
-                .select()
-                .single();
+            // 1. Salvar ou Atualizar Peritagem
+            let peritagemId = editId;
 
-            if (pError) throw pError;
+            if (editId) {
+                // UPDATE
+                const { error: uError } = await supabase
+                    .from('peritagens')
+                    .update({
+                        tag: fixedData.tag,
+                        cliente: fixedData.cliente,
+                        local_equipamento: fixedData.local_equipamento,
+                        responsavel_tecnico: fixedData.responsavel_tecnico,
+                        tipo_cilindro: cylinderType,
+                        ni: fixedData.ni,
+                        numero_pedido: fixedData.pedido,
+                        ordem: fixedData.ordem,
+                        nota_fiscal: fixedData.nota_fiscal,
+                        camisa_int: dimensions.diametroInterno,
+                        camisa_ext: dimensions.diametroExterno,
+                        haste_diam: dimensions.diametroHaste,
+                        haste_comp: dimensions.comprimentoHaste,
+                        curso: dimensions.curso,
+                        camisa_comp: dimensions.comprimentoTotal,
+                        montagem: dimensions.montagem,
+                        pressao_nominal: dimensions.pressaoNominal,
+                        fabricante_modelo: dimensions.fabricanteModelo,
+                        foto_frontal: fotoFrontal,
+                        status: 'AGUARDANDO APROVAÇÃO DO PCP', // Reseta status ao editar
+                        desenho_conjunto: fixedData.desenho_conjunto,
+                        lubrificante: fixedData.lubrificante,
+                        volume: fixedData.volume,
+                        acoplamento_polia: fixedData.acoplamento_polia,
+                        sistema_lubrificacao: fixedData.sistema_lubrificacao,
+                        outros_especificar: fixedData.outros_especificar,
+                        observacoes_gerais: fixedData.observacoes_gerais,
+                        fabricante: fixedData.fabricante,
+                        tipo_modelo: fixedData.tipo_modelo,
+                        area: fixedData.area,
+                        linha: fixedData.linha,
+                        os_interna: fixedData.os_interna
+                    })
+                    .eq('id', editId);
+
+                if (uError) throw uError;
+
+                // Deletar análises antigas para recriar (estratégia simples)
+                await supabase.from('peritagem_analise_tecnica').delete().eq('peritagem_id', editId);
+
+            } else {
+                // INSERT
+                const { data: peritagem, error: pError } = await supabase
+                    .from('peritagens')
+                    .insert([{
+                        numero_peritagem: numeroPeritagem,
+                        os: numeroPeritagem,
+                        tag: fixedData.tag,
+                        cliente: fixedData.cliente,
+                        local_equipamento: fixedData.local_equipamento,
+                        responsavel_tecnico: fixedData.responsavel_tecnico,
+                        tipo_cilindro: cylinderType,
+                        ni: fixedData.ni,
+                        numero_pedido: fixedData.pedido,
+                        ordem: fixedData.ordem,
+                        nota_fiscal: fixedData.nota_fiscal,
+                        camisa_int: dimensions.diametroInterno,
+                        camisa_ext: dimensions.diametroExterno,
+                        haste_diam: dimensions.diametroHaste,
+                        haste_comp: dimensions.comprimentoHaste,
+                        curso: dimensions.curso,
+                        camisa_comp: dimensions.comprimentoTotal,
+                        montagem: dimensions.montagem,
+                        pressao_nominal: dimensions.pressaoNominal,
+                        fabricante_modelo: dimensions.fabricanteModelo,
+                        foto_frontal: fotoFrontal,
+                        criado_por: user?.id,
+                        status: 'AGUARDANDO APROVAÇÃO DO PCP',
+                        desenho_conjunto: fixedData.desenho_conjunto,
+                        lubrificante: fixedData.lubrificante,
+                        volume: fixedData.volume,
+                        acoplamento_polia: fixedData.acoplamento_polia,
+                        sistema_lubrificacao: fixedData.sistema_lubrificacao,
+                        outros_especificar: fixedData.outros_especificar,
+                        observacoes_gerais: fixedData.observacoes_gerais,
+                        fabricante: fixedData.fabricante,
+                        tipo_modelo: fixedData.tipo_modelo,
+                        area: fixedData.area,
+                        linha: fixedData.linha,
+                        os_interna: fixedData.os_interna
+                    }])
+                    .select()
+                    .single();
+
+                if (pError) throw pError;
+                peritagemId = peritagem.id;
+            }
+
 
             // 2. Salvar Itens do Checklist
             const analyses = checklistItems
                 .filter(item => item.conformidade !== null)
                 .map(item => ({
-                    peritagem_id: peritagem.id,
+                    peritagem_id: peritagemId,
                     componente: item.text,
                     conformidade: item.conformidade,
                     anomalias: item.anomalia,
@@ -348,7 +568,7 @@ export const NovaPeritagem: React.FC = () => {
             const analysesVedacoes = vedacoes
                 .filter(item => item.text && item.text.trim() !== '')
                 .map(item => ({
-                    peritagem_id: peritagem.id,
+                    peritagem_id: peritagemId,
                     componente: item.text,
                     conformidade: 'não conforme',
                     anomalias: item.observacao || '',
