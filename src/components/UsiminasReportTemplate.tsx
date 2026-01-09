@@ -4,6 +4,13 @@ import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/render
 // Fontes nativas para evitar erros de rede
 const FONT_FAMILY = 'Helvetica';
 
+const formatDim = (val: string | undefined) => {
+    if (!val) return '-';
+    let v = val.trim();
+    if (v.includes('"')) return v;
+    return v.replace(/\s*mm$/i, '') + ' mm';
+};
+
 const styles = StyleSheet.create({
     page: {
         paddingTop: 40,
@@ -405,26 +412,26 @@ export const UsiminasReportTemplate: React.FC<{ data: ReportData }> = ({ data })
             </View>
 
             {/* Tabela de Dimensões sem bordas com cabeçalho azul */}
-            <View style={{ marginTop: 15 }} wrap={false}>
-                <View style={{ backgroundColor: '#005696', padding: 5, marginBottom: 2 }}>
-                    <Text style={{ fontSize: 11, fontWeight: 'bold', color: '#fff' }}>DIMENSÕES TÉCNICAS (MM)</Text>
+            <View style={{ marginTop: 10 }} wrap={false}>
+                <View style={{ backgroundColor: '#005696', padding: 3, marginBottom: 0 }}>
+                    <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#fff' }}>DIMENSÕES TÉCNICAS (MM)</Text>
                 </View>
                 {/* Layout Stacked para evitar sobreposição */}
-                <View style={{ paddingLeft: 2 }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
-                        <Text style={{ fontSize: 10 }}>
+                <View style={{ padding: 4 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 2 }}>
+                        <Text style={{ fontSize: 9, marginRight: 30 }}>
                             <Text style={{ fontWeight: 'bold' }}>CAMISA: </Text>
-                            Ø INT. {data.camisa_int} x Ø EXT. {data.camisa_ext} x COMP. {data.camisa_comp}
+                            Ø INT. {formatDim(data.camisa_int)} x Ø EXT. {formatDim(data.camisa_ext)} x COMP. {formatDim(data.camisa_comp)}
                         </Text>
-                        <Text style={{ fontSize: 10 }}>
+                        <Text style={{ fontSize: 9 }}>
                             <Text style={{ fontWeight: 'bold' }}>HASTE: </Text>
-                            Ø {data.haste_diam} x COMP. {data.haste_comp}
+                            Ø {formatDim(data.haste_diam)} x COMP. {formatDim(data.haste_comp)}
                         </Text>
                     </View>
                     <View style={{ marginTop: 0 }}>
-                        <Text style={{ fontSize: 10 }}>
+                        <Text style={{ fontSize: 9 }}>
                             <Text style={{ fontWeight: 'bold' }}>CURSO: </Text>
-                            {data.curso} MM
+                            {formatDim(data.curso)}
                         </Text>
                     </View>
                 </View>
