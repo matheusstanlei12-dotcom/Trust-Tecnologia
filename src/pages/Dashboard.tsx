@@ -320,7 +320,7 @@ export const Dashboard: React.FC = () => {
     return (
         <div className="dashboard-container">
             <h1 className="page-title">Painel de Controle</h1>
-            <p className="page-subtitle">Bem-vindo ao sistema HIDRAUP. Veja o resumo das atividades.</p>
+            <p className="page-subtitle">Bem-vindo ao sistema Trust Tecnologia. Veja o resumo das atividades.</p>
 
             {loading ? (
                 <div style={{ padding: '3rem', textAlign: 'center', background: 'white', borderRadius: '16px' }}>
