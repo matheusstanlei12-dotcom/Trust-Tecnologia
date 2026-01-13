@@ -41,9 +41,9 @@ export const LoginPage: React.FC = () => {
             <div className="login-card">
                 <header className="login-header">
                     <div className="logo-placeholder">
-                        <img src="/logo.png" alt="HIDRAUP Logo" style={{ maxWidth: '180px' }} />
+                        <img src="/logo.png" alt="Trust Tecnologia Logo" style={{ maxWidth: '180px' }} />
                     </div>
-                    <h1>ACESSO AO SISTEMA DE PERITAGEM</h1>
+                    <h1>TRUST TECNOLOGIA - SISTEMA DE PERITAGEM</h1>
                 </header>
 
                 <form className="login-form" onSubmit={handleLogin}>

@@ -94,7 +94,7 @@ export const Relatorios: React.FC = () => {
             const reportData = {
                 laudoNum: String(peritagem.numero_peritagem || ''),
                 numero_os: String(peritagem.numero_peritagem || ''),
-                data: new Date().toLocaleDateString('pt-BR'),
+                data: peritagem.data_execucao ? new Date(peritagem.data_execucao).toLocaleDateString('pt-BR') : new Date().toLocaleDateString('pt-BR'),
                 hora: peritagem.data_execucao ? new Date(peritagem.data_execucao).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '',
                 area: String(peritagem.area || '-'),
                 linha: String(peritagem.linha || '-'),
@@ -179,7 +179,8 @@ export const Relatorios: React.FC = () => {
                 acoplamento_polia: String(peritagem.acoplamento_polia || 'NÃO'),
                 sistema_lubrificacao: String(peritagem.sistema_lubrificacao || 'NÃO'),
                 outros_especificar: String(peritagem.outros_especificar || '-'),
-                observacoes_gerais: String(peritagem.observacoes_gerais || '-')
+                observacoes_gerais: String(peritagem.observacoes_gerais || '-'),
+                status: String(peritagem.status || '')
             };
 
             setFullReportData(reportData);

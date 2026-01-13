@@ -86,9 +86,9 @@ export const RegisterPage: React.FC = () => {
             <div className="login-card register-card">
                 <header className="login-header">
                     <div className="logo-placeholder">
-                        <img src="/logo.png" alt="HIDRAUP Logo" style={{ maxWidth: '180px' }} />
+                        <img src="/logo.png" alt="Trust Tecnologia Logo" style={{ maxWidth: '180px' }} />
                     </div>
-                    <h1>SOLICITAR ACESSO</h1>
+                    <h1>TRUST TECNOLOGIA - SOLICITAR ACESSO</h1>
                 </header>
 
                 <form className="login-form" onSubmit={handleRegister}>

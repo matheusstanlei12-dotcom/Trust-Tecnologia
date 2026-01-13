@@ -278,17 +278,20 @@ export const NovaPeritagem: React.FC = () => {
                 list = STANDARD_ITEMS;
             }
 
-            setChecklistItems(list.map((text) => {
+            setChecklistItems(list.map((text, index) => {
+                // Itens 80, 81 e 82 (índices 79-81 se considerarmos a lista padrão de 82 itens)
+                const isPreset = (fixedData.cliente !== 'USIMINAS' && index >= 79 && index <= 81);
+
                 return {
                     id: crypto.randomUUID(),
                     text,
-                    status: 'vermelho',
-                    conformidade: null,
+                    status: isPreset ? 'verde' : 'vermelho',
+                    conformidade: isPreset ? 'conforme' : null,
                     anomalia: '',
                     solucao: '',
                     fotos: [],
                     dimensoes: '',
-                    qtd: '',
+                    qtd: isPreset ? '1' : '',
                     tipo: 'componente'
                 };
             }));

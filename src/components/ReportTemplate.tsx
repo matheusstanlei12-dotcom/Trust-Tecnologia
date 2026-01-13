@@ -312,6 +312,7 @@ interface ReportData {
     observacoes_gerais?: string;
     area?: string;
     linha?: string;
+    status?: string;
 }
 
 export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
@@ -320,7 +321,7 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
         <Page size="A4" style={styles.coverPage}>
             <Image src="/logo.png" style={styles.coverLogo} />
             <Text style={{ fontSize: 12, color: 'red', marginBottom: 30, fontWeight: 'bold', textTransform: 'uppercase' }}>Serviços Hidráulicos e Pneumáticos Ltda</Text>
-            <Text style={styles.coverTitle}>RELATÓRIO TÉCNICO DE PERITAGEM</Text>
+            <Text style={styles.coverTitle}>RELATÓRIO TÉCNICO DE PERITAGEM{data.status === 'REVISÃO NECESSÁRIA' ? ' - REVISÃO' : ''}</Text>
 
 
             <View style={styles.coverDivider} />
@@ -421,6 +422,12 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
                             <View style={{ marginBottom: 8 }}>
                                 <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#555', marginBottom: 2 }}>OBSERVAÇÕES:</Text>
                                 <Text style={{ fontSize: 9 }}>{data.observacoes_gerais}</Text>
+                            </View>
+                            <View style={{ marginBottom: 8 }}>
+                                <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#555', marginBottom: 2 }}>STATUS:</Text>
+                                <Text style={{ fontSize: 9, fontWeight: 'bold', color: data.status === 'REVISÃO NECESSÁRIA' ? '#e67e22' : '#005696' }}>
+                                    {data.status || '-'}
+                                </Text>
                             </View>
                         </View>
                     </View>
@@ -629,7 +636,7 @@ export const ReportTemplate: React.FC<{ data: ReportData }> = ({ data }) => (
             )}
 
             <View style={styles.footer} fixed>
-                <Text>Documento gerado automaticamente pela TrustEng. LTDA</Text>
+                <Text>Documento gerado automaticamente pela Trust Tecnologia</Text>
             </View>
         </Page>
     </Document >
